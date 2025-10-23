@@ -59,6 +59,29 @@ Pour chaque repas, affichage automatique de :
 - **Mise à jour** : Modifier à tout moment
 - **Objectif** : Suivi vs objectif quotidien
 
+#### Activités Physiques
+- **Liste d'activités prédéfinies** : 
+  - 🚶 Marche
+  - 🏃 Course à pied
+  - 🚴 Vélo
+  - 🏊 Natation
+  - 💪 HIIT
+  - 🏋️ Musculation
+  - 🧘 Yoga
+  - ⚽ Sport collectif
+- **Enregistrement par activité** :
+  - Durée en minutes
+  - Calories brûlées
+- **Activités personnalisées** : Créez vos propres types d'activités
+- **Gestion complète** :
+  - Modification d'une activité existante
+  - Suppression d'activités
+  - Historique conservé
+- **Résumé quotidien** :
+  - Durée totale d'activité
+  - Calories totales brûlées
+  - Intégré dans le bilan calorique de la journée
+
 #### Résumé de la Journée
 Affichage formaté incluant :
 - 📅 Date
@@ -199,6 +222,31 @@ Graphiques disponibles :
 4. **📈 Comparaison Hebdo/Mensuelle**
    - Barres comparatives
    - Moyenne 7 jours vs 30 jours
+
+#### 🥗 Analyse par Aliment
+**Section d'analyse détaillée** de la consommation par aliment sur 7/30/365 jours
+
+**Cartes de Synthèse** :
+1. 📦 **Nombre Total d'Aliments** consommés
+2. ⚖️ **Poids Total** consommé (kg)
+3. 💰 **Coût Total** de l'alimentation
+
+**Tableau Détaillé avec Tri** :
+- **Colonnes affichées** :
+  - Nom de l'aliment
+  - Poids total consommé (kg)
+  - Coût total (€)
+  - Macronutriments consommés (g)
+  - **Protéines/100g** : Teneur en protéines
+  - **Prix/100g protéines** : Ratio qualité-prix protéique
+- **Tri dynamique** : Clic sur les en-têtes pour trier
+- **Filtrage des colonnes** : Afficher/masquer les macros
+- **Export CSV** : Téléchargement des données
+- **Copie presse-papier** : Format texte tabulé
+
+**Graphiques Top 10** :
+1. **📊 Top 10 Poids** : Aliments les plus consommés en quantité
+2. **💰 Top 10 Coût** : Aliments les plus chers
 
 ---
 
@@ -460,7 +508,7 @@ Pour toute question ou suggestion, consultez le fichier `README.md` du projet.
 
 ---
 
-**Version** : 1.2  
+**Version** : 1.3  
 **Date** : Octobre 2025  
 **Auteur** : Nutrition Tracker Team
 
