@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker Nutritionnel</title>
+    <!-- Librairie externe pour les graphiques -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Liaison vers le fichier de styles CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🍽️ Tracker Nutritionnel</h1>
+
+        <!-- =================== NAVIGATION PAR ONGLETS =================== -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="tracker">📅 Suivi Quotidien</button>
+            <button class="nav-tab" data-tab="stats">📊 Statistiques</button>
+            <button class="nav-tab" data-tab="goals">🎯 Objectifs</button>
+            <button class="nav-tab" data-tab="foods">🥗 Aliments</button>
+            <button class="nav-tab" data-tab="settings">⚙️ Paramètres</button>
+        </div>
+
+        <!-- =================== CONTENU DE L'ONGLET "SUIVI QUOTIDIEN" =================== -->
+        <div id="tracker-tab" class="tab-content active">
+            <!-- En-tête du calendrier -->
+            <div class="calendar-header">
+                <button id="prev-day-btn">← Jour Précédent</button>
+                <h2 id="currentDate"></h2>
+                <div>
+                    <button id="today-btn" class="today-btn">Aujourd'hui</button>
+                    <button id="next-day-btn">Jour Suivant →</button>
+                </div>
+            </div>
+
+            <!-- Résumé nutritionnel de la journée avec barres de progression -->
+            <div class="summary-modern" id="summary">
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <span class="progress-label">🔥 Calories</span>
+                        <span class="progress-values" id="totalCalories">0 / 0 kcal</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="caloriesProgress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <span class="progress-label">🥩 Protéines</span>
+                        <span class="progress-values" id="totalProteins">0 / 0 g</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="proteinsProgress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <span class="progress-label">🍞 Glucides</span>
+                        <span class="progress-values" id="totalCarbs">0 / 0 g</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="carbsProgress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <span class="progress-label">🥑 Lipides</span>
+                        <span class="progress-values" id="totalFats">0 / 0 g</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="fatsProgress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <span class="progress-label">🍬 Sucres</span>
+                        <span class="progress-values" id="totalSugars">0 g</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill secondary" id="sugarsProgress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <span class="progress-label">🌾 Fibres</span>
+                        <span class="progress-values" id="totalFibers">0 g</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="fibersProgress" style="width: 0%; background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);"></div>
+                    </div>
+                </div>
+                <div class="progress-card weight-card">
+                    <div class="progress-header">
+                        <span class="progress-label">⚖️ Poids</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                        <input type="number" id="weightInput" step="0.1" placeholder="kg" style="flex: 1; padding: 8px; border: 2px solid var(--color-border); border-radius: 8px; font-size: 1em;">
+                        <button id="saveWeightBtn" class="quick-action-btn">💾</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Hydratation et Activité -->
+            <div class="wellness-section">
+                <!-- Hydratation -->
+                <div class="wellness-card water-card">
+                    <div class="wellness-header">
+                        <h3>💧 Hydratation</h3>
+                        <span class="wellness-target">Objectif: <span id="waterGoal">2000</span> ml</span>
+                    </div>
+                    <div class="wellness-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill water-fill" id="waterProgress" style="width: 0%;"></div>
+                        </div>
+                        <span class="wellness-value" id="waterValue">0 ml / 2000 ml</span>
+                    </div>
+                    <div class="wellness-actions">
+                        <button class="water-btn add-btn" data-amount="300">+300ml</button>
+                        <button class="water-btn add-btn" data-amount="500">+500ml</button>
+                        <button class="water-btn add-btn" data-amount="1000">+1L</button>
+                        <button class="water-btn edit-btn" id="editWaterBtn" title="Modifier la quantité">✏️ Éditer</button>
+                        <button class="water-btn reset-btn" id="resetWaterBtn" title="Réinitialiser">🔄</button>
+                    </div>
+                </div>
+
+                <!-- Compteur de pas -->
+                <div class="wellness-card steps-card">
+                    <div class="wellness-header">
+                        <h3>👟 Pas</h3>
+                        <span class="wellness-target">Objectif: <span id="stepsGoal">10000</span> pas</span>
+                    </div>
+                    <div class="wellness-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill steps-fill" id="stepsProgress" style="width: 0%;"></div>
+                        </div>
+                        <span class="wellness-value" id="stepsValue">0 / 10000 pas</span>
+                    </div>
+                    <div class="wellness-actions">
+                        <input type="number" id="stepsInput" placeholder="Nombre de pas" min="0" step="100" style="flex: 1; padding: 10px; border: 2px solid var(--color-border); border-radius: 8px; font-size: 1em;">
+                        <button class="steps-btn update-btn" id="updateStepsBtn">✓ Mettre à jour</button>
+                        <button class="steps-btn reset-btn" id="resetStepsBtn" title="Réinitialiser">🔄</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Activités Physiques -->
+            <div class="activities-section">
+                <div class="activities-header">
+                    <h3>🏃 Activités Physiques</h3>
+                    <button class="add-activity-btn" id="addCustomActivityBtn" title="Ajouter une nouvelle activité">➕ Nouvelle activité</button>
+                </div>
+
+                <!-- Formulaire d'ajout d'activité -->
+                <div class="activity-form">
+                    <select id="activitySelect" class="activity-select">
+                        <option value="">Sélectionner une activité...</option>
+                    </select>
+                    <input type="number" id="activityDuration" placeholder="Durée (min)" min="1" class="activity-input">
+                    <input type="number" id="activityCalories" placeholder="Calories brûlées" min="0" class="activity-input">
+                    <button class="activity-btn add-btn" id="addActivityBtn">➕ Ajouter</button>
+                </div>
+
+                <!-- Liste des activités du jour -->
+                <div class="activities-list" id="activitiesList">
+                    <p class="no-activities">Aucune activité enregistrée aujourd'hui</p>
+                </div>
+
+                <!-- Résumé des activités -->
+                <div class="activities-summary" id="activitiesSummary" style="display: none;">
+                    <div class="summary-item">
+                        <span class="summary-label">⏱️ Temps total :</span>
+                        <span class="summary-value" id="totalDuration">0 min</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">🔥 Calories brûlées :</span>
+                        <span class="summary-value" id="totalActivityCalories">0 kcal</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Résumé Quotidien -->
+            <div class="daily-summary-card">
+                <div class="daily-summary-header">
+                    <h3>📋 Résumé de la Journée</h3>
+                    <div class="summary-actions">
+                        <button class="toggle-summary-btn" id="toggleSummaryBtn" title="Afficher/Masquer le résumé">
+                            <span class="toggle-icon">▼</span>
+                        </button>
+                        <button class="copy-btn" id="copySummaryBtn" title="Copier le résumé">
+                            <span class="copy-icon">📋</span>
+                            <span class="copy-text">Copier</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="daily-summary-content collapsed" id="dailySummaryContent">
+                    <p style="text-align: center; color: #999; padding: 20px;">Aucun aliment ajouté pour aujourd'hui</p>
+                </div>
+            </div>
+
+            <!-- Liste des aliments disponibles (pour le glisser-déposer) -->
+            <div class="foods-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-title" style="margin-bottom: 0;">🥗 Aliments Disponibles</h2>
+                    <div class="search-container">
+                        <input type="text" id="foodSearch" placeholder="🔍 Rechercher un aliment..." class="search-input">
+                    </div>
+                </div>
+                <div class="foods-list" id="foodsList"></div>
+                <p id="noResultsMessage" style="display: none; text-align: center; color: #999; padding: 20px;">🔍 Aucun aliment trouvé</p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button id="loadMoreFoodsBtn" class="load-more-btn" style="display: none;">
+                        📋 Voir plus d'aliments (<span id="remainingFoodsCount">0</span> restants)
+                    </button>
+                </div>
+            </div>
+
+            <h2 class="section-title">📅 Mes Repas</h2>
+            <!-- Grille des repas de la journée -->
+            <div class="meals-grid">
+                <div class="meal-column" data-meal="petit-dej">
+                    <div class="meal-title">🌅 Petit Déjeuner</div>
+                    <div class="meal-summary" id="summary-petit-dej"></div>
+                    <div class="meal-items" id="petit-dej"></div>
+                </div>
+                <div class="meal-column" data-meal="dejeuner">
+                    <div class="meal-title">☀️ Déjeuner</div>
+                    <div class="meal-summary" id="summary-dejeuner"></div>
+                    <div class="meal-items" id="dejeuner"></div>
+                </div>
+                <div class="meal-column" data-meal="diner">
+                    <div class="meal-title">🌙 Dîner</div>
+                    <div class="meal-summary" id="summary-diner"></div>
+                    <div class="meal-items" id="diner"></div>
+                </div>
+                <div class="meal-column" data-meal="snack">
+                    <div class="meal-title">🍎 Snack</div>
+                    <div class="meal-summary" id="summary-snack"></div>
+                    <div class="meal-items" id="snack"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================== CONTENU DE L'ONGLET "STATISTIQUES" =================== -->
+        <div id="stats-tab" class="tab-content">
+            <h2 class="section-title">📊 Statistiques Nutritionnelles</h2>
+            <!-- Boutons pour choisir la période d'affichage -->
+            <div class="stats-period">
+                <button class="period-btn active" data-period="7">7 jours</button>
+                <button class="period-btn" data-period="14">14 jours</button>
+                <button class="period-btn" data-period="30">30 jours</button>
+            </div>
+            <!-- Grille pour les graphiques -->
+            <div class="stats-grid">
+                <div class="chart-container">
+                    <h3>Évolution des Calories</h3><canvas id="caloriesChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Répartition des Macronutriments</h3><canvas id="macrosChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Évolution des Protéines</h3><canvas id="proteinsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Évolution des Glucides</h3><canvas id="carbsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Évolution des Lipides</h3><canvas id="lipidsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Évolution des Sucres</h3><canvas id="sugarsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🌾 Évolution des Fibres</h3><canvas id="fibersChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Évolution du Poids</h3><canvas id="weightChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>💧 Hydratation Quotidienne</h3><canvas id="waterChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>👟 Nombre de Pas</h3><canvas id="stepsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Section Moyennes -->
+            <h2 class="section-title" style="margin-top: 50px;">📈 Moyennes Hebdomadaires & Mensuelles</h2>
+            <div class="stats-period">
+                <button class="average-period-btn active" data-avg-period="week">Par Semaine</button>
+                <button class="average-period-btn" data-avg-period="month">Par Mois</button>
+            </div>
+            <div class="stats-grid">
+                <div class="chart-container">
+                    <h3>📊 Moyenne des Calories</h3><canvas id="avgCaloriesChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🥩 Moyenne des Protéines</h3><canvas id="avgProteinsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🍚 Moyenne des Glucides</h3><canvas id="avgCarbsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🥑 Moyenne des Lipides</h3><canvas id="avgFatsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🌾 Moyenne des Fibres</h3><canvas id="avgFibersChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>⚖️ Moyenne du Poids</h3><canvas id="avgWeightChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>💧 Moyenne Hydratation</h3><canvas id="avgWaterChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>👟 Moyenne des Pas</h3><canvas id="avgStepsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Section Analyse des Coûts -->
+            <h2 class="section-title" style="margin-top: 50px;">💰 Analyse des Coûts</h2>
+            <div class="stats-period">
+                <button class="cost-period-btn active" data-cost-period="7">7 jours</button>
+                <button class="cost-period-btn" data-cost-period="14">14 jours</button>
+                <button class="cost-period-btn" data-cost-period="30">30 jours</button>
+            </div>
+            
+            <!-- Cartes de synthèse des coûts -->
+            <div class="cost-summary-cards">
+                <div class="cost-card">
+                    <h4>💳 Coût Total</h4>
+                    <p class="cost-value" id="totalCost">0.00 €</p>
+                    <small id="totalCostPeriod">7 derniers jours</small>
+                </div>
+                <div class="cost-card">
+                    <h4>📊 Coût Moyen/Jour</h4>
+                    <p class="cost-value" id="avgDailyCost">0.00 €</p>
+                    <small id="avgCostPeriod">7 derniers jours</small>
+                </div>
+                <div class="cost-card">
+                    <h4>📅 Coût Mensuel Estimé</h4>
+                    <p class="cost-value" id="monthlyCost">0.00 €</p>
+                    <small>Basé sur la moyenne actuelle</small>
+                </div>
+            </div>
+
+            <!-- Graphiques des coûts -->
+            <div class="stats-grid">
+                <div class="chart-container">
+                    <h3>💰 Évolution des Coûts Quotidiens</h3><canvas id="dailyCostsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🍽️ Répartition des Coûts par Repas</h3><canvas id="costsByMealChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🏆 Top 5 Aliments les Plus Chers</h3><canvas id="topCostsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>📈 Comparaison Hebdo/Mensuelle</h3><canvas id="costComparisonChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Section Activités Physiques -->
+            <h2 class="section-title" style="margin-top: 50px;">🏃 Activités Physiques</h2>
+            <div class="stats-period">
+                <button class="activity-period-btn active" data-activity-period="7">7 jours</button>
+                <button class="activity-period-btn" data-activity-period="14">14 jours</button>
+                <button class="activity-period-btn" data-activity-period="30">30 jours</button>
+            </div>
+
+            <!-- Graphiques des activités -->
+            <div class="stats-grid">
+                <div class="chart-container">
+                    <h3>🔥 Calories Brûlées Quotidiennes</h3><canvas id="activityCaloriesChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>⏱️ Temps d'Activité Total</h3><canvas id="activityTimeChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>📊 Répartition par Type d'Activité</h3><canvas id="activityTypeDistChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🏆 Top 5 Activités les Plus Pratiquées</h3><canvas id="topActivitiesChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🔥 Calories par Type d'Activité</h3><canvas id="caloriesByTypeChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>📈 Comparaison Hebdo/Mensuelle</h3><canvas id="activityComparisonChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Section Analyse par Aliment -->
+            <h2 class="section-title" style="margin-top: 50px;">📊 Analyse par Aliment</h2>
+            <div class="stats-period">
+                <button class="food-analysis-period-btn active" data-food-period="7">7 jours</button>
+                <button class="food-analysis-period-btn" data-food-period="30">30 jours</button>
+                <button class="food-analysis-period-btn" data-food-period="365">365 jours</button>
+            </div>
+
+            <!-- Cartes de synthèse -->
+            <div class="cost-summary-cards" style="margin-bottom: 30px;">
+                <div class="cost-card">
+                    <div class="cost-icon">📦</div>
+                    <div class="cost-content">
+                        <div class="cost-label">Aliments Différents</div>
+                        <div class="cost-value" id="foodAnalysisTotalFoods">0</div>
+                        <div class="cost-period" id="foodAnalysisFoodsPeriod">7 derniers jours</div>
+                    </div>
+                </div>
+                <div class="cost-card">
+                    <div class="cost-icon">⚖️</div>
+                    <div class="cost-content">
+                        <div class="cost-label">Poids Total</div>
+                        <div class="cost-value" id="foodAnalysisTotalWeight">0 kg</div>
+                        <div class="cost-period" id="foodAnalysisWeightPeriod">7 derniers jours</div>
+                    </div>
+                </div>
+                <div class="cost-card">
+                    <div class="cost-icon">💰</div>
+                    <div class="cost-content">
+                        <div class="cost-label">Coût Total</div>
+                        <div class="cost-value" id="foodAnalysisTotalCost">0 €</div>
+                        <div class="cost-period" id="foodAnalysisCostPeriod">7 derniers jours</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau détaillé -->
+            <div class="food-analysis-table-container">
+                <div class="food-analysis-table-header">
+                    <h3>📋 Détail par Aliment</h3>
+                    <div class="food-analysis-export-buttons">
+                        <button class="export-btn" id="copyFoodAnalysisBtn" title="Copier dans le presse-papier">📋 Copier</button>
+                        <button class="export-btn" id="exportFoodAnalysisCSVBtn" title="Exporter en CSV">📥 Export CSV</button>
+                    </div>
+                </div>
+                
+                <!-- Sélecteur de colonnes -->
+                <div class="food-analysis-columns-selector">
+                    <span style="font-weight: 600; color: #667eea; margin-right: 15px;">📊 Afficher :</span>
+                    <label class="column-checkbox">
+                        <input type="checkbox" class="column-toggle" data-column="proteins" checked>
+                        <span>🥩 Protéines</span>
+                    </label>
+                    <label class="column-checkbox">
+                        <input type="checkbox" class="column-toggle" data-column="carbs" checked>
+                        <span>🍞 Glucides</span>
+                    </label>
+                    <label class="column-checkbox">
+                        <input type="checkbox" class="column-toggle" data-column="fats" checked>
+                        <span>🧈 Lipides</span>
+                    </label>
+                    <label class="column-checkbox">
+                        <input type="checkbox" class="column-toggle" data-column="fibers">
+                        <span>🌾 Fibres</span>
+                    </label>
+                    <label class="column-checkbox">
+                        <input type="checkbox" class="column-toggle" data-column="sugars">
+                        <span>🍬 Sucres</span>
+                    </label>
+                    <label class="column-checkbox">
+                        <input type="checkbox" class="column-toggle" data-column="proteinsPer100g" checked>
+                        <span>💪 Prot/100g</span>
+                    </label>
+                    <label class="column-checkbox">
+                        <input type="checkbox" class="column-toggle" data-column="proteinPrice" checked>
+                        <span>💰 Prix/100g prot</span>
+                    </label>
+                </div>
+                <div class="food-analysis-table-wrapper">
+                    <table class="food-analysis-table" id="foodAnalysisTable">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="name">Aliment <span class="sort-icon">⬍</span></th>
+                                <th class="sortable" data-sort="weight">Poids Total <span class="sort-icon">⬍</span></th>
+                                <th class="sortable" data-sort="cost">Prix Total <span class="sort-icon">⬍</span></th>
+                                <th class="sortable macro-column" data-sort="proteins" data-column="proteins">Protéines <span class="sort-icon">⬍</span></th>
+                                <th class="sortable macro-column" data-sort="carbs" data-column="carbs">Glucides <span class="sort-icon">⬍</span></th>
+                                <th class="sortable macro-column" data-sort="fats" data-column="fats">Lipides <span class="sort-icon">⬍</span></th>
+                                <th class="sortable macro-column" data-sort="fibers" data-column="fibers" style="display: none;">Fibres <span class="sort-icon">⬍</span></th>
+                                <th class="sortable macro-column" data-sort="sugars" data-column="sugars" style="display: none;">Sucres <span class="sort-icon">⬍</span></th>
+                                <th class="sortable macro-column" data-sort="proteinsPer100g" data-column="proteinsPer100g">Prot/100g <span class="sort-icon">⬍</span></th>
+                                <th class="sortable macro-column" data-sort="proteinPrice" data-column="proteinPrice">Prix/100g prot <span class="sort-icon">⬍</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="foodAnalysisTableBody">
+                            <tr>
+                                <td colspan="10" style="text-align: center; padding: 40px; color: #999;">
+                                    Aucune donnée disponible
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Graphiques Top 10 -->
+            <div class="stats-grid" style="margin-top: 30px;">
+                <div class="chart-container">
+                    <h3>⚖️ Top 10 - Poids Consommé</h3>
+                    <canvas id="foodAnalysisWeightChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>💰 Top 10 - Coût Total</h3>
+                    <canvas id="foodAnalysisCostChart"></canvas>
+                </div>
+            </div>
+            <!-- ===================================== -->
+        </div>
+    </div>
+
+    <!-- =================== CONTENU DE L'ONGLET "OBJECTIFS" =================== -->
+    <div id="goals-tab" class="tab-content">
+        <h2 class="section-title">🔥 Calculateur de Sèche</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em;">Déterminez votre apport calorique optimal pour perdre du gras</p>
+        
+        <div class="add-food-section">
+            <form class="add-food-form" id="goalsForm">
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label style="margin-bottom: 15px; font-size: 1em; font-weight: 600; color: var(--color-text-dark);">Sexe</label>
+                    <div class="gender-selector">
+                        <div class="gender-option">
+                            <input type="radio" id="homme" name="sexe" value="homme" checked>
+                            <label for="homme" class="gender-label">
+                                <span class="emoji">👨</span>
+                                <span>Homme</span>
+                            </label>
+                        </div>
+                        <div class="gender-option">
+                            <input type="radio" id="femme" name="sexe" value="femme">
+                            <label for="femme" class="gender-label">
+                                <span class="emoji">👩</span>
+                                <span>Femme</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">🎂 Âge (années)</label>
+                    <input type="number" id="age" min="15" max="100" placeholder="30" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="goalWeight">⚖️ Poids (kg)</label>
+                    <input type="number" id="goalWeight" min="30" max="300" step="0.1" placeholder="80" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="taille">📏 Taille (cm)</label>
+                    <input type="number" id="taille" min="100" max="250" placeholder="175" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="activite">🏋️ Niveau d'activité physique</label>
+                    <select id="activite" required>
+                        <option value="1.2">Sédentaire (peu ou pas d'exercice)</option>
+                        <option value="1.375">Légèrement actif (1-3 jours/semaine)</option>
+                        <option value="1.55">Modérément actif (3-5 jours/semaine)</option>
+                        <option value="1.725">Très actif (6-7 jours/semaine)</option>
+                        <option value="1.9">Extrêmement actif (2x par jour, travail physique)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="deficit">🔥 Déficit calorique souhaité</label>
+                    <select id="deficit" required>
+                        <option value="0.10">Léger - 10% (perte lente, préserve muscle)</option>
+                        <option value="0.15">Modéré - 15% (équilibré)</option>
+                        <option value="0.20">Standard - 20% (perte efficace)</option>
+                        <option value="0.25">Agressif - 25% (perte rapide)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="waterGoalInput">💧 Objectif d'hydratation quotidien (ml)</label>
+                    <input type="number" id="waterGoalInput" min="500" max="10000" step="100" value="2000" placeholder="2000">
+                    <small style="color: #999; font-size: 0.85em; margin-top: 5px; display: block;">Recommandé : 2000-3000 ml par jour</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="stepsGoalInput">👟 Objectif de pas quotidien</label>
+                    <input type="number" id="stepsGoalInput" min="1000" max="50000" step="1000" value="10000" placeholder="10000">
+                    <small style="color: #999; font-size: 0.85em; margin-top: 5px; display: block;">Recommandé : 10000 pas par jour</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="sugarsMaxInput">🍬 Seuil maximum de sucres (g/jour)</label>
+                    <input type="number" id="sugarsMaxInput" min="0" max="200" step="1" value="25" placeholder="25">
+                    <small style="color: #999; font-size: 0.85em; margin-top: 5px; display: block;">Limite haute : 50g | Idéal : 25g par jour</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="fibersMinInput">🌾 Seuil minimum de fibres (g/jour)</label>
+                    <input type="number" id="fibersMinInput" min="0" max="100" step="1" value="25" placeholder="25">
+                    <small style="color: #999; font-size: 0.85em; margin-top: 5px; display: block;">Recommandé : minimum 25g par jour</small>
+                </div>
+
+                <button type="submit" class="add-btn">Calculer et Sauvegarder</button>
+            </form>
+        </div>
+
+        <!-- Section des résultats -->
+        <div id="goalsResults" style="margin-top: 40px; display: none;">
+            <h2 class="section-title">📊 Vos Résultats</h2>
+            
+            <div class="result-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <span style="font-weight: 600; color: #555;">💪 Métabolisme de Base (MB)</span>
+                    <span style="font-size: 1.4em; font-weight: 700; color: #667eea;" id="goalMB">0 kcal</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 600; color: #555;">⚡ Dépense Énergétique Totale (DET)</span>
+                    <span style="font-size: 1.4em; font-weight: 700; color: #667eea;" id="goalDET">0 kcal</span>
+                </div>
+            </div>
+
+            <div class="result-card-highlight">
+                <div style="display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1;">
+                    <span style="font-weight: 600; color: white; font-size: 1.2em;">🎯 Calories pour la Sèche</span>
+                    <span style="font-size: 1.8em; font-weight: 700; color: white;" id="goalCalories">0 kcal</span>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #333; font-size: 1.3em;">📊 Répartition des Macronutriments</h3>
+                <button class="edit-macros-btn" id="editMacrosBtn" style="padding: 8px 16px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9em; display: none;">
+                    ✏️ Modifier
+                </button>
+            </div>
+            <div class="summary">
+                <div class="summary-item">
+                    <h3>🥩 Protéines</h3>
+                    <p id="goalProteins" class="macro-display">0 g</p>
+                    <input type="number" id="goalProteinsInput" class="macro-input" min="0" step="1" style="display: none; width: 100%; padding: 10px; border: 2px solid #667eea; border-radius: 8px; font-size: 1.2em; font-weight: 700; text-align: center;">
+                </div>
+                <div class="summary-item">
+                    <h3>🥑 Lipides</h3>
+                    <p id="goalFats" class="macro-display">0 g</p>
+                    <input type="number" id="goalFatsInput" class="macro-input" min="0" step="1" style="display: none; width: 100%; padding: 10px; border: 2px solid #667eea; border-radius: 8px; font-size: 1.2em; font-weight: 700; text-align: center;">
+                </div>
+                <div class="summary-item">
+                    <h3>🍚 Glucides</h3>
+                    <p id="goalCarbs" class="macro-display">0 g</p>
+                    <input type="number" id="goalCarbsInput" class="macro-input" min="0" step="1" style="display: none; width: 100%; padding: 10px; border: 2px solid #667eea; border-radius: 8px; font-size: 1.2em; font-weight: 700; text-align: center;">
+                </div>
+            </div>
+            <div id="macroEditActions" style="display: none; text-align: center; margin-top: 20px; gap: 10px;">
+                <button class="add-btn" id="saveMacrosBtn" style="margin-right: 10px;">💾 Sauvegarder</button>
+                <button class="cancel-btn" id="cancelMacrosBtn" style="background: #ef4444; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">❌ Annuler</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #333; font-size: 1.3em;">🎯 Objectifs Bien-Être</h3>
+                <button class="edit-macros-btn" id="editWellnessBtn" style="padding: 8px 16px; background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9em; display: none;">
+                    ✏️ Modifier
+                </button>
+            </div>
+            <div class="summary">
+                <div class="summary-item">
+                    <h3>💧 Hydratation</h3>
+                    <p id="goalWaterDisplay" class="wellness-display">2000 ml</p>
+                    <input type="number" id="goalWaterEditInput" class="wellness-input" min="500" max="10000" step="100" style="display: none; width: 100%; padding: 10px; border: 2px solid #06b6d4; border-radius: 8px; font-size: 1.2em; font-weight: 700; text-align: center;">
+                </div>
+                <div class="summary-item">
+                    <h3>👟 Pas</h3>
+                    <p id="goalStepsDisplay" class="wellness-display">10000 pas</p>
+                    <input type="number" id="goalStepsEditInput" class="wellness-input" min="1000" max="50000" step="1000" style="display: none; width: 100%; padding: 10px; border: 2px solid #06b6d4; border-radius: 8px; font-size: 1.2em; font-weight: 700; text-align: center;">
+                </div>
+            </div>
+            <div id="wellnessEditActions" style="display: none; text-align: center; margin-top: 20px; gap: 10px;">
+                <button class="add-btn" id="saveWellnessBtn" style="margin-right: 10px;">💾 Sauvegarder</button>
+                <button class="cancel-btn" id="cancelWellnessBtn" style="background: #ef4444; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">❌ Annuler</button>
+            </div>
+
+            <div class="goals-info-box">
+                <h4>💡 Conseils pour votre sèche</h4>
+                <p>
+                    • Pesez-vous 1 fois par semaine dans les mêmes conditions<br>
+                    • Visez une perte de 0.5-1% de votre poids par semaine<br>
+                    • Ajustez vos calories si la perte stagne pendant 2 semaines<br>
+                    • Maintenez un apport élevé en protéines pour préserver la masse musculaire<br>
+                    • Hydratez-vous abondamment (3-4L d'eau par jour)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== CONTENU DE L'ONGLET "ALIMENTS" =================== -->
+    <div id="foods-tab" class="tab-content">
+        <!-- Section pour ajouter un nouvel aliment -->
+        <div class="add-food-section">
+            <h2 class="section-title">➕ Ajouter un Aliment</h2>
+            <form class="add-food-form" id="addFoodForm">
+                <div class="form-group"><label>Nom</label><input type="text" id="foodName" required></div>
+                <div class="form-group"><label>Calories (kcal/100g)</label><input type="number" step="0.1"
+                        id="foodCalories" required></div>
+                <div class="form-group"><label>Protéines (g/100g)</label><input type="number" step="0.1"
+                        id="foodProteins" required></div>
+                <div class="form-group"><label>Glucides (g/100g)</label><input type="number" step="0.1" id="foodCarbs"
+                        required></div>
+                <div class="form-group"><label>Sucres (g/100g)</label><input type="number" step="0.1" id="foodSugars"
+                        required></div>
+                <div class="form-group"><label>Fibres (g/100g)</label><input type="number" step="0.1" id="foodFibers"
+                        required></div>
+                <div class="form-group"><label>Lipides (g/100g)</label><input type="number" step="0.1" id="foodFats"
+                        required></div>
+                <div class="form-group">
+                    <label>💰 Prix (€)</label>
+                    <input type="number" step="0.01" id="foodPrice" placeholder="Ex: 4.50" min="0">
+                    <small style="color: #999; font-size: 0.85em; display: block; margin-top: 5px;">Optionnel - Prix du produit en magasin</small>
+                </div>
+                <div class="form-group">
+                    <label>📦 Pour (grammes)</label>
+                    <input type="number" step="1" id="foodPriceGrams" placeholder="Ex: 500" min="1">
+                    <small style="color: #999; font-size: 0.85em; display: block; margin-top: 5px;">Optionnel - Grammage du produit acheté</small>
+                </div>
+                <button type="submit" class="add-btn">Ajouter l'Aliment</button>
+            </form>
+        </div>
+
+        <!-- Section pour voir et gérer les aliments existants -->
+        <div class="foods-section" style="margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 20px; flex-wrap: wrap;">
+                <h2 class="section-title" style="margin-bottom: 0;">🥗 Liste des Aliments</h2>
+                <div class="search-container">
+                    <input type="text" id="foodSearchManage" placeholder="🔍 Rechercher un aliment..." class="search-input">
+                </div>
+            </div>
+            <p style="color: #999; margin-bottom: 15px; font-size: 0.9em;">💡 Cliquez sur un aliment pour le modifier</p>
+            <div class="foods-list" id="foodsListManage"></div>
+            <p id="noResultsMessageManage" style="display: none; text-align: center; color: #999; padding: 20px;">🔍 Aucun aliment trouvé</p>
+        </div>
+    </div>
+
+    <!-- =================== CONTENU DE L'ONGLET "PARAMÈTRES" =================== -->
+    <div id="settings-tab" class="tab-content">
+        <h2 class="section-title">⚙️ Paramètres</h2>
+        
+        <!-- Section Gestion des Données -->
+        <div class="settings-section">
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h3>💾 Gestion des Données</h3>
+                    <p class="settings-description">Sauvegardez ou importez vos données pour les conserver en sécurité</p>
+                </div>
+                <div class="settings-card-body">
+                    <div class="settings-actions">
+                        <div class="settings-action-item">
+                            <div class="action-info">
+                                <h4>📤 Exporter les données</h4>
+                                <p>Téléchargez toutes vos données en format JSON</p>
+                            </div>
+                            <button id="export-btn" class="settings-btn export-btn">💾 Exporter</button>
+                        </div>
+                        
+                        <div class="settings-action-item">
+                            <div class="action-info">
+                                <h4>📥 Importer les données</h4>
+                                <p>Restaurez vos données depuis un fichier JSON</p>
+                            </div>
+                            <button id="import-btn" class="settings-btn import-btn">📂 Importer</button>
+                            <input type="file" id="fileInput" accept=".json" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Zone Dangereuse -->
+        <div class="settings-section">
+            <div class="settings-card danger-card">
+                <div class="settings-card-header">
+                    <h3>⚠️ Zone Dangereuse</h3>
+                    <p class="settings-description">Actions irréversibles - utilisez avec précaution</p>
+                </div>
+                <div class="settings-card-body">
+                    <div class="settings-actions">
+                        <div class="settings-action-item">
+                            <div class="action-info">
+                                <h4>🔄 Réinitialiser toutes les données</h4>
+                                <p>Supprime définitivement tous les repas, objectifs et aliments personnalisés</p>
+                            </div>
+                            <button id="reset-btn" class="settings-btn reset-btn">🗑️ Réinitialiser</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Informations -->
+        <div class="settings-section">
+            <div class="settings-card info-card">
+                <div class="settings-card-header">
+                    <h3>ℹ️ Informations</h3>
+                </div>
+                <div class="settings-card-body">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Version</span>
+                            <span class="info-value">1.0.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Stockage</span>
+                            <span class="info-value">IndexedDB</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Framework</span>
+                            <span class="info-value">Vanilla JS</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Graphiques</span>
+                            <span class="info-value">Chart.js</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- =============================================
+         MODALE DE MODIFICATION D'ALIMENT
+         (cachée par défaut avec le CSS)
+    ============================================= -->
+    <div id="editFoodModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h3>Modifier l'Aliment</h3>
+            <form id="editFoodForm" class="add-food-form">
+                <input type="hidden" id="editFoodId">
+
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="editFoodName" required>
+                </div>
+                <div class="form-group">
+                    <label>Calories (kcal/100g)</label>
+                    <input type="number" step="0.1" id="editFoodCalories" required>
+                </div>
+                <div class="form-group">
+                    <label>Protéines (g/100g)</label>
+                    <input type="number" step="0.1" id="editFoodProteins" required>
+                </div>
+                <div class="form-group">
+                    <label>Glucides (g/100g)</label>
+                    <input type="number" step="0.1" id="editFoodCarbs" required>
+                </div>
+                <div class="form-group">
+                    <label>Sucres (g/100g)</label>
+                    <input type="number" step="0.1" id="editFoodSugars" required>
+                </div>
+                <div class="form-group">
+                    <label>Fibres (g/100g)</label>
+                    <input type="number" step="0.1" id="editFoodFibers" required>
+                </div>
+                <div class="form-group">
+                    <label>Lipides (g/100g)</label>
+                    <input type="number" step="0.1" id="editFoodFats" required>
+                </div>
+                <div class="form-group">
+                    <label>💰 Prix (€)</label>
+                    <input type="number" step="0.01" id="editFoodPrice" placeholder="Ex: 4.50" min="0">
+                    <small style="color: #999; font-size: 0.85em; display: block; margin-top: 5px;">Optionnel - Prix du produit en magasin</small>
+                </div>
+                <div class="form-group">
+                    <label>📦 Pour (grammes)</label>
+                    <input type="number" step="1" id="editFoodPriceGrams" placeholder="Ex: 500" min="1">
+                    <small style="color: #999; font-size: 0.85em; display: block; margin-top: 5px;">Optionnel - Grammage du produit acheté</small>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="add-btn">Sauvegarder</button>
+                    <button type="button" class="reset-btn" id="cancelEditBtn">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =============================================
+         MODALE D'AJOUT D'ACTIVITÉ PERSONNALISÉE
+    ============================================= -->
+    <div id="customActivityModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeCustomActivityModal">&times;</button>
+            <h3>Nouvelle Activité Personnalisée</h3>
+            <form id="customActivityForm">
+                <div class="form-group">
+                    <label>Nom de l'activité</label>
+                    <input type="text" id="customActivityName" placeholder="Ex: Boxe, Danse, etc." required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="add-btn">Ajouter</button>
+                    <button type="button" class="reset-btn" id="cancelCustomActivityBtn">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =============================================
+         MODALE DE MODIFICATION D'ACTIVITÉ
+    ============================================= -->
+    <div id="editActivityModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeEditActivityModal">&times;</button>
+            <h3>Modifier l'Activité</h3>
+            <form id="editActivityForm">
+                <input type="hidden" id="editActivityIndex">
+                <div class="form-group">
+                    <label>Activité</label>
+                    <select id="editActivityType" class="activity-select">
+                        <option value="">Sélectionner...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Durée (minutes)</label>
+                    <input type="number" id="editActivityDuration" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Calories brûlées</label>
+                    <input type="number" id="editActivityCalories" min="0" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="add-btn">Sauvegarder</button>
+                    <button type="button" class="reset-btn" id="cancelEditActivityBtn">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Le script principal de l'application, chargé à la fin -->
+    <script src="js/app.js" type="module"></script>
+</body>
+
+</html>
