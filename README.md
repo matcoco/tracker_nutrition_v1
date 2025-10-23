@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![JavaScript](https://img.shields.io/badge/javascript-100%25-yellow.svg)
 ![Responsive](https://img.shields.io/badge/responsive-mobile%20%7C%20tablet%20%7C%20desktop-purple.svg)
@@ -34,12 +34,32 @@
 
 ---
 
+## 🆕 Nouveautés Version 1.3
+
+Cette version majeure apporte des fonctionnalités très attendues :
+
+- 💰 **Gestion complète des coûts** : Ajoutez les prix de vos aliments et suivez votre budget alimentaire
+- 🥗 **Analyse par aliment** : Identifiez les aliments les plus consommés et les plus chers
+- 💧 **Suivi hydratation** : Enregistrez votre consommation d'eau quotidienne avec objectifs
+- 👟 **Nombre de pas** : Suivez votre activité quotidienne avec graphiques
+- 🏃 **Activités physiques** : Enregistrez vos sports (durée, calories brûlées)
+- 📊 **Graphiques de sucres** : 3 seuils de recommandation (idéal/recommandé/max)
+- 🌾 **Graphiques de fibres** : Suivi vs objectif minimum
+- 📈 **Moyennes périodiques** : Analyses hebdomadaires et mensuelles
+- 💾 **Export amélioré** : Format JSON v1.2 avec toutes les nouvelles données
+
+**🔗 Documentation complète** : Consultez [FONCTIONNALITES.md](FONCTIONNALITES.md) pour tous les détails
+
+---
+
 ## ✨ Fonctionnalités
 
 ### 📊 Suivi Nutritionnel Complet
-- ✅ **Tracking en temps réel** : Calories, protéines, glucides, lipides, sucres
+- ✅ **Tracking en temps réel** : Calories, protéines, glucides, lipides, sucres, fibres
 - ✅ **Barres de progression visuelles** : Visualisez vos objectifs en un coup d'œil
 - ✅ **Système de repas** : Petit déjeuner, déjeuner, dîner, snacks
+- ✅ **Suivi du poids** : Enregistrement quotidien et graphique d'évolution
+- ✅ **Résumé journalier** : Format texte copiable avec tous les détails
 
 ### 🎯 Gestion Intelligente
 - ✅ **Drag & Drop** : Déplacez vos aliments entre les repas
@@ -51,7 +71,10 @@
 - ✅ **Graphiques interactifs** : Chart.js pour des visualisations élégantes
 - ✅ **Multi-périodes** : Analyses sur 7, 14 ou 30 jours
 - ✅ **Graphique de poids** : Suivez votre évolution corporelle
-- ✅ **Répartition macros** : Donut chart des macronutriments
+- ✅ **Répartition macros** : Donut chart des macronutriments (incluant fibres et sucres)
+- ✅ **Moyennes hebdomadaires/mensuelles** : Analyses sur 12 semaines ou 6 mois
+- ✅ **Graphiques de sucres** : 3 seuils de recommandation (25g/50g/100g)
+- ✅ **Graphiques de fibres** : Suivi vs objectif minimum
 
 ### 🎯 Calcul d'Objectifs Automatique
 - ✅ **Formule Mifflin-St Jeor** : Calcul du métabolisme de base (MB)
@@ -63,13 +86,36 @@
 - ✅ **100+ aliments pré-enregistrés** : Base complète incluse
 - ✅ **Ajout d'aliments personnalisés** : Créez votre propre bibliothèque
 - ✅ **Modification facile** : Cliquez pour éditer
-- ✅ **Import/Export** : Sauvegardez vos données en JSON
+- ✅ **Gestion des prix** : Prix au 100g et par portion
+- ✅ **Import/Export** : Sauvegardez vos données en JSON (version 1.2)
 
 ### 📱 Design Moderne
 - ✅ **100% Responsive** : Mobile, tablette, desktop
 - ✅ **Interface épurée** : Design Material-inspired
 - ✅ **Dark mode ready** : Variables CSS pour thème sombre
 - ✅ **Animations fluides** : Transitions CSS optimisées
+
+### 💰 Gestion des Coûts
+- ✅ **Suivi budgétaire** : Prix des aliments et calcul automatique
+- ✅ **Coût par repas** : Affichage du coût de chaque repas
+- ✅ **Coût journalier** : Total des dépenses alimentaires
+- ✅ **Analyses des coûts** : Graphiques sur 7/14/30 jours
+- ✅ **Top 5 aliments chers** : Identification des postes de dépense
+- ✅ **Projection mensuelle** : Estimation du budget alimentaire
+
+### 🥗 Analyse par Aliment
+- ✅ **Consommation détaillée** : Poids et coût par aliment
+- ✅ **Ratio qualité-prix** : Prix pour 100g de protéines
+- ✅ **Tableau triable** : Tri par nom, poids, coût, macros
+- ✅ **Export CSV** : Téléchargement des analyses
+- ✅ **Top 10 graphiques** : Visualisation des aliments principaux
+
+### 💧 Bien-être & Activité
+- ✅ **Suivi hydratation** : Enregistrement quotidien (ml)
+- ✅ **Nombre de pas** : Suivi de l'activité quotidienne
+- ✅ **Activités physiques** : Enregistrement des sports (durée, calories)
+- ✅ **Activités personnalisées** : Créez vos propres types d'activités
+- ✅ **Graphiques wellness** : Hydratation et pas sur plusieurs périodes
 
 ### 🔒 Confidentialité
 - ✅ **Données locales** : Stockage IndexedDB dans votre navigateur
@@ -195,15 +241,20 @@ npx http-server
 nutrition-tracker/
 ├── 📄 index.html              # Point d'entrée
 ├── 📁 css/
-│   └── style.css              # Styles (1600+ lignes)
+│   └── style.css              # Styles (2000+ lignes)
 ├── 📁 js/
 │   ├── app.js                 # Point d'entrée JS & orchestration
 │   ├── db.js                  # Gestion IndexedDB
 │   ├── ui.js                  # Manipulation DOM
 │   ├── utils.js               # Fonctions utilitaires
-│   ├── charts.js              # Configuration Chart.js
-│   └── foods-data.js          # Base de données aliments
-└── 📄 README.md               # Documentation
+│   ├── charts.js              # Graphiques nutritionnels (Chart.js)
+│   ├── costs.js               # Graphiques des coûts
+│   ├── food-analysis.js       # Analyse par aliment
+│   ├── db-utils.js            # Utilitaires diagnostic DB
+│   ├── config.js              # Configuration et données par défaut
+│   └── foods-data.js          # Base de données aliments (100+)
+├── 📄 README.md               # Documentation principale
+└── 📄 FONCTIONNALITES.md      # Documentation détaillée
 ```
 
 ### Modules JavaScript
@@ -211,11 +262,15 @@ nutrition-tracker/
 | Fichier | Responsabilité |
 |---------|----------------|
 | `app.js` | Initialisation, event listeners, orchestration |
-| `db.js` | CRUD IndexedDB (meals, goals, foods, weight) |
+| `db.js` | CRUD IndexedDB (meals, goals, foods, weight, water, steps, activities) |
 | `ui.js` | Affichage, modales, notifications |
-| `utils.js` | Calculs (TDEE, macros, totaux) |
-| `charts.js` | Configuration et update des graphiques |
-| `foods-data.js` | 100+ aliments pré-enregistrés |
+| `utils.js` | Calculs (TDEE, macros, totaux, coûts) |
+| `charts.js` | Graphiques nutritionnels (Chart.js) |
+| `costs.js` | Graphiques d'analyse des coûts |
+| `food-analysis.js` | Analyse détaillée par aliment |
+| `db-utils.js` | Diagnostic et réparation de la base de données |
+| `config.js` | Configuration globale et données par défaut |
+| `foods-data.js` | 100+ aliments pré-enregistrés avec prix |
 
 ---
 
@@ -256,24 +311,25 @@ export const defaultFoods = {
 
 ## 🗺️ Roadmap
 
-### Version 1.1 (À venir)
+### Version 1.4 (À venir)
 - [ ] 🌙 Mode sombre
 - [ ] 📸 Scan de codes-barres (Open Food Facts API)
-- [ ] 🍴 Recettes avec calcul automatique
-- [ ] 📊 Export PDF des statistiques
+- [ ] 🗑️ Suppression d'aliments
+- [ ] 📸 Photos des repas
+- [ ] 🏷️ Catégories d'aliments
+- [ ] ⭐ Aliments favoris
 
 ### Version 2.0 (Futur)
+- [ ] 🍴 Recettes avec calcul automatique
+- [ ] 📊 Export PDF des statistiques
 - [ ] 🔥 Synchronisation Firebase (multi-appareils)
 - [ ] 🔐 Authentification Google
 - [ ] 👥 Partage de recettes entre utilisateurs
 - [ ] 🤖 Suggestions IA basées sur l'historique
 - [ ] 📱 Application mobile native (React Native)
-
-### Idées en exploration
-- [ ] 💧 Suivi de l'hydratation
-- [ ] 🏃 Intégration activités sportives
 - [ ] 🛒 Génération de liste de courses
 - [ ] 📅 Planification de repas hebdomadaire
+- [ ] 🔔 Rappels hydratation et repas
 
 ---
 
