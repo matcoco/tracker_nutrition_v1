@@ -1,0 +1,3244 @@
+{
+  "version": "1.3",
+  "exportDate": "2025-10-23T05:15:25.643Z",
+  "foods": [
+    {
+      "id": "amande-grillee-papapero",
+      "name": "Amande grillée Papapéro",
+      "calories": 654,
+      "proteins": 25,
+      "carbs": 1.1,
+      "sugars": 1.1,
+      "fibers": 0,
+      "fats": 58,
+      "price": 3.81,
+      "priceGrams": 100
+    },
+    {
+      "id": "amandes-non-salees-vico",
+      "name": "Amandes non salées Vico",
+      "calories": 640,
+      "proteins": 26,
+      "carbs": 3.7,
+      "sugars": 3.9,
+      "fibers": 12,
+      "fats": 53,
+      "price": 3.56,
+      "priceGrams": 180
+    },
+    {
+      "id": "beurre-doux-paturages",
+      "name": "Beurre doux Pâturages",
+      "calories": 744,
+      "proteins": 0.6,
+      "carbs": 0.8,
+      "sugars": 0.8,
+      "fibers": 0.5,
+      "fats": 82,
+      "price": 2.51,
+      "priceGrams": 250
+    },
+    {
+      "id": "blanc-de-poulet-tranches",
+      "name": "Blanc de poulet tranches",
+      "calories": 106,
+      "proteins": 23,
+      "carbs": 0.5,
+      "sugars": 0.5,
+      "fibers": 0.9,
+      "fats": 1.7,
+      "price": 7.35,
+      "priceGrams": 600
+    },
+    {
+      "id": "brioche-nature-boulangerie",
+      "name": "Brioche nature boulangerie",
+      "calories": 350,
+      "proteins": 10,
+      "carbs": 36,
+      "sugars": 13,
+      "fibers": 3,
+      "fats": 19
+    },
+    {
+      "id": "brocolis-saint-eloi-surgeles",
+      "name": "Brocolis Saint Eloi surgelés",
+      "calories": 31,
+      "proteins": 2.2,
+      "carbs": 1.8,
+      "sugars": 1.8,
+      "fibers": 2.9,
+      "fats": 0.5,
+      "price": 2.23,
+      "priceGrams": 900
+    },
+    {
+      "id": "comte-paturages",
+      "name": "Comté Pâturages",
+      "calories": 410,
+      "proteins": 26,
+      "carbs": 0.5,
+      "sugars": 0.5,
+      "fibers": 0.5,
+      "fats": 34,
+      "price": 4.84,
+      "priceGrams": 350
+    },
+    {
+      "id": "cote-de-porc-echine-jean-roze",
+      "name": "Côte de porc échine Jean Rozé",
+      "calories": 211,
+      "proteins": 19,
+      "carbs": 0.5,
+      "sugars": 0.4,
+      "fibers": 0.5,
+      "fats": 14.6,
+      "price": 5.62,
+      "priceGrams": 100
+    },
+    {
+      "id": "demi-baguette-de-campagne-chabrior-bio",
+      "name": "Demi baguette de campagne Chabrior BIO",
+      "calories": 277,
+      "proteins": 9.5,
+      "carbs": 56,
+      "sugars": 3,
+      "fibers": 3.6,
+      "fats": 0.4,
+      "price": 2.37,
+      "priceGrams": 250
+    },
+    {
+      "id": "fanta-100ml-mcdonalds",
+      "name": "Fanta 100ml McDonald's",
+      "calories": 38,
+      "proteins": 0,
+      "carbs": 0.5,
+      "sugars": 6.7,
+      "fibers": 0,
+      "fats": 0,
+      "price": 3.1,
+      "priceGrams": 400
+    },
+    {
+      "id": "farine-de-ble-type-65",
+      "name": "Farine de blé type 65",
+      "calories": 353,
+      "proteins": 11,
+      "carbs": 71.5,
+      "sugars": 1.5,
+      "fibers": 3.6,
+      "fats": 1.1,
+      "price": null,
+      "priceGrams": null
+    },
+    {
+      "id": "frites-mccain-650g-cote-brasserie",
+      "name": "Frites McCain 650g coté brasserie",
+      "calories": 165,
+      "proteins": 2.5,
+      "carbs": 22.5,
+      "sugars": 0.5,
+      "fibers": 4.5,
+      "fats": 6,
+      "price": 2.4,
+      "priceGrams": 650
+    },
+    {
+      "id": "fromage-blanc-paturage",
+      "name": "Fromage Blanc Pâturage",
+      "calories": 75,
+      "proteins": 7.1,
+      "carbs": 3.9,
+      "sugars": 3,
+      "fibers": 0.5,
+      "fats": 3.2,
+      "price": 1.95,
+      "priceGrams": 1000
+    },
+    {
+      "id": "fusilli-protein-",
+      "name": "Fusilli protein +",
+      "calories": 354,
+      "proteins": 20,
+      "carbs": 63,
+      "sugars": 1.7,
+      "fibers": 3.1,
+      "fats": 1.7,
+      "price": 2.19,
+      "priceGrams": 400
+    },
+    {
+      "id": "grignotte-poulet",
+      "name": "Grignotte Poulet",
+      "calories": 192,
+      "proteins": 21,
+      "carbs": 0.9,
+      "sugars": 0.9,
+      "fibers": 0.5,
+      "fats": 2.8,
+      "price": 2.52,
+      "priceGrams": 170
+    },
+    {
+      "id": "haricot-rouge-saint-eloi",
+      "name": "Haricot rouge Saint Eloi",
+      "calories": 94,
+      "proteins": 6.8,
+      "carbs": 11.4,
+      "sugars": 0.6,
+      "fibers": 6.3,
+      "fats": 0.7,
+      "price": 1.37,
+      "priceGrams": 500
+    },
+    {
+      "id": "haricots-verts-cassegrain",
+      "name": "Haricots Verts Cassegrain",
+      "calories": 36,
+      "proteins": 1.7,
+      "carbs": 3.3,
+      "sugars": 1.1,
+      "fibers": 2.6,
+      "fats": 0.5,
+      "price": 3.1,
+      "priceGrams": 390
+    },
+    {
+      "id": "haricots-verts-saint-eloi",
+      "name": "Haricots verts Saint Eloi",
+      "calories": 36,
+      "proteins": 1.7,
+      "carbs": 33,
+      "sugars": 1.1,
+      "fibers": 2.6,
+      "fats": 0.5,
+      "price": 1.87,
+      "priceGrams": 1000
+    },
+    {
+      "id": "huile-de-coco",
+      "name": "Huile de coco",
+      "calories": 899,
+      "proteins": 0.5,
+      "carbs": 0.5,
+      "sugars": 0.1,
+      "fibers": 0.5,
+      "fats": 92.8,
+      "price": null,
+      "priceGrams": null
+    },
+    {
+      "id": "huile-de-noisette-berinoix",
+      "name": "Huile de noisette Bérinoix",
+      "calories": 900,
+      "proteins": 0,
+      "carbs": 0,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 100,
+      "price": 8.72,
+      "priceGrams": 500
+    },
+    {
+      "id": "huile-de-tournesol-bouton-dor",
+      "name": "Huile de tournesol Bouton d'or",
+      "calories": 900,
+      "proteins": 0.5,
+      "carbs": 0.5,
+      "sugars": 0.5,
+      "fibers": 0,
+      "fats": 100,
+      "price": 3.64,
+      "priceGrams": 750
+    },
+    {
+      "id": "jaune-doeuf",
+      "name": "Jaune d'oeuf",
+      "calories": 366,
+      "proteins": 16.5,
+      "carbs": 1.3,
+      "sugars": 0.6,
+      "fibers": 0,
+      "fats": 31,
+      "price": 10.9,
+      "priceGrams": 1500
+    },
+    {
+      "id": "jkieffer-sans-alcool-jaune",
+      "name": "J.Kieffer sans alcool jaune",
+      "calories": 36,
+      "proteins": 0,
+      "carbs": 0,
+      "sugars": 8.7,
+      "fibers": 0,
+      "fats": 0,
+      "price": 2.9,
+      "priceGrams": 748
+    },
+    {
+      "id": "kiwi-vert",
+      "name": "Kiwi Vert",
+      "calories": 61,
+      "proteins": 1.1,
+      "carbs": 14,
+      "sugars": 9,
+      "fibers": 3,
+      "fats": 0.5,
+      "price": 0.8,
+      "priceGrams": 105
+    },
+    {
+      "id": "la-poelee-du-marche",
+      "name": "La poêlée du marché",
+      "calories": 54,
+      "proteins": 2.7,
+      "carbs": 4.2,
+      "sugars": 2.7,
+      "fibers": 3.4,
+      "fats": 2.2,
+      "price": 3.49,
+      "priceGrams": 750
+    },
+    {
+      "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+      "name": "Lentilles cuisinées à l'auvergnate Raynal et Roquelaure",
+      "calories": 105,
+      "proteins": 6.6,
+      "carbs": 14,
+      "sugars": 1,
+      "fibers": 3.7,
+      "fats": 0.5,
+      "price": 2.11,
+      "priceGrams": 820
+    },
+    {
+      "id": "oeuf-entier",
+      "name": "Oeuf entier",
+      "calories": 147,
+      "proteins": 12.5,
+      "carbs": 0.7,
+      "sugars": 0.7,
+      "fibers": 0,
+      "fats": 9.9,
+      "price": 10.9,
+      "priceGrams": 1500
+    },
+    {
+      "id": "olive-verte-a-la-farce-de-poivron",
+      "name": "Olive verte  à la farce de poivron",
+      "calories": 151,
+      "proteins": 1.1,
+      "carbs": 1.9,
+      "sugars": 0.5,
+      "fibers": 2.8,
+      "fats": 15.2,
+      "price": 1.62,
+      "priceGrams": 120
+    },
+    {
+      "id": "orange",
+      "name": "Orange",
+      "calories": 47,
+      "proteins": 0.8,
+      "carbs": 0.3,
+      "sugars": 7.6,
+      "fibers": 2.7,
+      "fats": 0.1,
+      "price": 2.89,
+      "priceGrams": 1500
+    },
+    {
+      "id": "pain-au-chocolat",
+      "name": "Pain au chocolat",
+      "calories": 277,
+      "proteins": 4.8,
+      "carbs": 17,
+      "sugars": 15,
+      "fibers": 2.1,
+      "fats": 14,
+      "price": 1.2,
+      "priceGrams": 80
+    },
+    {
+      "id": "pate-complete-penne-bio-village",
+      "name": "Pâte Complète PENNE Bio village",
+      "calories": 336,
+      "proteins": 14,
+      "carbs": 62,
+      "sugars": 3.5,
+      "fibers": 12,
+      "fats": 2,
+      "price": 1.9,
+      "priceGrams": 500
+    },
+    {
+      "id": "pizza-maison-artichaut",
+      "name": "Pizza maison artichaut",
+      "calories": 250,
+      "proteins": 7,
+      "carbs": 19,
+      "sugars": 2,
+      "fibers": 2.5,
+      "fats": 14
+    },
+    {
+      "id": "poivrons-cuisines-cassegrain",
+      "name": "Poivrons cuisinés cassegrain",
+      "calories": 70,
+      "proteins": 1.5,
+      "carbs": 2.2,
+      "sugars": 6,
+      "fibers": 3.7,
+      "fats": 3.2,
+      "price": 3.79,
+      "priceGrams": 375
+    },
+    {
+      "id": "pomme-gala",
+      "name": "Pomme Gala",
+      "calories": 54,
+      "proteins": 0.3,
+      "carbs": 12.7,
+      "sugars": 11,
+      "fibers": 2.7,
+      "fats": 0.1,
+      "price": 2.99,
+      "priceGrams": 2000
+    },
+    {
+      "id": "potatoes-mccain-aux-herbes",
+      "name": "Potatoes McCain aux herbes",
+      "calories": 145,
+      "proteins": 2.5,
+      "carbs": 20.5,
+      "sugars": 0.5,
+      "fibers": 3,
+      "fats": 5,
+      "price": 2.71,
+      "priceGrams": 780
+    },
+    {
+      "id": "potatoes-paprika",
+      "name": "Potatoes paprika",
+      "calories": 129,
+      "proteins": 2.5,
+      "carbs": 20,
+      "sugars": 0.5,
+      "fibers": 3,
+      "fats": 3.1,
+      "price": 1.2,
+      "priceGrams": 600
+    },
+    {
+      "id": "raisin-vert",
+      "name": "Raisin vert",
+      "calories": 69,
+      "proteins": 0.7,
+      "carbs": 18.1,
+      "sugars": 16.3,
+      "fibers": 2,
+      "fats": 0.2,
+      "price": null,
+      "priceGrams": null
+    },
+    {
+      "id": "sandwich-sodebo-rosette",
+      "name": "Sandwich Sodebo Rosette",
+      "calories": 291,
+      "proteins": 11,
+      "carbs": 26.3,
+      "sugars": 2.7,
+      "fibers": 4.3,
+      "fats": 14,
+      "price": 1.49,
+      "priceGrams": 125
+    },
+    {
+      "id": "scheppes-tonic",
+      "name": "Scheppes tonic",
+      "calories": 19,
+      "proteins": 0,
+      "carbs": 0,
+      "sugars": 4.4,
+      "fibers": 0,
+      "fats": 0,
+      "price": 1.72,
+      "priceGrams": 1500
+    },
+    {
+      "id": "skyr-nature-yoplait",
+      "name": "Skyr Nature Yoplait",
+      "calories": 57,
+      "proteins": 9.5,
+      "carbs": 3.6,
+      "sugars": 3.6,
+      "fibers": 0,
+      "fats": 0.5,
+      "price": 4.09,
+      "priceGrams": 850
+    },
+    {
+      "id": "son-de-ble",
+      "name": "Son de Blé",
+      "calories": 297,
+      "proteins": 14,
+      "carbs": 35,
+      "sugars": 8,
+      "fibers": 40,
+      "fats": 2.5,
+      "price": 3.08,
+      "priceGrams": 250
+    },
+    {
+      "id": "steack-hache-charal-15mg",
+      "name": "Steack haché Charal 15%MG",
+      "calories": 209,
+      "proteins": 19,
+      "carbs": 0,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 15,
+      "price": 13.43,
+      "priceGrams": 1000
+    },
+    {
+      "id": "sucre-roux-de-canne",
+      "name": "Sucre roux de canne",
+      "calories": 380,
+      "proteins": 0.5,
+      "carbs": 0.5,
+      "sugars": 95,
+      "fats": 0.5,
+      "price": null,
+      "priceGrams": null
+    },
+    {
+      "id": "sucrine",
+      "name": "Sucrine",
+      "calories": 16,
+      "proteins": 1.2,
+      "carbs": 2.2,
+      "sugars": 0,
+      "fibers": 1,
+      "fats": 0.2,
+      "price": 1.29,
+      "priceGrams": 420
+    },
+    {
+      "id": "tablette-chocolat-57-cacao",
+      "name": "Tablette chocolat 57% cacao",
+      "calories": 559,
+      "proteins": 6.4,
+      "carbs": 3,
+      "sugars": 43,
+      "fats": 37,
+      "price": null,
+      "priceGrams": null
+    },
+    {
+      "id": "tarte-au-thon-maison",
+      "name": "Tarte au thon maison",
+      "calories": 180,
+      "proteins": 7,
+      "carbs": 15,
+      "sugars": 2,
+      "fibers": 1.4,
+      "fats": 7.5
+    },
+    {
+      "id": "thon-odyssee",
+      "name": "Thon Odyssée",
+      "calories": 119,
+      "proteins": 26.7,
+      "carbs": 0.5,
+      "sugars": 0.5,
+      "fibers": 0.5,
+      "fats": 1.4,
+      "price": 3.57,
+      "priceGrams": 279
+    },
+    {
+      "id": "tomates-cerises-du-maroc",
+      "name": "Tomates cerises du Maroc",
+      "calories": 34,
+      "proteins": 1.3,
+      "carbs": 5.6,
+      "sugars": 4.8,
+      "fibers": 1.2,
+      "fats": 0.5,
+      "price": 0.99,
+      "priceGrams": 250
+    },
+    {
+      "id": "tranche-pain-complet-la-boulangere-bio",
+      "name": "Tranche pain complet La boulangère BIO",
+      "calories": 268,
+      "proteins": 8.1,
+      "carbs": 40.7,
+      "sugars": 6.3,
+      "fibers": 5.3,
+      "fats": 4.2,
+      "price": null,
+      "priceGrams": null
+    },
+    {
+      "id": "whey-100-concentree",
+      "name": "Whey 100% concentrée ",
+      "calories": 366,
+      "proteins": 74,
+      "carbs": 4.8,
+      "sugars": 4,
+      "fibers": 0.5,
+      "fats": 5.8,
+      "price": 34,
+      "priceGrams": 2000
+    }
+  ],
+  "dailyMeals": [
+    {
+      "date": "2025-07-25",
+      "meals": {
+        "petit-dej": [],
+        "dejeuner": [],
+        "diner": [],
+        "snack": []
+      },
+      "weight": 78.7
+    },
+    {
+      "date": "2025-09-17",
+      "meals": {
+        "petit-dej": [],
+        "dejeuner": [],
+        "diner": [],
+        "snack": []
+      },
+      "weight": 78.3
+    },
+    {
+      "date": "2025-10-06",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 65,
+            "uniqueId": 1760038581671
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 40,
+            "uniqueId": 1760038596421
+          },
+          {
+            "id": "fromage-blanc-paturage",
+            "weight": 150,
+            "uniqueId": 1760038600697
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760038610314
+          },
+          {
+            "id": "son-de-ble",
+            "weight": 30,
+            "uniqueId": 1760038683148
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "pate-complete-penne-bio-village",
+            "weight": 137,
+            "uniqueId": 1760038705389
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 125,
+            "uniqueId": 1760038717498
+          }
+        ],
+        "diner": [
+          {
+            "id": "amendes-grillees",
+            "weight": 4,
+            "uniqueId": 1760038776854
+          },
+          {
+            "id": "grignotte-poulet",
+            "weight": 170,
+            "uniqueId": 1760038786051
+          },
+          {
+            "id": "brocolis-saint-eloi-surgeles",
+            "weight": 100,
+            "uniqueId": 1760038798154
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760038925266
+          },
+          {
+            "id": "haricot-rouge-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1760991657949
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760038729084
+          },
+          {
+            "id": "amendes-grillees",
+            "weight": 14,
+            "uniqueId": 1760038746631
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 125,
+            "uniqueId": 1760038752135
+          },
+          {
+            "id": "amande-grillee-papapero",
+            "weight": 20,
+            "uniqueId": 1760111870789
+          }
+        ]
+      },
+      "weight": 79.5
+    },
+    {
+      "date": "2025-10-07",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "comte-paturages",
+            "weight": 40,
+            "uniqueId": 1760039035103
+          },
+          {
+            "id": "son-de-ble",
+            "weight": 30,
+            "uniqueId": 1760039055376
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760039063293
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760039069812
+          },
+          {
+            "id": "pate-complete-penne-bio-village",
+            "weight": 30,
+            "uniqueId": 1760039120970
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "thon-odyssee",
+            "weight": 94,
+            "uniqueId": 1760039188309
+          },
+          {
+            "id": "pate-complete-penne-bio-village",
+            "weight": 150,
+            "uniqueId": 1760039192797
+          },
+          {
+            "id": "olive-verte-a-la-farce-de-poivron",
+            "weight": 34,
+            "uniqueId": 1760039214400
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 125,
+            "uniqueId": 1760039217592
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 102,
+            "uniqueId": 1760991779174
+          }
+        ],
+        "diner": [
+          {
+            "id": "brocolis-saint-eloi-surgeles",
+            "weight": 200,
+            "uniqueId": 1760039225412
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760039244857
+          },
+          {
+            "id": "pate-complete-penne-bio-village",
+            "weight": 100,
+            "uniqueId": 1760039250146
+          },
+          {
+            "id": "kiwi-vert",
+            "weight": 45,
+            "uniqueId": 1760039393472
+          },
+          {
+            "id": "raisin-vert",
+            "weight": 100,
+            "uniqueId": 1760039396257
+          }
+        ],
+        "snack": [
+          {
+            "id": "amendes-grillees",
+            "weight": 20,
+            "uniqueId": 1760039257885
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760039260562
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 140,
+            "uniqueId": 1760039270125
+          },
+          {
+            "id": "amande-grillee-papapero",
+            "weight": 20,
+            "uniqueId": 1760111893066
+          }
+        ]
+      },
+      "weight": 79.7
+    },
+    {
+      "date": "2025-10-08",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "son-de-ble",
+            "weight": 30,
+            "uniqueId": 1760039462650
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760039477477
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 40,
+            "uniqueId": 1760039481204
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 70,
+            "uniqueId": 1760039485095
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760039511663
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "pate-complete-penne-bio-village",
+            "weight": 150,
+            "uniqueId": 1760039564406
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 110,
+            "uniqueId": 1760039580231
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 94,
+            "uniqueId": 1760039583773
+          },
+          {
+            "id": "olive-verte-a-la-farce-de-poivron",
+            "weight": 34,
+            "uniqueId": 1760039587103
+          },
+          {
+            "id": "amendes-grillees",
+            "weight": 20,
+            "uniqueId": 1760039590956
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 145,
+            "uniqueId": 1760039631642
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 160,
+            "uniqueId": 1760991837186
+          }
+        ],
+        "diner": [
+          {
+            "id": "pate-complete-penne-bio-village",
+            "weight": 100,
+            "uniqueId": 1760039651133
+          },
+          {
+            "id": "brocolis-saint-eloi-surgeles",
+            "weight": 100,
+            "uniqueId": 1760039655712
+          },
+          {
+            "id": "grignotte-poulet",
+            "weight": 184,
+            "uniqueId": 1760039672127
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 145,
+            "uniqueId": 1760039687474
+          },
+          {
+            "id": "raisin-vert",
+            "weight": 100,
+            "uniqueId": 1760039692244
+          },
+          {
+            "id": "kiwi-vert",
+            "weight": 45,
+            "uniqueId": 1760039697600
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1760991840636
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760039724375
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 143,
+            "uniqueId": 1760039737982
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 145,
+            "uniqueId": 1760039754275
+          }
+        ]
+      },
+      "weight": null
+    },
+    {
+      "date": "2025-10-09",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "comte-paturages",
+            "weight": 60,
+            "uniqueId": 1760039850211
+          },
+          {
+            "id": "son-de-ble",
+            "weight": 50,
+            "uniqueId": 1760039863066
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760039871404
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760039875394
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1760039879422
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "haricots-verts-cassegrain",
+            "weight": 390,
+            "uniqueId": 1760039922016
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 94,
+            "uniqueId": 1760039925378
+          },
+          {
+            "id": "olive-verte-a-la-farce-de-poivron",
+            "weight": 120,
+            "uniqueId": 1760039931920
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 120,
+            "uniqueId": 1760039936996
+          }
+        ],
+        "diner": [
+          {
+            "id": "brocolis-saint-eloi-surgeles",
+            "weight": 150,
+            "uniqueId": 1760039942241
+          },
+          {
+            "id": "pate-complete-penne-bio-village",
+            "weight": 100,
+            "uniqueId": 1760039985753
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760039991515
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1760039995069
+          },
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 145,
+            "uniqueId": 1760040227022
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1760991890732
+          }
+        ],
+        "snack": [
+          {
+            "id": "pomme-gala",
+            "weight": 145,
+            "uniqueId": 1760039999703
+          },
+          {
+            "id": "amendes-grillees",
+            "weight": 20,
+            "uniqueId": 1760040007801
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760040036590
+          },
+          {
+            "id": "amendes-grillees",
+            "weight": 20,
+            "uniqueId": 1760111281174
+          }
+        ]
+      },
+      "weight": null
+    },
+    {
+      "date": "2025-10-10",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1760069995739
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 64,
+            "uniqueId": 1760070008588
+          },
+          {
+            "id": "son-de-ble",
+            "weight": 40,
+            "uniqueId": 1760070036640
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 140,
+            "uniqueId": 1760070049494
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 25,
+            "uniqueId": 1760070051545
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "haricots-verts-cassegrain",
+            "weight": 390,
+            "uniqueId": 1760070404737
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 94,
+            "uniqueId": 1760070407121
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 250,
+            "uniqueId": 1760070425065
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1760109362542
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1760109363898
+          }
+        ],
+        "diner": [
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 400,
+            "uniqueId": 1760166138122
+          },
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 200,
+            "uniqueId": 1760166170476
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 20,
+            "uniqueId": 1760166178019
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760070467925
+          },
+          {
+            "id": "jaune-doeuf",
+            "weight": 78,
+            "uniqueId": 1760109894029
+          },
+          {
+            "id": "huile-de-coco",
+            "weight": 5,
+            "uniqueId": 1760110096105
+          },
+          {
+            "id": "amande-grillee-papapero",
+            "weight": 20,
+            "uniqueId": 1760111807085
+          }
+        ]
+      }
+    },
+    {
+      "date": "2025-10-11",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "jaune-doeuf",
+            "weight": 62,
+            "uniqueId": 1760166242293
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 60,
+            "uniqueId": 1760166259256
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 100,
+            "uniqueId": 1760166284370
+          },
+          {
+            "id": "huile-de-tournesol-bouton-dor",
+            "weight": 4,
+            "uniqueId": 1760181106420
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 56,
+            "uniqueId": 1760184679814
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 100,
+            "uniqueId": 1760251970651
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 147,
+            "uniqueId": 1760181259688
+          },
+          {
+            "id": "la-poelee-du-marche",
+            "weight": 150,
+            "uniqueId": 1760181889190
+          },
+          {
+            "id": "brocolis-saint-eloi-surgeles",
+            "weight": 130,
+            "uniqueId": 1760181989410
+          },
+          {
+            "id": "jkieffer-sans-alcool-jaune",
+            "weight": 167,
+            "uniqueId": 1760182499469
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1760186205910
+          }
+        ],
+        "diner": [
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1760185895099
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 94,
+            "uniqueId": 1760185950816
+          },
+          {
+            "id": "fusilli-protein-",
+            "weight": 50,
+            "uniqueId": 1760186046605
+          },
+          {
+            "id": "sucrine",
+            "weight": 200,
+            "uniqueId": 1760206665333
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 160,
+            "uniqueId": 1760207092113
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 20,
+            "uniqueId": 1760207320808
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 40,
+            "uniqueId": 1760216089715
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760185899367
+          }
+        ]
+      }
+    },
+    {
+      "date": "2025-10-12",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "oeuf-entier",
+            "weight": 224,
+            "uniqueId": 1760250538595
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 54,
+            "uniqueId": 1760250542933
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760250560842
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 100,
+            "uniqueId": 1760251149309
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 4,
+            "uniqueId": 1760251901040
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "tablette-chocolat-57-cacao",
+            "weight": 15,
+            "uniqueId": 1760265648724
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 15,
+            "uniqueId": 1760265651817
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 14,
+            "uniqueId": 1760265662263
+          },
+          {
+            "id": "sucre-roux-de-canne",
+            "weight": 10,
+            "uniqueId": 1760265909747
+          },
+          {
+            "id": "farine-de-ble-type-65",
+            "weight": 7.5,
+            "uniqueId": 1760265911039
+          },
+          {
+            "id": "potatoes-paprika",
+            "weight": 100,
+            "uniqueId": 1760266333697
+          },
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 222,
+            "uniqueId": 1760266625630
+          },
+          {
+            "id": "scheppes-tonic",
+            "weight": 242,
+            "uniqueId": 1760267529898
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1760269199813
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 100,
+            "uniqueId": 1760992068519
+          }
+        ],
+        "diner": [
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 198,
+            "uniqueId": 1760290578467
+          },
+          {
+            "id": "scheppes-tonic",
+            "weight": 100,
+            "uniqueId": 1760291335765
+          },
+          {
+            "id": "fusilli-protein-",
+            "weight": 100,
+            "uniqueId": 1760329457326
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 140,
+            "uniqueId": 1760992077135
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760280934489
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1760280975813
+          }
+        ]
+      },
+      "weight": null
+    },
+    {
+      "date": "2025-10-13",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 4,
+            "uniqueId": 1760329421363
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 224,
+            "uniqueId": 1760329480889
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 7,
+            "uniqueId": 1760329518527
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 100,
+            "uniqueId": 1760329529966
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 60,
+            "uniqueId": 1760329635622
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760329657187
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "thon-odyssee",
+            "weight": 94,
+            "uniqueId": 1760370520990
+          },
+          {
+            "id": "haricots-verts-cassegrain",
+            "weight": 390,
+            "uniqueId": 1760370527558
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 250,
+            "uniqueId": 1760370575826
+          }
+        ],
+        "diner": [
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 150,
+            "uniqueId": 1760371165763
+          },
+          {
+            "id": "brocolis-saint-eloi-surgeles",
+            "weight": 100,
+            "uniqueId": 1760371198594
+          },
+          {
+            "id": "fusilli-protein-",
+            "weight": 50,
+            "uniqueId": 1760371217745
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 20,
+            "uniqueId": 1760371245965
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 30,
+            "uniqueId": 1760386735857
+          },
+          {
+            "id": "poivrons-cuisines-cassegrain",
+            "weight": 30,
+            "uniqueId": 1760386835176
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1760992117932
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760370590908
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1760386874112
+          },
+          {
+            "id": "amande-grillee-papapero",
+            "weight": 20,
+            "uniqueId": 1760416410275
+          }
+        ]
+      },
+      "weight": null
+    },
+    {
+      "date": "2025-10-14",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1760386987595
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 50,
+            "uniqueId": 1760387015764
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760387019783
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 10,
+            "uniqueId": 1760387093028
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 4,
+            "uniqueId": 1760416291681
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 123,
+            "uniqueId": 1760416932756
+          },
+          {
+            "id": "poivrons-cuisines-cassegrain",
+            "weight": 100,
+            "uniqueId": 1760417658413
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "thon-odyssee",
+            "weight": 94,
+            "uniqueId": 1760416317183
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 250,
+            "uniqueId": 1760416355392
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1760992181261
+          }
+        ],
+        "diner": [
+          {
+            "id": "grignotte-poulet",
+            "weight": 170,
+            "uniqueId": 1760461896720
+          },
+          {
+            "id": "brocolis-saint-eloi-surgeles",
+            "weight": 100,
+            "uniqueId": 1760462223917
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 200,
+            "uniqueId": 1760462483025
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 16,
+            "uniqueId": 1760462498826
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 170,
+            "uniqueId": 1760992166480
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760416365048
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1760416561476
+          },
+          {
+            "id": "amande-grillee-papapero",
+            "weight": 15,
+            "uniqueId": 1760416679409
+          }
+        ]
+      },
+      "weight": 79
+    },
+    {
+      "date": "2025-10-15",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "comte-paturages",
+            "weight": 72,
+            "uniqueId": 1760504330679
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 10,
+            "uniqueId": 1760504337183
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760504348383
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1760504401344
+          },
+          {
+            "id": "poivrons-cuisines-cassegrain",
+            "weight": 100,
+            "uniqueId": 1760504439350
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1760504610928
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "haricots-verts-cassegrain",
+            "weight": 390,
+            "uniqueId": 1760561525223
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 112,
+            "uniqueId": 1760561535875
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 250,
+            "uniqueId": 1760561538870
+          }
+        ],
+        "diner": [
+          {
+            "id": "kiwi-vert",
+            "weight": 100,
+            "uniqueId": 1760561387887
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 50,
+            "uniqueId": 1760561399663
+          },
+          {
+            "id": "poivrons-cuisines-cassegrain",
+            "weight": 70,
+            "uniqueId": 1760561401728
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760561405495
+          },
+          {
+            "id": "grignotte-poulet",
+            "weight": 170,
+            "uniqueId": 1760561409870
+          },
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 80,
+            "uniqueId": 1760561489914
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 14,
+            "uniqueId": 1760561561064
+          },
+          {
+            "id": "tranche-pain-complet-la-boulangere-bio",
+            "weight": 35.7,
+            "uniqueId": 1760589271411
+          },
+          {
+            "id": "orange",
+            "weight": 156,
+            "uniqueId": 1760641796028
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1760992222741
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760561389478
+          },
+          {
+            "id": "amande-grillee-papapero",
+            "weight": 20,
+            "uniqueId": 1760561417454
+          }
+        ]
+      },
+      "weight": 78.5
+    },
+    {
+      "date": "2025-10-16",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 10,
+            "uniqueId": 1760589665115
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760589670469
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 60,
+            "uniqueId": 1760589699333
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1760589773012
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760590265497
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "thon-odyssee",
+            "weight": 77,
+            "uniqueId": 1760589512838
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 207,
+            "uniqueId": 1760589652459
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 12,
+            "uniqueId": 1760589687818
+          },
+          {
+            "id": "olive-verte-a-la-farce-de-poivron",
+            "weight": 35,
+            "uniqueId": 1760636281143
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1760992259021
+          }
+        ],
+        "diner": [
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1760591934172
+          },
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 150,
+            "uniqueId": 1760638469816
+          },
+          {
+            "id": "fusilli-protein-",
+            "weight": 50,
+            "uniqueId": 1760639268950
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760639459730
+          },
+          {
+            "id": "orange",
+            "weight": 156,
+            "uniqueId": 1760641776285
+          },
+          {
+            "id": "la-poelee-du-marche",
+            "weight": 100,
+            "uniqueId": 1760675240563
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 100,
+            "uniqueId": 1760992261354
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760589666643
+          },
+          {
+            "id": "amande-grillee-papapero",
+            "weight": 30,
+            "uniqueId": 1760592013562
+          }
+        ]
+      },
+      "weight": 78.1
+    },
+    {
+      "date": "2025-10-17",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "comte-paturages",
+            "weight": 60,
+            "uniqueId": 1760675140080
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1760675173906
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760675191589
+          },
+          {
+            "id": "olive-verte-a-la-farce-de-poivron",
+            "weight": 61,
+            "uniqueId": 1760675475255
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 10,
+            "uniqueId": 1760675500235
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760675513180
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1760675542246
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 10,
+            "uniqueId": 1760735621800
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "haricots-verts-cassegrain",
+            "weight": 390,
+            "uniqueId": 1760718983481
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 93,
+            "uniqueId": 1760719132000
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 250,
+            "uniqueId": 1760733743246
+          }
+        ],
+        "diner": [
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 150,
+            "uniqueId": 1760719399949
+          },
+          {
+            "id": "potatoes-mccain-aux-herbes",
+            "weight": 200,
+            "uniqueId": 1760720134410
+          },
+          {
+            "id": "orange",
+            "weight": 100,
+            "uniqueId": 1760726742247
+          },
+          {
+            "id": "la-poelee-du-marche",
+            "weight": 250,
+            "uniqueId": 1760733991203
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 4,
+            "uniqueId": 1760734048434
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760719030952
+          },
+          {
+            "id": "amande-grillee-papapero",
+            "weight": 20,
+            "uniqueId": 1760719780351
+          }
+        ]
+      },
+      "weight": 77.9
+    },
+    {
+      "date": "2025-10-18",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1760769519761
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 60,
+            "uniqueId": 1760769538726
+          },
+          {
+            "id": "kiwi-vert",
+            "weight": 77,
+            "uniqueId": 1760769554742
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 155,
+            "uniqueId": 1760769564775
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760769611955
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1760769633505
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 10,
+            "uniqueId": 1760769665351
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 186,
+            "uniqueId": 1760789065600
+          },
+          {
+            "id": "brocolis-saint-eloi-surgeles",
+            "weight": 100,
+            "uniqueId": 1760789244887
+          },
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 115,
+            "uniqueId": 1760789274567
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 4,
+            "uniqueId": 1760789745619
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 250,
+            "uniqueId": 1760992333583
+          }
+        ],
+        "diner": [
+          {
+            "id": "brocolis-saint-eloi-surgeles",
+            "weight": 115,
+            "uniqueId": 1760819034610
+          },
+          {
+            "id": "potatoes-mccain-aux-herbes",
+            "weight": 212,
+            "uniqueId": 1760819661014
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 93,
+            "uniqueId": 1760819693142
+          },
+          {
+            "id": "grignotte-poulet",
+            "weight": 105,
+            "uniqueId": 1760819699360
+          },
+          {
+            "id": "haricot-rouge-saint-eloi",
+            "weight": 97,
+            "uniqueId": 1760820091827
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1760820319181
+          },
+          {
+            "id": "fanta-100ml-mcdonalds",
+            "weight": 200,
+            "uniqueId": 1760820967730
+          },
+          {
+            "id": "pain-au-chocolat",
+            "weight": 78,
+            "uniqueId": 1760822607754
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1760992336433
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760821690456
+          }
+        ]
+      },
+      "weight": 77.8
+    },
+    {
+      "date": "2025-10-19",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1760856884498
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 29,
+            "uniqueId": 1760856894096
+          },
+          {
+            "id": "haricot-rouge-saint-eloi",
+            "weight": 100,
+            "uniqueId": 1760856900879
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760856908081
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 4,
+            "uniqueId": 1760856916746
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 10,
+            "uniqueId": 1760857010905
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 120,
+            "uniqueId": 1760858437844
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 155,
+            "uniqueId": 1760879964185
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "frites-mccain-650g-cote-brasserie",
+            "weight": 150,
+            "uniqueId": 1760875571237
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760876725818
+          },
+          {
+            "id": "sucrine",
+            "weight": 280,
+            "uniqueId": 1760876787980
+          },
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 280,
+            "uniqueId": 1760877424165
+          },
+          {
+            "id": "jkieffer-sans-alcool-jaune",
+            "weight": 250,
+            "uniqueId": 1760877474409
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1760879933590
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 150,
+            "uniqueId": 1760992460321
+          }
+        ],
+        "diner": [
+          {
+            "id": "comte-paturages",
+            "weight": 30,
+            "uniqueId": 1760903807215
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760904312442
+          }
+        ],
+        "snack": []
+      },
+      "weight": 78
+    },
+    {
+      "date": "2025-10-20",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1760935674725
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 10,
+            "uniqueId": 1760935684625
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 125,
+            "uniqueId": 1760935703142
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 150,
+            "uniqueId": 1760935709592
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760935716292
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 50,
+            "uniqueId": 1760935772620
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 10,
+            "uniqueId": 1760935778551
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1760935808534
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1760937077857
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 94,
+            "uniqueId": 1760937086639
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 80,
+            "uniqueId": 1760937101536
+          },
+          {
+            "id": "sandwich-sodebo-rosette",
+            "weight": 125,
+            "uniqueId": 1760960888671
+          }
+        ],
+        "diner": [
+          {
+            "id": "sucrine",
+            "weight": 127,
+            "uniqueId": 1760977924806
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 142,
+            "uniqueId": 1760977940954
+          },
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 143,
+            "uniqueId": 1760977974851
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1760978017175
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 108,
+            "uniqueId": 1760984104606
+          },
+          {
+            "id": "raisin-vert",
+            "weight": 15,
+            "uniqueId": 1761021788737
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760937111970
+          },
+          {
+            "id": "amande-grillee-papapero",
+            "weight": 30,
+            "uniqueId": 1760937120587
+          }
+        ]
+      },
+      "weight": 78.3
+    },
+    {
+      "date": "2025-10-21",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "oeuf-entier",
+            "weight": 150,
+            "uniqueId": 1760993971576
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 50,
+            "uniqueId": 1760994093734
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1760994113183
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 13,
+            "uniqueId": 1760994153680
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 125,
+            "uniqueId": 1761021730806
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761021884083
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 10,
+            "uniqueId": 1761022206894
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1761071739289
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 125,
+            "uniqueId": 1761071746936
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 93,
+            "uniqueId": 1761071752470
+          },
+          {
+            "id": "olive-verte-a-la-farce-de-poivron",
+            "weight": 32,
+            "uniqueId": 1761071765452
+          }
+        ],
+        "diner": [
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1761073178516
+          },
+          {
+            "id": "grignotte-poulet",
+            "weight": 179,
+            "uniqueId": 1761073326438
+          },
+          {
+            "id": "pomme-gala",
+            "weight": 100,
+            "uniqueId": 1761078386644
+          },
+          {
+            "id": "pizza-maison-artichaut",
+            "weight": 212,
+            "uniqueId": 1761078539967
+          },
+          {
+            "id": "raisin-vert",
+            "weight": 30,
+            "uniqueId": 1761078590330
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1760994066603
+          },
+          {
+            "id": "amandes-non-salees-vico",
+            "weight": 16,
+            "uniqueId": 1761072271238
+          }
+        ]
+      },
+      "weight": 77.7
+    },
+    {
+      "date": "2025-10-22",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "oeuf-entier",
+            "weight": 150,
+            "uniqueId": 1761079052213
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 110,
+            "uniqueId": 1761108333684
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 50,
+            "uniqueId": 1761108339501
+          },
+          {
+            "id": "poivrons-cuisines-cassegrain",
+            "weight": 60,
+            "uniqueId": 1761108348284
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1761108354866
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1761108364865
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761108418595
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 9,
+            "uniqueId": 1761108538184
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "olive-verte-a-la-farce-de-poivron",
+            "weight": 38,
+            "uniqueId": 1761111532578
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1761111547711
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 127,
+            "uniqueId": 1761111560642
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 93,
+            "uniqueId": 1761111646821
+          }
+        ],
+        "diner": [
+          {
+            "id": "grignotte-poulet",
+            "weight": 170,
+            "uniqueId": 1761150384074
+          },
+          {
+            "id": "sucrine",
+            "weight": 120,
+            "uniqueId": 1761150407423
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 20,
+            "uniqueId": 1761150422120
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 125,
+            "uniqueId": 1761150428668
+          },
+          {
+            "id": "tarte-au-thon-maison",
+            "weight": 140,
+            "uniqueId": 1761163108663
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761163139244
+          },
+          {
+            "id": "brioche-nature-boulangerie",
+            "weight": 70,
+            "uniqueId": 1761163430906
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 20,
+            "uniqueId": 1761194413454
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1761150143841
+          },
+          {
+            "id": "amandes-non-salees-vico",
+            "weight": 20,
+            "uniqueId": 1761150512713
+          }
+        ]
+      },
+      "weight": 77.7
+    },
+    {
+      "date": "2025-10-23",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "comte-paturages",
+            "weight": 48,
+            "uniqueId": 1761152351275
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1761152361977
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1761152372358
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761152471369
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 150,
+            "uniqueId": 1761152483970
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 9,
+            "uniqueId": 1761194821539
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1761152454336
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 114,
+            "uniqueId": 1761152689421
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 93,
+            "uniqueId": 1761152711300
+          }
+        ],
+        "diner": [],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1761152243912
+          },
+          {
+            "id": "amandes-non-salees-vico",
+            "weight": 20,
+            "uniqueId": 1761152256151
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1761196491698
+          }
+        ]
+      },
+      "weight": 78
+    }
+  ],
+  "goals": [
+    {
+      "id": "current",
+      "calories": 2186,
+      "proteins": 171,
+      "carbs": 200,
+      "fats": 78,
+      "mb": 1690,
+      "det": 2916,
+      "sexe": "homme",
+      "age": 40,
+      "weight": 77.9,
+      "taille": 177,
+      "activite": 1.725,
+      "deficitPercent": 0.25,
+      "waterGoal": 2000,
+      "stepsGoal": 10000,
+      "sugarsMax": 50,
+      "fibersMin": 25
+    }
+  ],
+  "dailyWater": [
+    {
+      "date": "2025-10-06",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:28",
+          "ml": 300
+        },
+        {
+          "time": "15:28",
+          "ml": 300
+        },
+        {
+          "time": "15:28",
+          "ml": 300
+        },
+        {
+          "time": "15:28",
+          "ml": 300
+        },
+        {
+          "time": "15:28",
+          "ml": 300
+        },
+        {
+          "time": "15:28",
+          "ml": 300
+        },
+        {
+          "time": "15:28",
+          "ml": 500
+        },
+        {
+          "time": "15:28",
+          "ml": 0,
+          "type": "edit"
+        },
+        {
+          "time": "15:28",
+          "ml": 1000
+        },
+        {
+          "time": "15:28",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-07",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:29",
+          "ml": 1000
+        },
+        {
+          "time": "15:29",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-08",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:29",
+          "ml": 1000
+        },
+        {
+          "time": "15:29",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-09",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:30",
+          "ml": 1000
+        },
+        {
+          "time": "15:30",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-10",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:30",
+          "ml": 1000
+        },
+        {
+          "time": "15:30",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-11",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:30",
+          "ml": 1000
+        },
+        {
+          "time": "15:30",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-12",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:31",
+          "ml": 1000
+        },
+        {
+          "time": "15:31",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-13",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:31",
+          "ml": 1000
+        },
+        {
+          "time": "15:31",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-14",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:32",
+          "ml": 1000
+        },
+        {
+          "time": "15:32",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-15",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:32",
+          "ml": 1000
+        },
+        {
+          "time": "15:32",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-16",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:33",
+          "ml": 1000
+        },
+        {
+          "time": "15:33",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-17",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "15:33",
+          "ml": 1000
+        },
+        {
+          "time": "15:33",
+          "ml": 1000
+        }
+      ]
+    },
+    {
+      "date": "2025-10-18",
+      "totalMl": 1600,
+      "history": [
+        {
+          "time": "15:27",
+          "ml": 1000
+        },
+        {
+          "time": "22:49",
+          "ml": 300
+        },
+        {
+          "time": "23:47",
+          "ml": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-19",
+      "totalMl": 1800,
+      "history": [
+        {
+          "time": "09:35",
+          "ml": 300
+        },
+        {
+          "time": "10:08",
+          "ml": 300
+        },
+        {
+          "time": "13:33",
+          "ml": 300
+        },
+        {
+          "time": "15:18",
+          "ml": 300
+        },
+        {
+          "time": "21:56",
+          "ml": 300
+        },
+        {
+          "time": "21:56",
+          "ml": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-20",
+      "totalMl": 1800,
+      "history": [
+        {
+          "time": "17:50",
+          "ml": 300
+        },
+        {
+          "time": "17:51",
+          "ml": 300
+        },
+        {
+          "time": "17:51",
+          "ml": 300
+        },
+        {
+          "time": "17:51",
+          "ml": 300
+        },
+        {
+          "time": "17:51",
+          "ml": 300
+        },
+        {
+          "time": "22:04",
+          "ml": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-21",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "20:41",
+          "ml": 300
+        },
+        {
+          "time": "20:41",
+          "ml": 300
+        },
+        {
+          "time": "20:41",
+          "ml": 500
+        },
+        {
+          "time": "20:41",
+          "ml": 300
+        },
+        {
+          "time": "20:41",
+          "ml": 300
+        },
+        {
+          "time": "22:26",
+          "ml": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-22",
+      "totalMl": 1700,
+      "history": [
+        {
+          "time": "18:10",
+          "ml": 300
+        },
+        {
+          "time": "18:10",
+          "ml": 300
+        },
+        {
+          "time": "18:10",
+          "ml": 500
+        },
+        {
+          "time": "18:10",
+          "ml": 300
+        },
+        {
+          "time": "22:04",
+          "ml": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-23",
+      "totalMl": 1400,
+      "history": [
+        {
+          "time": "07:15",
+          "ml": 300
+        },
+        {
+          "time": "07:15",
+          "ml": 300
+        },
+        {
+          "time": "07:15",
+          "ml": 500
+        },
+        {
+          "time": "07:15",
+          "ml": 300
+        }
+      ]
+    }
+  ],
+  "dailySteps": [
+    {
+      "date": "2025-10-06",
+      "steps": 12779
+    },
+    {
+      "date": "2025-10-07",
+      "steps": 11301
+    },
+    {
+      "date": "2025-10-08",
+      "steps": 12713
+    },
+    {
+      "date": "2025-10-09",
+      "steps": 14586
+    },
+    {
+      "date": "2025-10-10",
+      "steps": 9031
+    },
+    {
+      "date": "2025-10-11",
+      "steps": 14503
+    },
+    {
+      "date": "2025-10-12",
+      "steps": 15419
+    },
+    {
+      "date": "2025-10-13",
+      "steps": 15321
+    },
+    {
+      "date": "2025-10-14",
+      "steps": 11562
+    },
+    {
+      "date": "2025-10-15",
+      "steps": 12105
+    },
+    {
+      "date": "2025-10-16",
+      "steps": 16573
+    },
+    {
+      "date": "2025-10-17",
+      "steps": 15973
+    },
+    {
+      "date": "2025-10-18",
+      "steps": 13525
+    },
+    {
+      "date": "2025-10-19",
+      "steps": 14760
+    },
+    {
+      "date": "2025-10-20",
+      "steps": 13407
+    },
+    {
+      "date": "2025-10-21",
+      "steps": 18570
+    },
+    {
+      "date": "2025-10-22",
+      "steps": 10000
+    }
+  ],
+  "dailyActivities": [
+    {
+      "date": "2025-10-06",
+      "activities": [
+        {
+          "id": 1760991688391,
+          "type": "🚶 Marche",
+          "duration": 45,
+          "calories": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-07",
+      "activities": [
+        {
+          "id": 1760991740932,
+          "type": "🚶 Marche",
+          "duration": 48,
+          "calories": 320
+        },
+        {
+          "id": 1760991759720,
+          "type": "🏋️ Musculation",
+          "duration": 35,
+          "calories": 80
+        }
+      ]
+    },
+    {
+      "date": "2025-10-08",
+      "activities": [
+        {
+          "id": 1760991819156,
+          "type": "🚶 Marche",
+          "duration": 48,
+          "calories": 340
+        }
+      ]
+    },
+    {
+      "date": "2025-10-09",
+      "activities": [
+        {
+          "id": 1760991875990,
+          "type": "🚶 Marche",
+          "duration": 46,
+          "calories": 280
+        }
+      ]
+    },
+    {
+      "date": "2025-10-10",
+      "activities": [
+        {
+          "id": 1760991915825,
+          "type": "🚶 Marche",
+          "duration": 47,
+          "calories": 310
+        }
+      ]
+    },
+    {
+      "date": "2025-10-11",
+      "activities": [
+        {
+          "id": 1760991977374,
+          "type": "🚶 Marche",
+          "duration": 46,
+          "calories": 320
+        },
+        {
+          "id": 1760991988896,
+          "type": "🏋️ Musculation",
+          "duration": 35,
+          "calories": 90
+        }
+      ]
+    },
+    {
+      "date": "2025-10-12",
+      "activities": [
+        {
+          "id": 1760992041014,
+          "type": "🚶 Marche",
+          "duration": 52,
+          "calories": 256
+        }
+      ]
+    },
+    {
+      "date": "2025-10-13",
+      "activities": [
+        {
+          "id": 1760992100458,
+          "type": "🚶 Marche",
+          "duration": 45,
+          "calories": 240
+        }
+      ]
+    },
+    {
+      "date": "2025-10-14",
+      "activities": [
+        {
+          "id": 1760992143606,
+          "type": "🚶 Marche",
+          "duration": 46,
+          "calories": 290
+        },
+        {
+          "id": 1760992155190,
+          "type": "🏋️ Musculation",
+          "duration": 38,
+          "calories": 80
+        }
+      ]
+    },
+    {
+      "date": "2025-10-15",
+      "activities": [
+        {
+          "id": 1760992208906,
+          "type": "🚶 Marche",
+          "duration": 57,
+          "calories": 320
+        }
+      ]
+    },
+    {
+      "date": "2025-10-16",
+      "activities": [
+        {
+          "id": 1760992245496,
+          "type": "🚶 Marche",
+          "duration": 54,
+          "calories": 321
+        }
+      ]
+    },
+    {
+      "date": "2025-10-17",
+      "activities": [
+        {
+          "id": 1760992289600,
+          "type": "🚶 Marche",
+          "duration": 46,
+          "calories": 289
+        }
+      ]
+    },
+    {
+      "date": "2025-10-18",
+      "activities": [
+        {
+          "id": 1760992317757,
+          "type": "🚶 Marche",
+          "duration": 45,
+          "calories": 290
+        }
+      ]
+    },
+    {
+      "date": "2025-10-19",
+      "activities": [
+        {
+          "id": 1760906063404,
+          "type": "🚶 Marche",
+          "duration": 48,
+          "calories": 350
+        },
+        {
+          "id": 1760906550980,
+          "type": "💪 HIIT",
+          "duration": 37,
+          "calories": 269
+        },
+        {
+          "id": 1760906565173,
+          "type": "🏋️ Musculation",
+          "duration": 35,
+          "calories": 80
+        }
+      ]
+    },
+    {
+      "date": "2025-10-20",
+      "activities": [
+        {
+          "id": 1760990846579,
+          "type": "🚶 Marche",
+          "duration": 30,
+          "calories": 150
+        }
+      ]
+    },
+    {
+      "date": "2025-10-21",
+      "activities": [
+        {
+          "id": 1761072188460,
+          "type": "🚶 Marche",
+          "duration": 56,
+          "calories": 381
+        },
+        {
+          "id": 1761072208470,
+          "type": "🏋️ Musculation",
+          "duration": 35,
+          "calories": 140
+        }
+      ]
+    },
+    {
+      "date": "2025-10-22",
+      "activities": [
+        {
+          "id": 1761163513111,
+          "type": "🚶 Marche",
+          "duration": 25,
+          "calories": 80
+        }
+      ]
+    }
+  ],
+  "customActivities": [
+    {
+      "name": "marche rapide",
+      "id": 1
+    }
+  ]
+}
