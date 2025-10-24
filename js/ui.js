@@ -314,25 +314,38 @@ function showMealSelector(button, foodId, quickAddHandler, foodItemElement) {
  * Affiche les aliments dans l'onglet de gestion, les rendant cliquables pour modification.
  * @param {object} foods - Le dictionnaire de tous les aliments.
  * @param {Function} editClickHandler - La fonction à appeler lors d'un clic sur un aliment.
+ * @param {Function} deleteClickHandler - La fonction à appeler lors d'un clic sur le bouton supprimer.
  */
-export function displayFoodsManage(foods, editClickHandler) {
+export function displayFoodsManage(foods, editClickHandler, deleteClickHandler) {
     elements.foodsListManage.innerHTML = '';
     for (const [id, food] of Object.entries(foods)) {
         const el = document.createElement('div');
         el.className = 'food-item';
-        el.style.cursor = 'pointer'; // Curseur pour indiquer la cliquabilité
+        el.style.cursor = 'pointer';
+        el.style.position = 'relative';
         el.dataset.foodId = id;
-        el.dataset.foodName = food.name; // Pour la recherche
+        el.dataset.foodName = food.name;
         
-        // Calculer prix au 100g si disponible
         let priceInfo = '';
         if (food.price && food.priceGrams) {
             const pricePer100g = (food.price / food.priceGrams * 100).toFixed(2);
             priceInfo = ` | 💰 ${pricePer100g}€/100g`;
         }
         
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-food-btn';
+        deleteBtn.innerHTML = '🗑️';
+        deleteBtn.title = 'Supprimer cet aliment';
+        deleteBtn.dataset.foodId = id;
+        deleteBtn.dataset.foodName = food.name;
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteClickHandler(e);
+        });
+        
         el.innerHTML = `<div class="food-name">${food.name}</div><div class="food-calories">${food.calories} kcal | P: ${food.proteins}g | G: ${food.carbs}g | F: ${food.fibers || 0}g | L: ${food.fats}g${priceInfo}</div>`;
         el.addEventListener('click', editClickHandler);
+        el.appendChild(deleteBtn);
         elements.foodsListManage.appendChild(el);
     }
 }

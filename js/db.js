@@ -208,6 +208,21 @@ export function replaceFoodId(oldId, newId, newFoodData) {
 }
 
 /**
+ * Supprime un aliment de la base de données.
+ * @param {string} foodId - L'ID de l'aliment à supprimer.
+ * @returns {Promise<void>}
+ */
+export function deleteFood(foodId) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['foods'], 'readwrite');
+        const store = transaction.objectStore('foods');
+        const request = store.delete(foodId);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+/**
  * Sauvegarde les objectifs nutritionnels.
  * @param {object} goals - Les objectifs (calories, proteins, carbs, fats).
  * @returns {Promise<void>}

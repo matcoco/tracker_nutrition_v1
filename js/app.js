@@ -747,7 +747,7 @@ async function handleAddFood(e) {
     await db.saveFood(id, newFood);
     state.foods[id] = newFood;
     ui.displayFoods(state.foods, handleDragStart, handleQuickAdd);
-    ui.displayFoodsManage(state.foods, handleEditFoodClick);
+    ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
     form.reset();
     ui.showNotification(`${name} ajouté avec succès !`);
 }
@@ -757,6 +757,38 @@ function handleEditFoodClick(event) {
     const foodData = state.foods[foodId];
     if (foodData) {
         ui.openEditModal(foodId, foodData);
+    }
+}
+
+/**
+ * Gère la suppression d'un aliment avec confirmation.
+ */
+async function handleDeleteFoodClick(event) {
+    const foodId = event.currentTarget.dataset.foodId;
+    const foodName = event.currentTarget.dataset.foodName;
+    
+    if (!confirm(`⚠️ Êtes-vous sûr de vouloir supprimer "${foodName}" ?\n\nCette action est irréversible.`)) {
+        return;
+    }
+    
+    try {
+        // Supprimer de la base de données
+        await db.deleteFood(foodId);
+        
+        // Supprimer de l'état local
+        delete state.foods[foodId];
+        
+        // Rafraîchir les listes d'aliments
+        ui.displayFoods(state.foods, handleDragStart, handleQuickAdd);
+        ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
+        
+        // Recharger la journée pour mettre à jour l'affichage
+        await loadCurrentDay();
+        
+        ui.showNotification(`✅ "${foodName}" a été supprimé avec succès !`);
+    } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        ui.showNotification(`❌ Erreur lors de la suppression de "${foodName}"`, 'error');
     }
 }
 
@@ -809,7 +841,7 @@ async function handleUpdateFood(event) {
 
     // Rafraîchir toute l'interface
     ui.displayFoods(state.foods, handleDragStart, handleQuickAdd);
-    ui.displayFoodsManage(state.foods, handleEditFoodClick);
+    ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
     await loadCurrentDay(); 
 
     ui.closeEditModal();
@@ -1099,7 +1131,7 @@ async function init(isReload = false) {
         }
         await loadCurrentDay();
         ui.displayFoods(state.foods, handleDragStart, handleQuickAdd);
-        ui.displayFoodsManage(state.foods, handleEditFoodClick);
+        ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
         if (!isReload) {
             console.log('✅ Application prête !');
             console.log('\n🔧 OUTILS DE DIAGNOSTIC DISPONIBLES:');

@@ -442,6 +442,41 @@ h3 {
     transform: scale(0.95);
 }
 
+/* Bouton de suppression d'aliment */
+.delete-food-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+    opacity: 0;
+}
+
+#foodsListManage .food-item:hover .delete-food-btn {
+    opacity: 1;
+}
+
+.delete-food-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.delete-food-btn:active {
+    transform: scale(0.95);
+}
+
 /* Menu contextuel pour choisir le repas */
 .meal-selector-menu {
     position: absolute;
