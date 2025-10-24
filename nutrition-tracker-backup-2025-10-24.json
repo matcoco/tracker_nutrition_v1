@@ -1,7 +1,19 @@
 {
   "version": "1.3",
-  "exportDate": "2025-10-23T05:15:25.643Z",
+  "exportDate": "2025-10-24T19:51:24.837Z",
   "foods": [
+    {
+      "id": "accras-de-morue-recette-epicee-carrefour",
+      "name": "Accras de morue recette epicée carrefour",
+      "calories": 210,
+      "proteins": 11,
+      "carbs": 14.8,
+      "sugars": 1.2,
+      "fibers": 1.6,
+      "fats": 11,
+      "price": 3,
+      "priceGrams": 200
+    },
     {
       "id": "amande-grillee-papapero",
       "name": "Amande grillée Papapéro",
@@ -83,18 +95,6 @@
       "fats": 34,
       "price": 4.84,
       "priceGrams": 350
-    },
-    {
-      "id": "cote-de-porc-echine-jean-roze",
-      "name": "Côte de porc échine Jean Rozé",
-      "calories": 211,
-      "proteins": 19,
-      "carbs": 0.5,
-      "sugars": 0.4,
-      "fibers": 0.5,
-      "fats": 14.6,
-      "price": 5.62,
-      "priceGrams": 100
     },
     {
       "id": "demi-baguette-de-campagne-chabrior-bio",
@@ -443,6 +443,18 @@
       "priceGrams": null
     },
     {
+      "id": "saint-nectaire-laitier",
+      "name": "Saint nectaire laitier",
+      "calories": 340,
+      "proteins": 23.1,
+      "carbs": 1.1,
+      "sugars": 0.5,
+      "fibers": 0,
+      "fats": 27,
+      "price": 2.5,
+      "priceGrams": 200
+    },
+    {
       "id": "sandwich-sodebo-rosette",
       "name": "Sandwich Sodebo Rosette",
       "calories": 291,
@@ -581,6 +593,18 @@
       "fats": 4.2,
       "price": null,
       "priceGrams": null
+    },
+    {
+      "id": "viande-de-porc-offre-speciale",
+      "name": "Viande de porc offre spéciale",
+      "calories": 211,
+      "proteins": 19,
+      "carbs": 0.5,
+      "sugars": 0.4,
+      "fibers": 0.5,
+      "fats": 14.6,
+      "price": 9,
+      "priceGrams": 2200
     },
     {
       "id": "whey-100-concentree",
@@ -2538,7 +2562,58 @@
             "uniqueId": 1761152711300
           }
         ],
-        "diner": [],
+        "diner": [
+          {
+            "id": "viande-de-porc-offre-speciale",
+            "weight": 107,
+            "uniqueId": 1761239032989
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 73,
+            "uniqueId": 1761239397113
+          },
+          {
+            "id": "sucrine",
+            "weight": 215,
+            "uniqueId": 1761240767628
+          },
+          {
+            "id": "haricot-rouge-saint-eloi",
+            "weight": 107,
+            "uniqueId": 1761240990261
+          },
+          {
+            "id": "olive-verte-a-la-farce-de-poivron",
+            "weight": 18,
+            "uniqueId": 1761241176247
+          },
+          {
+            "id": "comte-paturages",
+            "weight": 13,
+            "uniqueId": 1761241200614
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761241271256
+          },
+          {
+            "id": "orange",
+            "weight": 200,
+            "uniqueId": 1761243609346
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 15,
+            "uniqueId": 1761243691740
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 20,
+            "uniqueId": 1761244009156
+          }
+        ],
         "snack": [
           {
             "id": "whey-100-concentree",
@@ -2546,18 +2621,122 @@
             "uniqueId": 1761152243912
           },
           {
-            "id": "amandes-non-salees-vico",
-            "weight": 20,
-            "uniqueId": 1761152256151
-          },
-          {
             "id": "skyr-nature-yoplait",
             "weight": 150,
             "uniqueId": 1761196491698
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 10,
+            "uniqueId": 1761239010757
           }
         ]
       },
       "weight": 78
+    },
+    {
+      "date": "2025-10-24",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "grignotte-poulet",
+            "weight": 170,
+            "uniqueId": 1761280199121
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 103,
+            "uniqueId": 1761280210118
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 4,
+            "uniqueId": 1761280216985
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1761280222683
+          },
+          {
+            "id": "saint-nectaire-laitier",
+            "weight": 49,
+            "uniqueId": 1761280421486
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1761283230310
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 125,
+            "uniqueId": 1761283240409
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 93,
+            "uniqueId": 1761283320751
+          }
+        ],
+        "diner": [
+          {
+            "id": "viande-de-porc-offre-speciale",
+            "weight": 83,
+            "uniqueId": 1761329794933
+          },
+          {
+            "id": "sucrine",
+            "weight": 117,
+            "uniqueId": 1761329815082
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 200,
+            "uniqueId": 1761329832831
+          },
+          {
+            "id": "haricot-rouge-saint-eloi",
+            "weight": 110,
+            "uniqueId": 1761329835365
+          },
+          {
+            "id": "accras-de-morue-recette-epicee-carrefour",
+            "weight": 95,
+            "uniqueId": 1761330459052
+          },
+          {
+            "id": "grignotte-poulet",
+            "weight": 70,
+            "uniqueId": 1761334485494
+          },
+          {
+            "id": "orange",
+            "weight": 311,
+            "uniqueId": 1761334565037
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 45,
+            "uniqueId": 1761283254739
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1761283344900
+          },
+          {
+            "id": "amandes-non-salees-vico",
+            "weight": 12,
+            "uniqueId": 1761330581292
+          }
+        ]
+      },
+      "weight": 77.8
     }
   ],
   "goals": [
@@ -2919,7 +3098,7 @@
     },
     {
       "date": "2025-10-23",
-      "totalMl": 1400,
+      "totalMl": 1850,
       "history": [
         {
           "time": "07:15",
@@ -2935,6 +3114,59 @@
         },
         {
           "time": "07:15",
+          "ml": 300
+        },
+        {
+          "time": "20:19",
+          "ml": 300
+        },
+        {
+          "time": "22:17",
+          "ml": 1850,
+          "type": "edit"
+        }
+      ]
+    },
+    {
+      "date": "2025-10-24",
+      "totalMl": 1800,
+      "history": [
+        {
+          "time": "07:22",
+          "ml": 300
+        },
+        {
+          "time": "07:23",
+          "ml": 300,
+          "type": "edit"
+        },
+        {
+          "time": "07:27",
+          "ml": 1000
+        },
+        {
+          "time": "07:27",
+          "ml": 300,
+          "type": "edit"
+        },
+        {
+          "time": "20:09",
+          "ml": 300
+        },
+        {
+          "time": "20:09",
+          "ml": 300
+        },
+        {
+          "time": "20:09",
+          "ml": 300
+        },
+        {
+          "time": "20:09",
+          "ml": 300
+        },
+        {
+          "time": "21:37",
           "ml": 300
         }
       ]
@@ -3008,6 +3240,10 @@
     {
       "date": "2025-10-22",
       "steps": 10000
+    },
+    {
+      "date": "2025-10-23",
+      "steps": 14420
     }
   ],
   "dailyActivities": [
@@ -3231,6 +3467,17 @@
           "type": "🚶 Marche",
           "duration": 25,
           "calories": 80
+        }
+      ]
+    },
+    {
+      "date": "2025-10-23",
+      "activities": [
+        {
+          "id": 1761250923051,
+          "type": "🚶 Marche",
+          "duration": 30,
+          "calories": 127
         }
       ]
     }
