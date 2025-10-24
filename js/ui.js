@@ -7,6 +7,7 @@ import { calculateMealTotals } from './utils.js';
 // On met en cache les éléments fréquemment utilisés pour de meilleures performances.
 const elements = {
     currentDate: document.getElementById('currentDate'),
+    datePicker: document.getElementById('datePicker'),
     totalCalories: document.getElementById('totalCalories'),
     totalProteins: document.getElementById('totalProteins'),
     totalCarbs: document.getElementById('totalCarbs'),
@@ -55,6 +56,12 @@ export function showNotification(msg, type = 'success') {
 export function updateDateDisplay(date) {
     if (elements.currentDate) {
         elements.currentDate.textContent = formatDateDisplay(date);
+    }
+    if (elements.datePicker) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        elements.datePicker.value = `${year}-${month}-${day}`;
     }
 }
 
