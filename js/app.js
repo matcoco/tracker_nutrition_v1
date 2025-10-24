@@ -247,6 +247,17 @@ function handleLoadMoreFoods() {
     ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount);
 }
 
+// --- HELPER POUR METTRE À JOUR LE RÉSUMÉ ---
+async function updateDailySummaryHelper() {
+    const meals = await db.loadDayMeals(state.currentDate);
+    const totals = utils.calculateDayTotals(meals, state.foods);
+    const dateFormatted = utils.formatDateDisplay(state.currentDate);
+    const waterData = await db.loadDayWater(state.currentDate);
+    const steps = await db.loadDaySteps(state.currentDate);
+    const activities = state.activities || [];
+    ui.updateDailySummary(meals, state.foods, totals, dateFormatted, waterData, steps, activities, state.goals);
+}
+
 // --- HANDLERS POUR L'HYDRATATION ---
 async function handleAddWater(amount) {
     const waterData = await db.loadDayWater(state.currentDate);
@@ -260,6 +271,9 @@ async function handleAddWater(amount) {
     await db.saveDayWater(state.currentDate, waterData);
     ui.updateWaterDisplay(waterData, state.goals);
     ui.showNotification(`+${amount}ml d'eau ajoutés ! 💧`);
+    
+    // Mettre à jour le résumé de la journée
+    await updateDailySummaryHelper();
 }
 
 async function handleEditWater() {
@@ -280,6 +294,9 @@ async function handleEditWater() {
         await db.saveDayWater(state.currentDate, waterData);
         ui.updateWaterDisplay(waterData, state.goals);
         ui.showNotification(`💧 Hydratation mise à jour : ${newMl} ml`);
+        
+        // Mettre à jour le résumé de la journée
+        await updateDailySummaryHelper();
     }
 }
 
@@ -288,6 +305,9 @@ async function handleResetWater() {
         await db.saveDayWater(state.currentDate, { totalMl: 0, history: [] });
         ui.updateWaterDisplay({ totalMl: 0, history: [] }, state.goals);
         ui.showNotification('💧 Hydratation réinitialisée');
+        
+        // Mettre à jour le résumé de la journée
+        await updateDailySummaryHelper();
     }
 }
 
@@ -304,6 +324,9 @@ async function handleUpdateSteps() {
     await db.saveDaySteps(state.currentDate, steps);
     ui.updateStepsDisplay(steps, state.goals);
     ui.showNotification(`👟 ${steps} pas enregistrés !`);
+    
+    // Mettre à jour le résumé de la journée
+    await updateDailySummaryHelper();
 }
 
 async function handleResetSteps() {
@@ -311,6 +334,9 @@ async function handleResetSteps() {
         await db.saveDaySteps(state.currentDate, 0);
         ui.updateStepsDisplay(0, state.goals);
         ui.showNotification('👟 Pas réinitialisés');
+        
+        // Mettre à jour le résumé de la journée
+        await updateDailySummaryHelper();
     }
 }
 
