@@ -71,6 +71,13 @@ function goToToday() {
     state.currentDate = new Date();
     loadCurrentDay();
 }
+function handleDatePickerChange(event) {
+    const selectedDate = event.target.value;
+    if (selectedDate) {
+        state.currentDate = new Date(selectedDate + 'T12:00:00');
+        loadCurrentDay();
+    }
+}
 
 
 // --- GESTIONNAIRES D'ÉVÉNEMENTS (HANDLERS) ---
@@ -1001,6 +1008,7 @@ function setupEventListeners() {
     document.getElementById('prev-day-btn').addEventListener('click', () => changeDate(-1));
     document.getElementById('next-day-btn').addEventListener('click', () => changeDate(1));
     document.getElementById('today-btn').addEventListener('click', goToToday);
+    document.getElementById('datePicker').addEventListener('change', handleDatePickerChange);
     document.getElementById('saveWeightBtn').addEventListener('click', handleSaveWeight);
     document.getElementById('goalsForm').addEventListener('submit', handleGoalsSubmit);
     document.getElementById('foodSearch').addEventListener('input', handleFoodSearch);

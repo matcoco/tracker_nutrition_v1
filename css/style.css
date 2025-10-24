@@ -217,7 +217,51 @@ h3 {
     transition: var(--transition-fast);
 }
 .calendar-header button:hover { transform: scale(1.05); }
-.calendar-header h2 { font-size: 1.8em; color: var(--color-text-light); }
+.calendar-header h2 { font-size: 1.8em; color: var(--color-text-light); margin: 0; }
+
+.date-display-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-picker {
+    padding: 8px 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--border-radius-sm);
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--color-primary-start);
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.date-picker:hover {
+    background: white;
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.date-picker:focus {
+    outline: none;
+    border-color: white;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+/* Style du calendrier natif (Chrome, Edge) */
+.date-picker::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: brightness(0) saturate(100%) invert(45%) sepia(90%) saturate(2000%) hue-rotate(220deg);
+    transition: all 0.2s ease;
+}
+
+.date-picker::-webkit-calendar-picker-indicator:hover {
+    transform: scale(1.1);
+}
 
 /* --- Section Import/Export (déplacée dans Paramètres) --- */
 #fileInput { display: none; }
@@ -1738,6 +1782,11 @@ h3 {
 
     .calendar-header h2 {
         font-size: 1.4em;
+    }
+
+    .date-picker {
+        font-size: 0.9em;
+        padding: 6px 10px;
     }
 
     /* === RÉSUMÉ JOURNALIER === */
