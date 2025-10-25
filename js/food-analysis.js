@@ -14,6 +14,44 @@ let currentSortDirection = 'asc';
 let currentFoodData = [];
 
 /**
+ * Calcule le prix pour 100g d'un aliment
+ * Gère les anciennes données (priceGrams) et les nouvelles (priceQuantity + priceUnit)
+ * @param {object} food - L'aliment
+ * @returns {number|null} - Prix pour 100g ou null si non disponible
+ */
+function getPricePer100g(food) {
+    if (!food.price) return null;
+    
+    // Nouveau format : priceQuantity + priceUnit
+    if (food.priceQuantity && food.priceUnit) {
+        if (food.priceUnit === 'grams') {
+            return (food.price / food.priceQuantity) * 100;
+        } else if (food.priceUnit === 'portions') {
+            // Utiliser le poids réel de la portion si disponible, sinon 100g par défaut
+            const portionWeight = food.portionWeight || 100;
+            const totalGrams = food.priceQuantity * portionWeight;
+            return (food.price / totalGrams) * 100;
+        }
+    }
+    
+    // Ancien format (rétrocompatibilité) : priceGrams
+    if (food.priceGrams) {
+        return (food.price / food.priceGrams) * 100;
+    }
+    
+    return null;
+}
+
+/**
+ * Vérifie si un aliment a des informations de prix
+ * @param {object} food - L'aliment
+ * @returns {boolean}
+ */
+function hasPrice(food) {
+    return food.price && (food.priceQuantity || food.priceGrams);
+}
+
+/**
  * Met à jour toute la section d'analyse par aliment
  */
 export async function updateFoodAnalysis(period, foods) {
@@ -72,8 +110,9 @@ async function collectFoodConsumption(period, foods) {
                         consumption[item.id].totalWeight += item.weight;
                         
                         // Calculer et ajouter le coût si disponible
-                        if (food.price && food.priceGrams) {
-                            const itemCost = (food.price / food.priceGrams) * item.weight;
+                        if (hasPrice(food)) {
+                            const pricePer100g = getPricePer100g(food);
+                            const itemCost = (pricePer100g / 100) * item.weight;
                             consumption[item.id].totalCost += itemCost;
                         }
                         
@@ -94,9 +133,10 @@ async function collectFoodConsumption(period, foods) {
     // Calculer le prix pour 100g de protéines
     Object.values(consumption).forEach(item => {
         const food = foods[item.id];
-        if (food && food.price && food.priceGrams && item.proteinsPer100g > 0) {
+        if (food && hasPrice(food) && item.proteinsPer100g > 0) {
             // Prix au kilo
-            const pricePerKg = (food.price / food.priceGrams) * 1000;
+            const pricePer100g = getPricePer100g(food);
+            const pricePerKg = pricePer100g * 10;
             // Prix pour 100g de protéines = (prix au kilo / protéines pour 100g) * 100
             item.proteinPrice = (pricePerKg / item.proteinsPer100g) * 100;
         } else {

@@ -1,9 +1,166 @@
 // js/charts.js
 
-import { loadPeriodMeals, loadAverages } from './db.js';
+import { loadPeriodMeals, loadAverages, getAllFromStore } from './db.js';
+import { calculateDayTotals, formatDateKey } from './utils.js';
 
 // Un objet pour conserver les instances des graphiques afin de pouvoir les détruire avant de les redessiner.
 let charts = {};
+
+/**
+ * Détermine si les données doivent être regroupées et comment
+ * @param {number|string} period - La période sélectionnée
+ * @returns {string} 'daily', 'weekly' ou 'monthly'
+ */
+function getGroupingMode(period) {
+    if (period === 'all') return 'monthly';
+    const numPeriod = parseInt(period);
+    if (numPeriod <= 30) return 'daily';
+    if (numPeriod <= 180) return 'weekly';
+    return 'monthly';
+}
+
+/**
+ * Regroupe les données par semaine (moyennes)
+ * @param {Array} data - Données quotidiennes
+ * @returns {Array} Données regroupées par semaine
+ */
+function groupByWeek(data) {
+    const weeks = {};
+    
+    data.forEach(day => {
+        const date = new Date(day.date);
+        // Obtenir le lundi de la semaine
+        const monday = new Date(date);
+        const dayOfWeek = date.getDay();
+        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        monday.setDate(date.getDate() + diff);
+        monday.setHours(0, 0, 0, 0);
+        
+        const weekKey = formatDateKey(monday);
+        
+        if (!weeks[weekKey]) {
+            weeks[weekKey] = {
+                date: weekKey,
+                days: [],
+                calories: 0,
+                proteins: 0,
+                carbs: 0,
+                fats: 0,
+                sugars: 0,
+                fibers: 0,
+                weights: [],
+                water: 0,
+                steps: 0
+            };
+        }
+        
+        weeks[weekKey].days.push(day);
+        weeks[weekKey].calories += day.calories;
+        weeks[weekKey].proteins += day.proteins;
+        weeks[weekKey].carbs += day.carbs;
+        weeks[weekKey].fats += day.fats;
+        weeks[weekKey].sugars += day.sugars;
+        weeks[weekKey].fibers += day.fibers;
+        if (day.weight) weeks[weekKey].weights.push(day.weight);
+        weeks[weekKey].water += day.water || 0;
+        weeks[weekKey].steps += day.steps || 0;
+    });
+    
+    // Calculer les moyennes
+    return Object.values(weeks).map(week => {
+        const count = week.days.length;
+        return {
+            date: week.date,
+            calories: week.calories / count,
+            proteins: week.proteins / count,
+            carbs: week.carbs / count,
+            fats: week.fats / count,
+            sugars: week.sugars / count,
+            fibers: week.fibers / count,
+            weight: week.weights.length > 0 ? week.weights.reduce((a, b) => a + b, 0) / week.weights.length : null,
+            water: week.water / count,
+            steps: week.steps / count
+        };
+    });
+}
+
+/**
+ * Regroupe les données par mois (moyennes)
+ * @param {Array} data - Données quotidiennes
+ * @returns {Array} Données regroupées par mois
+ */
+function groupByMonth(data) {
+    const months = {};
+    
+    data.forEach(day => {
+        const date = new Date(day.date);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`;
+        
+        if (!months[monthKey]) {
+            months[monthKey] = {
+                date: monthKey,
+                days: [],
+                calories: 0,
+                proteins: 0,
+                carbs: 0,
+                fats: 0,
+                sugars: 0,
+                fibers: 0,
+                weights: [],
+                water: 0,
+                steps: 0
+            };
+        }
+        
+        months[monthKey].days.push(day);
+        months[monthKey].calories += day.calories;
+        months[monthKey].proteins += day.proteins;
+        months[monthKey].carbs += day.carbs;
+        months[monthKey].fats += day.fats;
+        months[monthKey].sugars += day.sugars;
+        months[monthKey].fibers += day.fibers;
+        if (day.weight) months[monthKey].weights.push(day.weight);
+        months[monthKey].water += day.water || 0;
+        months[monthKey].steps += day.steps || 0;
+    });
+    
+    // Calculer les moyennes
+    return Object.values(months).map(month => {
+        const count = month.days.length;
+        return {
+            date: month.date,
+            calories: month.calories / count,
+            proteins: month.proteins / count,
+            carbs: month.carbs / count,
+            fats: month.fats / count,
+            sugars: month.sugars / count,
+            fibers: month.fibers / count,
+            weight: month.weights.length > 0 ? month.weights.reduce((a, b) => a + b, 0) / month.weights.length : null,
+            water: month.water / count,
+            steps: month.steps / count
+        };
+    });
+}
+
+/**
+ * Formatte les labels en fonction du mode de regroupement
+ * @param {string} dateStr - Date au format YYYY-MM-DD
+ * @param {string} mode - 'daily', 'weekly' ou 'monthly'
+ * @returns {string} Label formaté
+ */
+function formatLabel(dateStr, mode) {
+    const date = new Date(dateStr);
+    
+    if (mode === 'daily') {
+        return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+    } else if (mode === 'weekly') {
+        const endDate = new Date(date);
+        endDate.setDate(endDate.getDate() + 6);
+        return `${date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })} - ${endDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}`;
+    } else { // monthly
+        return date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+    }
+}
 
 // Configuration responsive commune pour les graphiques
 const getResponsiveOptions = (hasGoals = false, isDonut = false) => {
@@ -98,13 +255,73 @@ const getResponsiveOptions = (hasGoals = false, isDonut = false) => {
 
 /**
  * Met à jour tous les graphiques de la page des statistiques.
- * @param {number} period - Le nombre de jours pour la période (7, 14, ou 30).
+ * @param {number|string} period - Le nombre de jours pour la période ou 'all'.
  * @param {object} foods - Le dictionnaire de tous les aliments.
  * @param {object|null} goals - Les objectifs nutritionnels (optionnel).
  */
 export async function updateCharts(period, foods, goals = null) {
-    const data = await loadPeriodMeals(period, foods);
-    const labels = data.map(d => new Date(d.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
+    // Charger les données
+    let rawData;
+    if (period === 'all') {
+        // Charger toutes les données disponibles
+        const allMeals = await getAllFromStore('dailyMeals');
+        const allWeights = await getAllFromStore('dailyWeights');
+        const allWater = await getAllFromStore('dailyWater');
+        const allSteps = await getAllFromStore('dailySteps');
+        
+        // Créer un objet pour regrouper par date
+        const dataByDate = {};
+        
+        allMeals.forEach(meal => {
+            if (!dataByDate[meal.date]) {
+                dataByDate[meal.date] = { date: meal.date, meals: meal.meals };
+            }
+        });
+        
+        allWeights.forEach(w => {
+            if (dataByDate[w.date]) dataByDate[w.date].weight = w.weight;
+        });
+        
+        allWater.forEach(w => {
+            if (dataByDate[w.date]) dataByDate[w.date].water = w.totalMl;
+        });
+        
+        allSteps.forEach(s => {
+            if (dataByDate[s.date]) dataByDate[s.date].steps = s.steps;
+        });
+        
+        // Convertir en tableau et calculer les totaux
+        rawData = Object.values(dataByDate)
+            .map(day => {
+                const dayTotals = calculateDayTotals(day.meals || { 'petit-dej': [], 'dejeuner': [], 'diner': [], 'snack': [] }, foods);
+                return {
+                    date: day.date,
+                    weight: day.weight || null,
+                    water: day.water || 0,
+                    steps: day.steps || 0,
+                    ...dayTotals
+                };
+            })
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else {
+        rawData = await loadPeriodMeals(period, foods);
+    }
+    
+    // Déterminer le mode de regroupement
+    const groupingMode = getGroupingMode(period);
+    
+    // Appliquer le regroupement si nécessaire
+    let data;
+    if (groupingMode === 'weekly') {
+        data = groupByWeek(rawData);
+    } else if (groupingMode === 'monthly') {
+        data = groupByMonth(rawData);
+    } else {
+        data = rawData;
+    }
+    
+    // Créer les labels en fonction du mode
+    const labels = data.map(d => formatLabel(d.date, groupingMode));
 
     // --- Graphique des Calories (Ligne) ---
     if (charts.calories) charts.calories.destroy();

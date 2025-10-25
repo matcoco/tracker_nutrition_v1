@@ -11,6 +11,44 @@ const costCharts = {
 };
 
 /**
+ * Calcule le prix pour 100g d'un aliment
+ * Gère les anciennes données (priceGrams) et les nouvelles (priceQuantity + priceUnit)
+ * @param {object} food - L'aliment
+ * @returns {number|null} - Prix pour 100g ou null si non disponible
+ */
+function getPricePer100g(food) {
+    if (!food.price) return null;
+    
+    // Nouveau format : priceQuantity + priceUnit
+    if (food.priceQuantity && food.priceUnit) {
+        if (food.priceUnit === 'grams') {
+            return (food.price / food.priceQuantity) * 100;
+        } else if (food.priceUnit === 'portions') {
+            // Utiliser le poids réel de la portion si disponible, sinon 100g par défaut
+            const portionWeight = food.portionWeight || 100;
+            const totalGrams = food.priceQuantity * portionWeight;
+            return (food.price / totalGrams) * 100;
+        }
+    }
+    
+    // Ancien format (rétrocompatibilité) : priceGrams
+    if (food.priceGrams) {
+        return (food.price / food.priceGrams) * 100;
+    }
+    
+    return null;
+}
+
+/**
+ * Vérifie si un aliment a des informations de prix
+ * @param {object} food - L'aliment
+ * @returns {boolean}
+ */
+function hasPrice(food) {
+    return food.price && (food.priceQuantity || food.priceGrams);
+}
+
+/**
  * Met à jour tous les graphiques et cartes de coûts
  * @param {number} period - Nombre de jours
  * @param {object} foods - Dictionnaire des aliments
@@ -170,8 +208,9 @@ async function createTopCostsChart(period, foods) {
             if (Array.isArray(meals[mealType])) {
                 meals[mealType].forEach(item => {
                     const food = foods[item.id];
-                    if (food && food.price && food.priceGrams) {
-                        const itemCost = (food.price / food.priceGrams) * item.weight;
+                    if (food && hasPrice(food)) {
+                        const pricePer100g = getPricePer100g(food);
+                        const itemCost = (pricePer100g / 100) * item.weight;
                         if (!foodCosts[item.id]) {
                             foodCosts[item.id] = {
                                 name: food.name,
