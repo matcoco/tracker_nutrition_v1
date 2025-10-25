@@ -21,6 +21,7 @@
             <button class="nav-tab" data-tab="stats">📊 Statistiques</button>
             <button class="nav-tab" data-tab="goals">🎯 Objectifs</button>
             <button class="nav-tab" data-tab="foods">🥗 Aliments</button>
+            <button class="nav-tab" data-tab="comparison">⚖️ Comparaison</button>
             <button class="nav-tab" data-tab="settings">⚙️ Paramètres</button>
         </div>
 
@@ -254,6 +255,10 @@
                 <button class="period-btn active" data-period="7">7 jours</button>
                 <button class="period-btn" data-period="14">14 jours</button>
                 <button class="period-btn" data-period="30">30 jours</button>
+                <button class="period-btn" data-period="90">3 mois</button>
+                <button class="period-btn" data-period="180">6 mois</button>
+                <button class="period-btn" data-period="365">1 an</button>
+                <button class="period-btn" data-period="all">Tout</button>
             </div>
             <!-- Grille pour les graphiques -->
             <div class="stats-grid">
@@ -698,29 +703,80 @@
         <div class="add-food-section">
             <h2 class="section-title">➕ Ajouter un Aliment</h2>
             <form class="add-food-form" id="addFoodForm">
-                <div class="form-group"><label>Nom</label><input type="text" id="foodName" required></div>
-                <div class="form-group"><label>Calories (kcal/100g)</label><input type="number" step="0.1"
-                        id="foodCalories" required></div>
-                <div class="form-group"><label>Protéines (g/100g)</label><input type="number" step="0.1"
-                        id="foodProteins" required></div>
-                <div class="form-group"><label>Glucides (g/100g)</label><input type="number" step="0.1" id="foodCarbs"
-                        required></div>
-                <div class="form-group"><label>Sucres (g/100g)</label><input type="number" step="0.1" id="foodSugars"
-                        required></div>
-                <div class="form-group"><label>Fibres (g/100g)</label><input type="number" step="0.1" id="foodFibers"
-                        required></div>
-                <div class="form-group"><label>Lipides (g/100g)</label><input type="number" step="0.1" id="foodFats"
-                        required></div>
+                <!-- Nom -->
                 <div class="form-group">
-                    <label>💰 Prix (€)</label>
-                    <input type="number" step="0.01" id="foodPrice" placeholder="Ex: 4.50" min="0">
-                    <small style="color: #999; font-size: 0.85em; display: block; margin-top: 5px;">Optionnel - Prix du produit en magasin</small>
+                    <label>Nom</label>
+                    <input type="text" id="foodName" required>
+                </div>
+                
+                <!-- Type de valeurs -->
+                <div class="form-group">
+                    <label>📊 Type de valeurs</label>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="foodNutritionType" value="per100g" checked onchange="updateNutritionLabels('food')">
+                            <span>100g</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="foodNutritionType" value="perPortion" onchange="updateNutritionLabels('food')">
+                            <span>1 portion</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Poids portion (conditionnel) -->
+                <div class="form-group" id="foodPortionWeightGroup" style="display: none;">
+                    <label>⚖️ Poids (g)</label>
+                    <input type="number" step="1" id="foodPortionWeight" placeholder="125" min="1">
+                </div>
+                
+                <!-- Valeurs nutritionnelles -->
+                <div class="form-group">
+                    <label><span id="foodCaloriesLabel">Cal (kcal)</span></label>
+                    <input type="number" step="0.1" id="foodCalories" required>
                 </div>
                 <div class="form-group">
-                    <label>📦 Pour (grammes)</label>
-                    <input type="number" step="1" id="foodPriceGrams" placeholder="Ex: 500" min="1">
-                    <small style="color: #999; font-size: 0.85em; display: block; margin-top: 5px;">Optionnel - Grammage du produit acheté</small>
+                    <label><span id="foodProteinsLabel">Prot (g)</span></label>
+                    <input type="number" step="0.1" id="foodProteins" required>
                 </div>
+                <div class="form-group">
+                    <label><span id="foodCarbsLabel">Gluc (g)</span></label>
+                    <input type="number" step="0.1" id="foodCarbs" required>
+                </div>
+                <div class="form-group">
+                    <label><span id="foodSugarsLabel">Sucres (g)</span></label>
+                    <input type="number" step="0.1" id="foodSugars" required>
+                </div>
+                <div class="form-group">
+                    <label><span id="foodFibersLabel">Fibres (g)</span></label>
+                    <input type="number" step="0.1" id="foodFibers" required>
+                </div>
+                <div class="form-group">
+                    <label><span id="foodFatsLabel">Lipides (g)</span></label>
+                    <input type="number" step="0.1" id="foodFats" required>
+                </div>
+                
+                <!-- Prix -->
+                <div class="form-group">
+                    <label>💰 Prix (Optionnel)</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="foodPriceType" value="grams" checked onchange="updatePriceLabel('food')">
+                            <span>g</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="foodPriceType" value="portions" onchange="updatePriceLabel('food')">
+                            <span>p</span>
+                        </label>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: nowrap;">
+                        <input type="number" step="0.01" id="foodPrice" placeholder="4.50" min="0" style="width: 70px; min-width: 70px; flex-shrink: 0;">
+                        <span style="flex-shrink: 0;">€</span>
+                        <input type="number" step="1" id="foodPriceQuantity" placeholder="500" min="1" style="width: 70px; min-width: 70px; flex-shrink: 0;">
+                        <span id="foodPriceLabel" style="flex-shrink: 0;">g</span>
+                    </div>
+                </div>
+                
                 <button type="submit" class="add-btn">Ajouter l'Aliment</button>
             </form>
         </div>
@@ -736,6 +792,128 @@
             <p style="color: #999; margin-bottom: 15px; font-size: 0.9em;">💡 Cliquez sur un aliment pour le modifier</p>
             <div class="foods-list" id="foodsListManage"></div>
             <p id="noResultsMessageManage" style="display: none; text-align: center; color: #999; padding: 20px;">🔍 Aucun aliment trouvé</p>
+        </div>
+    </div>
+
+    <!-- =================== CONTENU DE L'ONGLET "COMPARAISON" =================== -->
+    <div id="comparison-tab" class="tab-content">
+        <h2 class="section-title">⚖️ Comparaison d'Aliments</h2>
+        
+        <!-- Section de sélection des aliments -->
+        <div class="comparison-selector">
+            <div class="selector-card">
+                <h3>🔍 Sélectionner les aliments à comparer</h3>
+                <p class="selector-description">Comparez de 2 à 3 aliments pour voir leurs différences nutritionnelles</p>
+                
+                <div class="food-selectors">
+                    <div class="selector-item">
+                        <label>🥗 Premier aliment</label>
+                        <div class="search-container">
+                            <input type="text" id="comparisonSearch1" placeholder="Rechercher un aliment..." class="search-input">
+                        </div>
+                        <select id="comparisonFood1" class="comparison-select">
+                            <option value="">-- Sélectionner --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="selector-item">
+                        <label>🍖 Deuxième aliment</label>
+                        <div class="search-container">
+                            <input type="text" id="comparisonSearch2" placeholder="Rechercher un aliment..." class="search-input">
+                        </div>
+                        <select id="comparisonFood2" class="comparison-select">
+                            <option value="">-- Sélectionner --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="selector-item">
+                        <label>🥑 Troisième aliment (optionnel)</label>
+                        <div class="search-container">
+                            <input type="text" id="comparisonSearch3" placeholder="Rechercher un aliment..." class="search-input">
+                        </div>
+                        <select id="comparisonFood3" class="comparison-select">
+                            <option value="">-- Sélectionner --</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="compareBtn" class="compare-btn" disabled>⚖️ Comparer</button>
+            </div>
+        </div>
+
+        <!-- Section des résultats de comparaison -->
+        <div id="comparisonResults" class="comparison-results" style="display: none;">
+            <!-- Options d'affichage -->
+            <div class="comparison-options">
+                <div class="option-group">
+                    <label>📊 Quantité de référence :</label>
+                    <select id="comparisonMode" class="mode-select">
+                        <option value="100g">100g (standard)</option>
+                        <option value="calories">Même calories (200 kcal)</option>
+                        <option value="price">Même prix (2€)</option>
+                    </select>
+                </div>
+                <button id="copyComparisonBtn" class="action-btn">📋 Copier</button>
+            </div>
+
+            <!-- Graphique Radar -->
+            <div class="chart-container radar-container">
+                <h3>📈 Vue d'ensemble nutritionnelle</h3>
+                <canvas id="comparisonRadarChart"></canvas>
+            </div>
+
+            <!-- Résumé rapide avec recommandations -->
+            <div class="comparison-summary">
+                <div class="summary-card winner-card">
+                    <div class="summary-icon">🏆</div>
+                    <div class="summary-content">
+                        <h4>Meilleur choix global</h4>
+                        <p id="bestOverall">-</p>
+                    </div>
+                </div>
+                <div class="summary-card protein-card">
+                    <div class="summary-icon">💪</div>
+                    <div class="summary-content">
+                        <h4>Plus riche en protéines</h4>
+                        <p id="bestProtein">-</p>
+                    </div>
+                </div>
+                <div class="summary-card calorie-card">
+                    <div class="summary-icon">🍃</div>
+                    <div class="summary-content">
+                        <h4>Moins calorique</h4>
+                        <p id="lowestCalorie">-</p>
+                    </div>
+                </div>
+                <div class="summary-card price-card">
+                    <div class="summary-icon">💰</div>
+                    <div class="summary-content">
+                        <h4>Plus économique</h4>
+                        <p id="bestPrice">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau comparatif détaillé -->
+            <div class="comparison-table-container">
+                <h3>📋 Comparaison détaillée</h3>
+                <div class="table-responsive">
+                    <table class="comparison-table" id="comparisonTable">
+                        <thead>
+                            <tr>
+                                <th>Indicateur</th>
+                                <th id="header1">Aliment 1</th>
+                                <th id="header2">Aliment 2</th>
+                                <th id="header3" style="display: none;">Aliment 3</th>
+                                <th>🏆 Meilleur</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparisonTableBody">
+                            <!-- Rempli dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -836,43 +1014,78 @@
             <form id="editFoodForm" class="add-food-form">
                 <input type="hidden" id="editFoodId">
 
+                <!-- Nom -->
                 <div class="form-group">
                     <label>Nom</label>
                     <input type="text" id="editFoodName" required>
                 </div>
+                
+                <!-- Type de valeurs -->
                 <div class="form-group">
-                    <label>Calories (kcal/100g)</label>
+                    <label>📊 Type de valeurs</label>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="editFoodNutritionType" value="per100g" checked onchange="updateNutritionLabels('editFood')">
+                            <span>100g</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="editFoodNutritionType" value="perPortion" onchange="updateNutritionLabels('editFood')">
+                            <span>1 portion</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Poids portion (conditionnel) -->
+                <div class="form-group" id="editFoodPortionWeightGroup" style="display: none;">
+                    <label>⚖️ Poids (g)</label>
+                    <input type="number" step="1" id="editFoodPortionWeight" placeholder="125" min="1">
+                </div>
+                
+                <!-- Valeurs nutritionnelles -->
+                <div class="form-group">
+                    <label><span id="editFoodCaloriesLabel">Cal (kcal)</span></label>
                     <input type="number" step="0.1" id="editFoodCalories" required>
                 </div>
                 <div class="form-group">
-                    <label>Protéines (g/100g)</label>
+                    <label><span id="editFoodProteinsLabel">Prot (g)</span></label>
                     <input type="number" step="0.1" id="editFoodProteins" required>
                 </div>
                 <div class="form-group">
-                    <label>Glucides (g/100g)</label>
+                    <label><span id="editFoodCarbsLabel">Gluc (g)</span></label>
                     <input type="number" step="0.1" id="editFoodCarbs" required>
                 </div>
                 <div class="form-group">
-                    <label>Sucres (g/100g)</label>
+                    <label><span id="editFoodSugarsLabel">Sucres (g)</span></label>
                     <input type="number" step="0.1" id="editFoodSugars" required>
                 </div>
                 <div class="form-group">
-                    <label>Fibres (g/100g)</label>
+                    <label><span id="editFoodFibersLabel">Fibres (g)</span></label>
                     <input type="number" step="0.1" id="editFoodFibers" required>
                 </div>
                 <div class="form-group">
-                    <label>Lipides (g/100g)</label>
+                    <label><span id="editFoodFatsLabel">Lipides (g)</span></label>
                     <input type="number" step="0.1" id="editFoodFats" required>
                 </div>
+                
+                <!-- Prix -->
                 <div class="form-group">
-                    <label>💰 Prix (€)</label>
-                    <input type="number" step="0.01" id="editFoodPrice" placeholder="Ex: 4.50" min="0">
-                    <small style="color: #999; font-size: 0.85em; display: block; margin-top: 5px;">Optionnel - Prix du produit en magasin</small>
-                </div>
-                <div class="form-group">
-                    <label>📦 Pour (grammes)</label>
-                    <input type="number" step="1" id="editFoodPriceGrams" placeholder="Ex: 500" min="1">
-                    <small style="color: #999; font-size: 0.85em; display: block; margin-top: 5px;">Optionnel - Grammage du produit acheté</small>
+                    <label>💰 Prix (Optionnel)</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="editFoodPriceType" value="grams" checked onchange="updatePriceLabel('editFood')">
+                            <span>g</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="editFoodPriceType" value="portions" onchange="updatePriceLabel('editFood')">
+                            <span>p</span>
+                        </label>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: nowrap;">
+                        <input type="number" step="0.01" id="editFoodPrice" placeholder="4.50" min="0" style="width: 70px; min-width: 70px; flex-shrink: 0;">
+                        <span style="flex-shrink: 0;">€</span>
+                        <input type="number" step="1" id="editFoodPriceQuantity" placeholder="500" min="1" style="width: 70px; min-width: 70px; flex-shrink: 0;">
+                        <span id="editFoodPriceLabel" style="flex-shrink: 0;">g</span>
+                    </div>
                 </div>
                 <div class="modal-buttons">
                     <button type="submit" class="add-btn">Sauvegarder</button>
@@ -932,6 +1145,52 @@
             </form>
         </div>
     </div>
+
+    <!-- Script pour gérer les labels dynamiques -->
+    <script>
+        function updatePriceLabel(prefix) {
+            const radioGrams = document.querySelector(`input[name="${prefix}PriceType"][value="grams"]`);
+            const radioPortions = document.querySelector(`input[name="${prefix}PriceType"][value="portions"]`);
+            const label = document.getElementById(`${prefix}PriceLabel`);
+            
+            if (radioPortions && radioPortions.checked) {
+                label.textContent = 'p';
+            } else {
+                label.textContent = 'g';
+            }
+        }
+        
+        function updateNutritionLabels(prefix) {
+            const radioPer100g = document.querySelector(`input[name="${prefix}NutritionType"][value="per100g"]`);
+            const radioPerPortion = document.querySelector(`input[name="${prefix}NutritionType"][value="perPortion"]`);
+            const portionWeightGroup = document.getElementById(`${prefix}PortionWeightGroup`);
+            
+            const isPerPortion = radioPerPortion && radioPerPortion.checked;
+            
+            // Afficher/masquer le champ de poids de portion
+            if (portionWeightGroup) {
+                portionWeightGroup.style.display = isPerPortion ? 'block' : 'none';
+            }
+            
+            // Mettre à jour tous les labels
+            const suffix = isPerPortion ? '/p' : '';
+            const labels = [
+                {id: 'Calories', text: 'Cal (kcal)'},
+                {id: 'Proteins', text: 'Prot (g)'},
+                {id: 'Carbs', text: 'Gluc (g)'},
+                {id: 'Sugars', text: 'Sucres (g)'},
+                {id: 'Fibers', text: 'Fibres (g)'},
+                {id: 'Fats', text: 'Lipides (g)'}
+            ];
+            
+            labels.forEach(label => {
+                const element = document.getElementById(`${prefix}${label.id}Label`);
+                if (element) {
+                    element.textContent = label.text + suffix;
+                }
+            });
+        }
+    </script>
 
     <!-- Le script principal de l'application, chargé à la fin -->
     <script src="js/app.js" type="module"></script>

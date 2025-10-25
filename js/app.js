@@ -9,6 +9,7 @@ import * as activityCharts from './activities-charts.js';
 import * as utils from './utils.js';
 import * as dbUtils from './db-utils.js';
 import * as foodAnalysis from './food-analysis.js';
+import * as foodComparison from './food-comparison.js';
 
 // --- ÉTAT GLOBAL DE L'APPLICATION ---
 let state = {
@@ -127,7 +128,10 @@ async function handleDrop(event) {
     
     // CAS 1 : Drop d'un aliment depuis la liste des aliments disponibles
     if (state.draggedFoodId && state.foods[state.draggedFoodId]) {
-        meals[targetMealType].push({ id: state.draggedFoodId, weight: 100, uniqueId: Date.now() });
+        const food = state.foods[state.draggedFoodId];
+        // Si l'aliment est basé sur des portions, utiliser le poids de la portion, sinon 100g
+        const defaultWeight = (food.isPortionBased && food.portionWeight) ? food.portionWeight : 100;
+        meals[targetMealType].push({ id: state.draggedFoodId, weight: defaultWeight, uniqueId: Date.now() });
         await db.saveDayMeals(state.currentDate, meals);
         loadCurrentDay();
     }
@@ -202,11 +206,14 @@ async function handleSaveWeight() {
 // --- HANDLER POUR L'AJOUT RAPIDE ---
 async function handleQuickAdd(foodId, mealType) {
     if (state.foods[foodId]) {
+        const food = state.foods[foodId];
         const meals = await db.loadDayMeals(state.currentDate);
-        meals[mealType].push({ id: foodId, weight: 100, uniqueId: Date.now() });
+        // Si l'aliment est basé sur des portions, utiliser le poids de la portion, sinon 100g
+        const defaultWeight = (food.isPortionBased && food.portionWeight) ? food.portionWeight : 100;
+        meals[mealType].push({ id: foodId, weight: defaultWeight, uniqueId: Date.now() });
         await db.saveDayMeals(state.currentDate, meals);
         loadCurrentDay();
-        ui.showNotification(`${state.foods[foodId].name} ajouté !`);
+        ui.showNotification(`${food.name} ajouté !`);
     }
 }
 
@@ -734,22 +741,50 @@ async function handleAddFood(e) {
         return;
     }
     const price = parseFloat(form.querySelector('#foodPrice').value);
-    const priceGrams = parseInt(form.querySelector('#foodPriceGrams').value);
+    const priceQuantity = parseFloat(form.querySelector('#foodPriceQuantity').value);
+    const priceUnit = form.querySelector('input[name="foodPriceType"]:checked')?.value || 'grams';
+    
+    // Récupérer le type de valeurs nutritionnelles
+    const nutritionType = form.querySelector('input[name="foodNutritionType"]:checked')?.value || 'per100g';
+    const portionWeight = parseFloat(form.querySelector('#foodPortionWeight')?.value) || null;
+    
+    // Récupérer les valeurs saisies
+    let calories = parseFloat(form.querySelector('#foodCalories').value) || 0;
+    let proteins = parseFloat(form.querySelector('#foodProteins').value) || 0;
+    let carbs = parseFloat(form.querySelector('#foodCarbs').value) || 0;
+    let sugars = parseFloat(form.querySelector('#foodSugars').value) || 0;
+    let fibers = parseFloat(form.querySelector('#foodFibers').value) || 0;
+    let fats = parseFloat(form.querySelector('#foodFats').value) || 0;
+    
+    // Si les valeurs sont pour 1 portion, convertir en valeurs pour 100g
+    if (nutritionType === 'perPortion' && portionWeight && portionWeight > 0) {
+        const ratio = 100 / portionWeight;
+        calories *= ratio;
+        proteins *= ratio;
+        carbs *= ratio;
+        sugars *= ratio;
+        fibers *= ratio;
+        fats *= ratio;
+    }
     
     const newFood = {
         name,
-        calories: parseFloat(form.querySelector('#foodCalories').value) || 0,
-        proteins: parseFloat(form.querySelector('#foodProteins').value) || 0,
-        carbs: parseFloat(form.querySelector('#foodCarbs').value) || 0,
-        sugars: parseFloat(form.querySelector('#foodSugars').value) || 0,
-        fibers: parseFloat(form.querySelector('#foodFibers').value) || 0,
-        fats: parseFloat(form.querySelector('#foodFats').value) || 0
+        calories,
+        proteins,
+        carbs,
+        sugars,
+        fibers,
+        fats,
+        // Stocker le type et le poids de portion
+        isPortionBased: nutritionType === 'perPortion',
+        portionWeight: nutritionType === 'perPortion' ? portionWeight : null
     };
     
     // Ajouter prix si renseigné
-    if (price && priceGrams && price > 0 && priceGrams > 0) {
+    if (price && priceQuantity && price > 0 && priceQuantity > 0) {
         newFood.price = price;
-        newFood.priceGrams = priceGrams;
+        newFood.priceQuantity = priceQuantity;
+        newFood.priceUnit = priceUnit; // 'grams' ou 'portions'
     }
     await db.saveFood(id, newFood);
     state.foods[id] = newFood;
@@ -810,22 +845,50 @@ async function handleUpdateFood(event) {
     const newId = utils.generateFoodId(newName);
 
     const price = parseFloat(form.querySelector('#editFoodPrice').value);
-    const priceGrams = parseInt(form.querySelector('#editFoodPriceGrams').value);
+    const priceQuantity = parseFloat(form.querySelector('#editFoodPriceQuantity').value);
+    const priceUnit = form.querySelector('input[name="editFoodPriceType"]:checked')?.value || 'grams';
+    
+    // Récupérer le type de valeurs nutritionnelles
+    const nutritionType = form.querySelector('input[name="editFoodNutritionType"]:checked')?.value || 'per100g';
+    const portionWeight = parseFloat(form.querySelector('#editFoodPortionWeight')?.value) || null;
+    
+    // Récupérer les valeurs saisies
+    let calories = parseFloat(form.querySelector('#editFoodCalories').value) || 0;
+    let proteins = parseFloat(form.querySelector('#editFoodProteins').value) || 0;
+    let carbs = parseFloat(form.querySelector('#editFoodCarbs').value) || 0;
+    let sugars = parseFloat(form.querySelector('#editFoodSugars').value) || 0;
+    let fibers = parseFloat(form.querySelector('#editFoodFibers').value) || 0;
+    let fats = parseFloat(form.querySelector('#editFoodFats').value) || 0;
+    
+    // Si les valeurs sont pour 1 portion, convertir en valeurs pour 100g
+    if (nutritionType === 'perPortion' && portionWeight && portionWeight > 0) {
+        const ratio = 100 / portionWeight;
+        calories *= ratio;
+        proteins *= ratio;
+        carbs *= ratio;
+        sugars *= ratio;
+        fibers *= ratio;
+        fats *= ratio;
+    }
     
     const updatedFoodData = {
         name: newName,
-        calories: parseFloat(form.querySelector('#editFoodCalories').value) || 0,
-        proteins: parseFloat(form.querySelector('#editFoodProteins').value) || 0,
-        carbs: parseFloat(form.querySelector('#editFoodCarbs').value) || 0,
-        sugars: parseFloat(form.querySelector('#editFoodSugars').value) || 0,
-        fibers: parseFloat(form.querySelector('#editFoodFibers').value) || 0,
-        fats: parseFloat(form.querySelector('#editFoodFats').value) || 0
+        calories,
+        proteins,
+        carbs,
+        sugars,
+        fibers,
+        fats,
+        // Stocker le type et le poids de portion
+        isPortionBased: nutritionType === 'perPortion',
+        portionWeight: nutritionType === 'perPortion' ? portionWeight : null
     };
     
     // Ajouter prix si renseigné
-    if (price && priceGrams && price > 0 && priceGrams > 0) {
+    if (price && priceQuantity && price > 0 && priceQuantity > 0) {
         updatedFoodData.price = price;
-        updatedFoodData.priceGrams = priceGrams;
+        updatedFoodData.priceQuantity = priceQuantity;
+        updatedFoodData.priceUnit = priceUnit; // 'grams' ou 'portions'
     }
 
     // CAS 1 : Le nom n'a pas changé, c'est une simple mise à jour.
@@ -968,11 +1031,15 @@ function setupEventListeners() {
                 }
                 foodAnalysis.updateFoodAnalysis(state.currentFoodAnalysisPeriod, state.foods);
             }
+            if (tabName === 'comparison') {
+                foodComparison.initComparison(state.foods);
+            }
         }
     });
     document.querySelector('.stats-period').addEventListener('click', e => {
         if (e.target.matches('.period-btn')) {
-            state.currentPeriod = parseInt(e.target.dataset.period, 10);
+            const periodValue = e.target.dataset.period;
+            state.currentPeriod = periodValue === 'all' ? 'all' : parseInt(periodValue, 10);
             document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
             charts.updateCharts(state.currentPeriod, state.foods, state.goals);
@@ -1124,6 +1191,9 @@ async function init(isReload = false) {
         await initializeDefaultFoods();
         state.foods = await db.loadFoods();
         state.goals = await db.loadGoals();
+        
+        // Exposer le state globalement pour les modules qui en ont besoin
+        window.appState = state;
         
         // Charger activités personnalisées avec protection
         try {

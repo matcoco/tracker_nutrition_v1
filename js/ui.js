@@ -3,6 +3,46 @@
 import { formatDateDisplay } from './utils.js';
 import { calculateMealTotals } from './utils.js';
 
+// --- Fonctions helper pour les prix ---
+
+/**
+ * Calcule le prix pour 100g d'un aliment
+ * Gère les anciennes données (priceGrams) et les nouvelles (priceQuantity + priceUnit)
+ * @param {object} food - L'aliment
+ * @returns {number|null} - Prix pour 100g ou null si non disponible
+ */
+function getPricePer100g(food) {
+    if (!food.price) return null;
+    
+    // Nouveau format : priceQuantity + priceUnit
+    if (food.priceQuantity && food.priceUnit) {
+        if (food.priceUnit === 'grams') {
+            return (food.price / food.priceQuantity) * 100;
+        } else if (food.priceUnit === 'portions') {
+            // Utiliser le poids réel de la portion si disponible, sinon 100g par défaut
+            const portionWeight = food.portionWeight || 100;
+            const totalGrams = food.priceQuantity * portionWeight;
+            return (food.price / totalGrams) * 100;
+        }
+    }
+    
+    // Ancien format (rétrocompatibilité) : priceGrams
+    if (food.priceGrams) {
+        return (food.price / food.priceGrams) * 100;
+    }
+    
+    return null;
+}
+
+/**
+ * Vérifie si un aliment a des informations de prix
+ * @param {object} food - L'aliment
+ * @returns {boolean}
+ */
+function hasPrice(food) {
+    return food.price && (food.priceQuantity || food.priceGrams);
+}
+
 // --- Éléments du DOM ---
 // On met en cache les éléments fréquemment utilisés pour de meilleures performances.
 const elements = {
@@ -31,7 +71,7 @@ const elements = {
     editFoodFibers: document.getElementById('editFoodFibers'),
     editFoodFats: document.getElementById('editFoodFats'),
     editFoodPrice: document.getElementById('editFoodPrice'),
-    editFoodPriceGrams: document.getElementById('editFoodPriceGrams'),
+    editFoodPriceQuantity: document.getElementById('editFoodPriceQuantity')
 };
 
 /**
@@ -221,8 +261,8 @@ function createFoodElement(id, food, dragStartHandler, quickAddHandler) {
     
     // Calculer prix au 100g si disponible
     let priceInfo = '';
-    if (food.price && food.priceGrams) {
-        const pricePer100g = (food.price / food.priceGrams * 100).toFixed(2);
+    if (hasPrice(food)) {
+        const pricePer100g = getPricePer100g(food).toFixed(2);
         priceInfo = ` | 💰 ${pricePer100g}€/100g`;
     }
     
@@ -231,7 +271,7 @@ function createFoodElement(id, food, dragStartHandler, quickAddHandler) {
             <div class="food-name">${food.name}</div>
             <button class="quick-action-btn" data-food-id="${id}" title="Ajouter rapidement">+</button>
         </div>
-        <div class="food-calories">${food.calories} kcal | P: ${food.proteins}g | G: ${food.carbs}g | F: ${food.fibers || 0}g | L: ${food.fats}g${priceInfo}</div>
+        <div class="food-calories">${parseFloat(food.calories).toFixed(1)} kcal | P: ${parseFloat(food.proteins).toFixed(1)}g | G: ${parseFloat(food.carbs).toFixed(1)}g | F: ${parseFloat(food.fibers || 0).toFixed(1)}g | L: ${parseFloat(food.fats).toFixed(1)}g${priceInfo}</div>
     `;
     
     el.addEventListener('dragstart', dragStartHandler);
@@ -334,8 +374,8 @@ export function displayFoodsManage(foods, editClickHandler, deleteClickHandler) 
         el.dataset.foodName = food.name;
         
         let priceInfo = '';
-        if (food.price && food.priceGrams) {
-            const pricePer100g = (food.price / food.priceGrams * 100).toFixed(2);
+        if (hasPrice(food)) {
+            const pricePer100g = getPricePer100g(food).toFixed(2);
             priceInfo = ` | 💰 ${pricePer100g}€/100g`;
         }
         
@@ -350,7 +390,7 @@ export function displayFoodsManage(foods, editClickHandler, deleteClickHandler) 
             deleteClickHandler(e);
         });
         
-        el.innerHTML = `<div class="food-name">${food.name}</div><div class="food-calories">${food.calories} kcal | P: ${food.proteins}g | G: ${food.carbs}g | F: ${food.fibers || 0}g | L: ${food.fats}g${priceInfo}</div>`;
+        el.innerHTML = `<div class="food-name">${food.name}</div><div class="food-calories">${parseFloat(food.calories).toFixed(1)} kcal | P: ${parseFloat(food.proteins).toFixed(1)}g | G: ${parseFloat(food.carbs).toFixed(1)}g | F: ${parseFloat(food.fibers || 0).toFixed(1)}g | L: ${parseFloat(food.fats).toFixed(1)}g${priceInfo}</div>`;
         el.addEventListener('click', editClickHandler);
         el.appendChild(deleteBtn);
         elements.foodsListManage.appendChild(el);
@@ -378,8 +418,9 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, m
         let mealCost = 0;
         items.forEach(item => {
             const food = foods[item.id];
-            if (food && food.price && food.priceGrams) {
-                mealCost += (food.price / food.priceGrams * item.weight);
+            if (food && hasPrice(food)) {
+                const pricePer100g = getPricePer100g(food);
+                mealCost += (pricePer100g / 100) * item.weight;
             }
         });
         
@@ -409,7 +450,7 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, m
             el.dataset.sourceMeal = type; // Type de repas source
             el.dataset.uniqueId = item.uniqueId; // ID unique de l'item
             el.dataset.foodId = item.id; // ID de l'aliment
-            el.dataset.weight = item.weight; // Poids actuel
+            el.dataset.weight = item.weight; // Poids actuel (toujours en grammes)
             
             const cal = (food.calories * item.weight / 100).toFixed(0);
             const prot = (food.proteins * item.weight / 100).toFixed(1);
@@ -420,9 +461,29 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, m
             
             // Calculer le coût si disponible
             let costInfo = '';
-            if (food.price && food.priceGrams) {
-                const cost = (food.price / food.priceGrams * item.weight).toFixed(2);
+            if (hasPrice(food)) {
+                const pricePer100g = getPricePer100g(food);
+                const cost = ((pricePer100g / 100) * item.weight).toFixed(2);
                 costInfo = ` | 💰 ${cost}€`;
+            }
+            
+            // Gérer l'affichage : portions ou grammes
+            const isPortionBased = food.isPortionBased || false;
+            const portionWeight = food.portionWeight || null;
+            let displayValue, displayUnit, inputStep;
+            
+            if (isPortionBased && portionWeight) {
+                // Afficher en portions
+                displayValue = (item.weight / portionWeight).toFixed(1);
+                displayUnit = 'p';
+                inputStep = '0.1';
+                el.dataset.isPortionBased = 'true';
+                el.dataset.portionWeight = portionWeight;
+            } else {
+                // Afficher en grammes
+                displayValue = item.weight;
+                displayUnit = 'g';
+                inputStep = '1';
             }
 
             el.innerHTML = `
@@ -431,8 +492,8 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, m
                     <button class="remove-btn">✕</button>
                 </div>
                 <div class="weight-input">
-                    <input type="number" value="${item.weight}" min="1">
-                    <span>g</span>
+                    <input type="number" value="${displayValue}" min="0.1" step="${inputStep}">
+                    <span>${displayUnit}</span>
                 </div>
                 <div class="meal-item-macros">${cal} kcal | P: ${prot}g | G: ${carb}g | F: ${fib}g | L: ${fat}g | S: ${sug}g${costInfo}</div>
             `;
@@ -440,7 +501,14 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, m
             el.querySelector('.remove-btn').onclick = () => removeHandler(type, item.uniqueId);
             
             const weightInput = el.querySelector('input[type="number"]');
-            weightInput.onchange = (e) => weightChangeHandler(type, item.uniqueId, e.target.value);
+            weightInput.onchange = (e) => {
+                let valueInGrams = parseFloat(e.target.value);
+                // Si c'est basé sur des portions, convertir en grammes
+                if (isPortionBased && portionWeight) {
+                    valueInGrams = valueInGrams * portionWeight;
+                }
+                weightChangeHandler(type, item.uniqueId, valueInGrams);
+            };
             
             // Empêcher le drag quand on interagit avec l'input ou le bouton
             weightInput.addEventListener('mousedown', (e) => {
@@ -492,14 +560,68 @@ export function switchTab(tabName) {
 export function openEditModal(foodId, foodData) {
     elements.editFoodId.value = foodId;
     elements.editFoodName.value = foodData.name;
-    elements.editFoodCalories.value = foodData.calories;
-    elements.editFoodProteins.value = foodData.proteins;
-    elements.editFoodCarbs.value = foodData.carbs;
-    elements.editFoodSugars.value = foodData.sugars;
-    elements.editFoodFibers.value = foodData.fibers || 0;
-    elements.editFoodFats.value = foodData.fats;
+    
+    // Gérer le type de nutrition (per100g ou perPortion)
+    const isPortionBased = foodData.isPortionBased || false;
+    const portionWeight = foodData.portionWeight || null;
+    
+    // Cocher le bon bouton radio nutrition
+    const nutritionType = isPortionBased ? 'perPortion' : 'per100g';
+    const radioNutrition = document.querySelector(`input[name="editFoodNutritionType"][value="${nutritionType}"]`);
+    if (radioNutrition) {
+        radioNutrition.checked = true;
+    }
+    
+    // Si c'est basé sur des portions, reconvertir les valeurs /100g en valeurs /portion
+    let calories = foodData.calories;
+    let proteins = foodData.proteins;
+    let carbs = foodData.carbs;
+    let sugars = foodData.sugars;
+    let fibers = foodData.fibers || 0;
+    let fats = foodData.fats;
+    
+    if (isPortionBased && portionWeight) {
+        const ratio = portionWeight / 100;
+        calories *= ratio;
+        proteins *= ratio;
+        carbs *= ratio;
+        sugars *= ratio;
+        fibers *= ratio;
+        fats *= ratio;
+        
+        // Afficher le poids de portion
+        const portionWeightInput = document.getElementById('editFoodPortionWeight');
+        if (portionWeightInput) {
+            portionWeightInput.value = portionWeight;
+        }
+    }
+    
+    elements.editFoodCalories.value = calories.toFixed(1);
+    elements.editFoodProteins.value = proteins.toFixed(1);
+    elements.editFoodCarbs.value = carbs.toFixed(1);
+    elements.editFoodSugars.value = sugars.toFixed(1);
+    elements.editFoodFibers.value = fibers.toFixed(1);
+    elements.editFoodFats.value = fats.toFixed(1);
+    
+    // Mettre à jour les labels
+    if (typeof window.updateNutritionLabels === 'function') {
+        window.updateNutritionLabels('editFood');
+    }
+    
     elements.editFoodPrice.value = foodData.price || '';
-    elements.editFoodPriceGrams.value = foodData.priceGrams || '';
+    elements.editFoodPriceQuantity.value = foodData.priceQuantity || foodData.priceGrams || '';
+    
+    // Cocher le bon bouton radio selon le priceUnit
+    const priceUnit = foodData.priceUnit || 'grams';
+    const radioToCheck = document.querySelector(`input[name="editFoodPriceType"][value="${priceUnit}"]`);
+    if (radioToCheck) {
+        radioToCheck.checked = true;
+        // Mettre à jour le label dynamiquement
+        if (typeof window.updatePriceLabel === 'function') {
+            window.updatePriceLabel('editFood');
+        }
+    }
+    
     elements.editModal.classList.add('show');
 }
 
@@ -736,8 +858,9 @@ export function updateDailySummary(meals, foods, totals, date, waterData = 0, st
                     let itemInfo = `  • ${food.name} - ${item.weight}g`;
                     
                     // Calculer le coût de cet item
-                    if (food.price && food.priceGrams) {
-                        const itemCost = (food.price / food.priceGrams * item.weight);
+                    if (hasPrice(food)) {
+                        const pricePer100g = getPricePer100g(food);
+                        const itemCost = (pricePer100g / 100) * item.weight;
                         totalCost += itemCost;
                         mealCost += itemCost;
                         itemInfo += ` (${itemCost.toFixed(2)}€)`;
@@ -852,8 +975,9 @@ export function generateSummaryText(meals, foods, totals, date, waterData = 0, s
                     let itemInfo = `  • ${food.name} - ${item.weight}g`;
                     
                     // Calculer le coût de cet item
-                    if (food.price && food.priceGrams) {
-                        const itemCost = (food.price / food.priceGrams * item.weight);
+                    if (hasPrice(food)) {
+                        const pricePer100g = getPricePer100g(food);
+                        const itemCost = (pricePer100g / 100) * item.weight;
                         totalCost += itemCost;
                         mealCost += itemCost;
                         itemInfo += ` (${itemCost.toFixed(2)}€)`;
