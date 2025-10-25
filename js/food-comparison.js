@@ -7,6 +7,8 @@ let selectedFoods = {
     food2: null,
     food3: null
 };
+let isInitialized = false; // Flag pour éviter la réinitialisation multiple
+let cachedFoods = {}; // Cache local des aliments
 
 /**
  * Calcule le prix pour 100g d'un aliment
@@ -23,9 +25,9 @@ function getPricePer100g(food) {
             // Ex: 3.50€ pour 500g => (3.50 / 500) * 100 = 0.70€/100g
             return (food.price / food.priceQuantity) * 100;
         } else if (food.priceUnit === 'portions') {
-            // Ex: 3.50€ pour 4 portions (assumant 100g par portion par défaut)
-            // => (3.50 / 400) * 100 = 0.875€/100g
-            const totalGrams = food.priceQuantity * 100; // 100g par portion par défaut
+            // Utiliser le poids réel de la portion si disponible, sinon 100g par défaut
+            const portionWeight = food.portionWeight || 100;
+            const totalGrams = food.priceQuantity * portionWeight;
             return (food.price / totalGrams) * 100;
         }
     }
@@ -52,9 +54,22 @@ function hasPrice(food) {
  * @param {object} foods - Dictionnaire des aliments
  */
 export function initComparison(foods) {
-    populateFoodSelects(foods);
-    setupSearchFilters(foods);
-    setupEventListeners();
+    // Toujours mettre à jour le cache des aliments
+    cachedFoods = foods;
+    
+    // Configurer les listeners et peupler (seulement la première fois)
+    if (!isInitialized) {
+        isInitialized = true;
+        populateFoodSelects(foods);
+        setupSearchFilters(foods);
+        setupEventListeners();
+    } else {
+        // Si déjà initialisé, juste vérifier si les options sont vides
+        const select1 = document.getElementById('comparisonFood1');
+        if (select1.options.length <= 1) { // Seulement l'option par défaut
+            populateFoodSelects(foods);
+        }
+    }
 }
 
 /**
@@ -69,6 +84,9 @@ function populateFoodSelects(foods) {
     ];
 
     selects.forEach(select => {
+        // Sauvegarder la valeur sélectionnée actuelle
+        const currentValue = select.value;
+        
         // Garder l'option par défaut
         select.innerHTML = '<option value="">-- Sélectionner --</option>';
         
@@ -79,6 +97,11 @@ function populateFoodSelects(foods) {
             option.textContent = food.name;
             select.appendChild(option);
         });
+        
+        // Restaurer la valeur sélectionnée si elle existe toujours
+        if (currentValue && foods[currentValue]) {
+            select.value = currentValue;
+        }
     });
 }
 
@@ -156,12 +179,16 @@ export function performComparison() {
         return;
     }
     
-    // Récupérer les aliments depuis le state global
-    const foods = window.appState?.foods || {};
+    // Vérifier que les aliments existent dans le cache
+    if (!cachedFoods[food1Id] || !cachedFoods[food2Id]) {
+        console.error('Aliments introuvables dans le cache');
+        return;
+    }
     
-    selectedFoods.food1 = { id: food1Id, ...foods[food1Id] };
-    selectedFoods.food2 = { id: food2Id, ...foods[food2Id] };
-    selectedFoods.food3 = food3Id ? { id: food3Id, ...foods[food3Id] } : null;
+    // Utiliser le cache local des aliments
+    selectedFoods.food1 = { id: food1Id, ...cachedFoods[food1Id] };
+    selectedFoods.food2 = { id: food2Id, ...cachedFoods[food2Id] };
+    selectedFoods.food3 = (food3Id && cachedFoods[food3Id]) ? { id: food3Id, ...cachedFoods[food3Id] } : null;
     
     // Afficher les résultats
     document.getElementById('comparisonResults').style.display = 'block';
