@@ -52,8 +52,9 @@ function hasPrice(food) {
  * Met à jour tous les graphiques et cartes de coûts
  * @param {number} period - Nombre de jours
  * @param {object} foods - Dictionnaire des aliments
+ * @param {object} composedMeals - Dictionnaire des repas composés
  */
-export async function updateCostCharts(period, foods) {
+export async function updateCostCharts(period, foods, composedMeals = {}) {
     // Charger les données de la période
     const data = [];
     const today = new Date();
@@ -63,8 +64,8 @@ export async function updateCostCharts(period, foods) {
         date.setDate(date.getDate() - i);
         const dateKey = utils.formatDateKey(date);
         const meals = await db.loadDayMeals(date);
-        const dayCost = utils.calculateDayCost(meals, foods);
-        const costsByMeal = utils.calculateCostsByMeal(meals, foods);
+        const dayCost = utils.calculateDayCost(meals, foods, composedMeals);
+        const costsByMeal = utils.calculateCostsByMeal(meals, foods, composedMeals);
         
         data.push({
             date: dateKey,
@@ -79,8 +80,8 @@ export async function updateCostCharts(period, foods) {
     // Créer les graphiques
     createDailyCostsChart(data);
     createCostsByMealChart(data);
-    createTopCostsChart(period, foods);
-    createCostComparisonChart(foods);
+    createTopCostsChart(period, foods, composedMeals);
+    createCostComparisonChart(foods, composedMeals);
 }
 
 /**
@@ -194,7 +195,7 @@ function createCostsByMealChart(data) {
 /**
  * Créer le graphique du top 5 des aliments les plus chers
  */
-async function createTopCostsChart(period, foods) {
+async function createTopCostsChart(period, foods, composedMeals = {}) {
     const foodCosts = {};
     const today = new Date();
     
@@ -207,7 +208,15 @@ async function createTopCostsChart(period, foods) {
         for (const mealType in meals) {
             if (Array.isArray(meals[mealType])) {
                 meals[mealType].forEach(item => {
-                    const food = foods[item.id];
+                    let food;
+                    
+                    // Vérifier si c'est un repas composé
+                    if (item.isMeal && composedMeals[item.id]) {
+                        food = composedMeals[item.id];
+                    } else {
+                        food = foods[item.id];
+                    }
+                    
                     if (food && hasPrice(food)) {
                         const pricePer100g = getPricePer100g(food);
                         const itemCost = (pricePer100g / 100) * item.weight;
@@ -267,7 +276,7 @@ async function createTopCostsChart(period, foods) {
 /**
  * Créer le graphique de comparaison hebdo/mensuelle
  */
-async function createCostComparisonChart(foods) {
+async function createCostComparisonChart(foods, composedMeals = {}) {
     // Calculer coûts des 7 et 30 derniers jours
     const periods = [7, 30];
     const costs = [];
@@ -280,7 +289,7 @@ async function createCostComparisonChart(foods) {
             const date = new Date(today);
             date.setDate(date.getDate() - i);
             const meals = await db.loadDayMeals(date);
-            totalCost += utils.calculateDayCost(meals, foods);
+            totalCost += utils.calculateDayCost(meals, foods, composedMeals);
         }
         
         costs.push((totalCost / period).toFixed(2));

@@ -13,6 +13,7 @@ export function initDB() {
         request.onupgradeneeded = (event) => {
             const dbInstance = event.target.result;
             if (!dbInstance.objectStoreNames.contains('foods')) dbInstance.createObjectStore('foods', { keyPath: 'id' });
+            if (!dbInstance.objectStoreNames.contains('meals')) dbInstance.createObjectStore('meals', { keyPath: 'id' });
             if (!dbInstance.objectStoreNames.contains('dailyMeals')) dbInstance.createObjectStore('dailyMeals', { keyPath: 'date' });
             if (!dbInstance.objectStoreNames.contains('goals')) dbInstance.createObjectStore('goals', { keyPath: 'id' });
             if (!dbInstance.objectStoreNames.contains('dailyWater')) dbInstance.createObjectStore('dailyWater', { keyPath: 'date' });
@@ -221,6 +222,61 @@ export function deleteFood(foodId) {
         request.onerror = () => reject(request.error);
     });
 }
+
+// ==================== REPAS COMPOSÉS ====================
+
+/**
+ * Sauvegarde un repas composé.
+ * @param {string} id - L'ID du repas.
+ * @param {object} meal - Les données du repas.
+ * @returns {Promise<void>}
+ */
+export function saveMeal(id, meal) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['meals'], 'readwrite');
+        const store = transaction.objectStore('meals');
+        const request = store.put({ id, ...meal });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+/**
+ * Charge tous les repas composés.
+ * @returns {Promise<object>} - Dictionnaire des repas.
+ */
+export function loadMeals() {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['meals'], 'readonly');
+        const request = transaction.objectStore('meals').getAll();
+        request.onsuccess = () => {
+            const mealsObject = {};
+            request.result.forEach(mealItem => {
+                const { id, ...data } = mealItem;
+                mealsObject[id] = data;
+            });
+            resolve(mealsObject);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+/**
+ * Supprime un repas composé.
+ * @param {string} mealId - L'ID du repas à supprimer.
+ * @returns {Promise<void>}
+ */
+export function deleteMeal(mealId) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['meals'], 'readwrite');
+        const store = transaction.objectStore('meals');
+        const request = store.delete(mealId);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// ==================== OBJECTIFS ====================
 
 /**
  * Sauvegarde les objectifs nutritionnels.

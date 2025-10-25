@@ -10,10 +10,12 @@ import * as utils from './utils.js';
 import * as dbUtils from './db-utils.js';
 import * as foodAnalysis from './food-analysis.js';
 import * as foodComparison from './food-comparison.js';
+import * as meals from './meals.js';
 
 // --- ÉTAT GLOBAL DE L'APPLICATION ---
 let state = {
     foods: {},
+    meals: {}, // Repas composés
     currentDate: new Date(),
     currentPeriod: 7,
     currentAveragePeriod: 'week', // 'week' ou 'month'
@@ -48,8 +50,8 @@ async function loadCurrentDay() {
         state.activities = [];
     }
     
-    ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, handleMealItemDragStart);
-    const totals = utils.calculateDayTotals(meals, state.foods);
+    ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, handleMealItemDragStart, state.meals);
+    const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
     ui.updateSummary(totals, state.goals);
     ui.updateWeightDisplay(weight);
     ui.updateWaterDisplay(waterData, state.goals);
@@ -62,7 +64,7 @@ async function loadCurrentDay() {
         console.log('Erreur affichage activités:', error);
     }
     
-    ui.updateDailySummary(meals, state.foods, totals, dateFormatted, waterData, steps, state.activities, state.goals);
+    ui.updateDailySummary(meals, state.foods, totals, dateFormatted, waterData, steps, state.activities, state.goals, state.meals);
 }
 function changeDate(days) {
     state.currentDate.setDate(state.currentDate.getDate() + days);
@@ -126,14 +128,31 @@ async function handleDrop(event) {
     
     const meals = await db.loadDayMeals(state.currentDate);
     
-    // CAS 1 : Drop d'un aliment depuis la liste des aliments disponibles
-    if (state.draggedFoodId && state.foods[state.draggedFoodId]) {
-        const food = state.foods[state.draggedFoodId];
-        // Si l'aliment est basé sur des portions, utiliser le poids de la portion, sinon 100g
-        const defaultWeight = (food.isPortionBased && food.portionWeight) ? food.portionWeight : 100;
-        meals[targetMealType].push({ id: state.draggedFoodId, weight: defaultWeight, uniqueId: Date.now() });
-        await db.saveDayMeals(state.currentDate, meals);
-        loadCurrentDay();
+    // CAS 1 : Drop d'un aliment ou repas depuis la liste disponible
+    if (state.draggedFoodId) {
+        // Vérifier si c'est un repas composé
+        if (state.meals[state.draggedFoodId]) {
+            // C'est un repas → l'ajouter comme bloc (pas de décomposition)
+            const meal = state.meals[state.draggedFoodId];
+            meals[targetMealType].push({ 
+                id: state.draggedFoodId,
+                isMeal: true, // Flag pour identifier que c'est un repas composé
+                weight: 100, // Poids par défaut (pourra être ajusté)
+                uniqueId: Date.now()
+            });
+            await db.saveDayMeals(state.currentDate, meals);
+            loadCurrentDay();
+            ui.showNotification(`${meal.name} ajouté !`);
+        }
+        // Sinon, c'est un aliment simple
+        else if (state.foods[state.draggedFoodId]) {
+            const food = state.foods[state.draggedFoodId];
+            // Si l'aliment est basé sur des portions, utiliser le poids de la portion, sinon 100g
+            const defaultWeight = (food.isPortionBased && food.portionWeight) ? food.portionWeight : 100;
+            meals[targetMealType].push({ id: state.draggedFoodId, weight: defaultWeight, uniqueId: Date.now() });
+            await db.saveDayMeals(state.currentDate, meals);
+            loadCurrentDay();
+        }
     }
     
     // CAS 2 : Drop d'un meal-item depuis un autre repas
@@ -205,9 +224,24 @@ async function handleSaveWeight() {
 
 // --- HANDLER POUR L'AJOUT RAPIDE ---
 async function handleQuickAdd(foodId, mealType) {
-    if (state.foods[foodId]) {
+    const meals = await db.loadDayMeals(state.currentDate);
+    
+    // Vérifier si c'est un repas composé
+    if (state.meals[foodId]) {
+        const meal = state.meals[foodId];
+        meals[mealType].push({ 
+            id: foodId,
+            isMeal: true, // Flag pour identifier que c'est un repas composé
+            weight: 100, // Poids par défaut
+            uniqueId: Date.now()
+        });
+        await db.saveDayMeals(state.currentDate, meals);
+        loadCurrentDay();
+        ui.showNotification(`${meal.name} ajouté !`);
+    }
+    // Sinon, c'est un aliment simple
+    else if (state.foods[foodId]) {
         const food = state.foods[foodId];
-        const meals = await db.loadDayMeals(state.currentDate);
         // Si l'aliment est basé sur des portions, utiliser le poids de la portion, sinon 100g
         const defaultWeight = (food.isPortionBased && food.portionWeight) ? food.portionWeight : 100;
         meals[mealType].push({ id: foodId, weight: defaultWeight, uniqueId: Date.now() });
@@ -224,7 +258,7 @@ function handleFoodSearch(event) {
     
     if (searchTerm) {
         // En mode recherche, afficher tous les résultats correspondants
-        ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, 0);
+        ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, 0, state.meals);
         
         const foodItems = document.querySelectorAll('.food-item');
         const noResultsMsg = document.getElementById('noResultsMessage');
@@ -249,7 +283,7 @@ function handleFoodSearch(event) {
         if (loadMoreBtn) loadMoreBtn.style.display = 'none';
     } else {
         // Sans recherche, revenir à l'affichage limité
-        ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount);
+        ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals);
         const noResultsMsg = document.getElementById('noResultsMessage');
         if (noResultsMsg) noResultsMsg.style.display = 'none';
     }
@@ -258,18 +292,23 @@ function handleFoodSearch(event) {
 // --- HANDLER POUR CHARGER PLUS D'ALIMENTS ---
 function handleLoadMoreFoods() {
     state.displayedFoodsCount += state.maxFoodsPerLoad;
-    ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount);
+    ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals);
+}
+
+// --- FONCTION POUR RAFRAÎCHIR LA LISTE DES ALIMENTS DISPONIBLES ---
+function refreshAvailableFoods() {
+    ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals);
 }
 
 // --- HELPER POUR METTRE À JOUR LE RÉSUMÉ ---
 async function updateDailySummaryHelper() {
     const meals = await db.loadDayMeals(state.currentDate);
-    const totals = utils.calculateDayTotals(meals, state.foods);
+    const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
     const dateFormatted = utils.formatDateDisplay(state.currentDate);
     const waterData = await db.loadDayWater(state.currentDate);
     const steps = await db.loadDaySteps(state.currentDate);
     const activities = state.activities || [];
-    ui.updateDailySummary(meals, state.foods, totals, dateFormatted, waterData, steps, activities, state.goals);
+    ui.updateDailySummary(meals, state.foods, totals, dateFormatted, waterData, steps, activities, state.goals, state.meals);
 }
 
 // --- HANDLERS POUR L'HYDRATATION ---
@@ -471,12 +510,12 @@ async function handleSaveWellness() {
 // --- HANDLER POUR COPIER LE RÉSUMÉ ---
 async function handleCopySummary() {
     const meals = await db.loadDayMeals(state.currentDate);
-    const totals = utils.calculateDayTotals(meals, state.foods);
+    const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
     const dateFormatted = utils.formatDateDisplay(state.currentDate);
     const waterData = await db.loadDayWater(state.currentDate);
     const steps = await db.loadDaySteps(state.currentDate);
     const activities = await db.loadDayActivities(state.currentDate);
-    const summaryText = ui.generateSummaryText(meals, state.foods, totals, dateFormatted, waterData, steps, activities, state.goals);
+    const summaryText = ui.generateSummaryText(meals, state.foods, totals, dateFormatted, waterData, steps, activities, state.goals, state.meals);
     
     const copyBtn = document.getElementById('copySummaryBtn');
     const copyText = copyBtn.querySelector('.copy-text');
@@ -788,7 +827,7 @@ async function handleAddFood(e) {
     }
     await db.saveFood(id, newFood);
     state.foods[id] = newFood;
-    ui.displayFoods(state.foods, handleDragStart, handleQuickAdd);
+    ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals);
     ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
     form.reset();
     ui.showNotification(`${name} ajouté avec succès !`);
@@ -821,7 +860,7 @@ async function handleDeleteFoodClick(event) {
         delete state.foods[foodId];
         
         // Rafraîchir les listes d'aliments
-        ui.displayFoods(state.foods, handleDragStart, handleQuickAdd);
+        ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals);
         ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
         
         // Recharger la journée pour mettre à jour l'affichage
@@ -910,7 +949,7 @@ async function handleUpdateFood(event) {
     }
 
     // Rafraîchir toute l'interface
-    ui.displayFoods(state.foods, handleDragStart, handleQuickAdd);
+    ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals);
     ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
     await loadCurrentDay(); 
 
@@ -922,6 +961,7 @@ async function handleUpdateFood(event) {
 async function handleExport() {
     try {
         const foodsData = await db.getAllFromStore('foods');
+        const composedMealsData = await db.getAllFromStore('meals'); // Repas composés
         const mealsData = await db.getAllFromStore('dailyMeals');
         const goalsData = await db.getAllFromStore('goals');
         const waterData = await db.getAllFromStore('dailyWater');
@@ -929,9 +969,10 @@ async function handleExport() {
         const activitiesData = await db.getAllFromStore('dailyActivities');
         const customActivitiesData = await db.getAllFromStore('customActivities');
         const dataToExport = { 
-            version: '1.3', 
+            version: '1.4', // Nouvelle version avec repas composés
             exportDate: new Date().toISOString(), 
-            foods: foodsData, 
+            foods: foodsData,
+            meals: composedMealsData, // Repas composés
             dailyMeals: mealsData, 
             goals: goalsData,
             dailyWater: waterData,
@@ -964,6 +1005,7 @@ function handleImport(event) {
             
             // Vider tous les stores
             await db.clearStore('foods');
+            await db.clearStore('meals'); // Repas composés
             await db.clearStore('dailyMeals');
             await db.clearStore('goals');
             await db.clearStore('dailyWater');
@@ -973,6 +1015,7 @@ function handleImport(event) {
             
             // Importer les données
             await db.bulkPut('foods', data.foods);
+            if (data.meals) await db.bulkPut('meals', data.meals); // Repas composés
             await db.bulkPut('dailyMeals', data.dailyMeals);
             if (data.goals) await db.bulkPut('goals', data.goals);
             if (data.dailyWater) await db.bulkPut('dailyWater', data.dailyWater);
@@ -990,15 +1033,18 @@ function handleImport(event) {
     event.target.value = '';
 }
 async function handleReset() {
-    if (!confirm('⚠️ Voulez-vous vraiment réinitialiser TOUTES vos données ?\n\nCela supprimera :\n- Tous vos aliments personnalisés\n- Tous vos repas enregistrés\n- Tous vos objectifs\n- Toutes vos données d\'hydratation\n- Toutes vos données de pas\n- Tous vos poids enregistrés\n\nCette action est IRRÉVERSIBLE !')) return;
+    if (!confirm('⚠️ Voulez-vous vraiment réinitialiser TOUTES vos données ?\n\nCela supprimera :\n- Tous vos aliments personnalisés\n- Tous vos repas composés\n- Tous vos repas quotidiens enregistrés\n- Tous vos objectifs\n- Toutes vos données d\'hydratation\n- Toutes vos données de pas\n- Toutes vos activités\n- Tous vos poids enregistrés\n\nCette action est IRRÉVERSIBLE !')) return;
     
     try {
         // Réinitialiser tous les stores
         await db.clearStore('foods');
+        await db.clearStore('meals'); // Repas composés
         await db.clearStore('dailyMeals');
         await db.clearStore('goals');
         await db.clearStore('dailyWater');
         await db.clearStore('dailySteps');
+        await db.clearStore('dailyActivities');
+        await db.clearStore('customActivities');
         
         // Afficher notification avant rechargement
         ui.showNotification('✅ Toutes les données ont été supprimées ! Rechargement...', 'success');
@@ -1023,13 +1069,16 @@ function setupEventListeners() {
             if (tabName === 'stats') {
                 charts.updateCharts(state.currentPeriod, state.foods, state.goals);
                 charts.updateAverageCharts(state.currentAveragePeriod, state.foods, state.goals);
-                costs.updateCostCharts(state.currentCostPeriod, state.foods);
+                costs.updateCostCharts(state.currentCostPeriod, state.foods, state.meals);
                 try {
                     activityCharts.updateActivityCharts(state.currentActivityPeriod);
                 } catch (error) {
                     console.log('Erreur chargement graphiques activités:', error);
                 }
                 foodAnalysis.updateFoodAnalysis(state.currentFoodAnalysisPeriod, state.foods);
+            }
+            if (tabName === 'meals') {
+                meals.initMeals(state.foods);
             }
             if (tabName === 'comparison') {
                 foodComparison.initComparison(state.foods);
@@ -1060,7 +1109,7 @@ function setupEventListeners() {
                 state.currentCostPeriod = parseInt(e.target.dataset.costPeriod, 10);
                 document.querySelectorAll('.cost-period-btn').forEach(btn => btn.classList.remove('active'));
                 e.target.classList.add('active');
-                costs.updateCostCharts(state.currentCostPeriod, state.foods);
+                costs.updateCostCharts(state.currentCostPeriod, state.foods, state.meals);
             }
             // Event listener pour les boutons de période des activités
             if (e.target.matches('.activity-period-btn')) {
@@ -1190,10 +1239,12 @@ async function init(isReload = false) {
         }
         await initializeDefaultFoods();
         state.foods = await db.loadFoods();
+        state.meals = await db.loadMeals();
         state.goals = await db.loadGoals();
         
         // Exposer le state globalement pour les modules qui en ont besoin
         window.appState = state;
+        window.refreshAvailableFoods = refreshAvailableFoods;
         
         // Charger activités personnalisées avec protection
         try {
@@ -1208,7 +1259,7 @@ async function init(isReload = false) {
             ui.displayGoals(state.goals);
         }
         await loadCurrentDay();
-        ui.displayFoods(state.foods, handleDragStart, handleQuickAdd);
+        ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals);
         ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
         if (!isReload) {
             console.log('✅ Application prête !');

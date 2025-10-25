@@ -1,6 +1,6 @@
 // js/config.js
 export const DB_NAME = 'NutritionTrackerDB';
-export const DB_VERSION = 5;
+export const DB_VERSION = 6; // v6: Ajout du store 'meals' pour les repas composés
 
 export const defaultActivities = [
     '🚶 Marche',
