@@ -641,6 +641,17 @@ h3 {
     cursor: grabbing !important;
 }
 
+/* Style spécifique pour les repas composés */
+.composed-meal-item {
+    border-left: 4px solid #f59e0b;
+    background: linear-gradient(to right, rgba(245, 158, 11, 0.05), var(--color-bg-container));
+}
+
+.composed-meal-item:hover {
+    border-left-color: #d97706;
+    background: linear-gradient(to right, rgba(245, 158, 11, 0.1), var(--color-bg-container));
+}
+
 .meal-item-header { 
     display: flex; 
     justify-content: space-between; 
@@ -3173,5 +3184,320 @@ h3 {
 
     .best-value::before {
         display: none;
+    }
+}
+
+/* =============================================
+   ONGLET REPAS COMPOSÉS
+   ============================================= */
+
+/* Formulaire de création de repas */
+.meal-form-section {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 30px;
+}
+
+.meal-form-section h3 {
+    color: var(--color-primary-start);
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.4em;
+}
+
+/* Container des ingrédients */
+.ingredients-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+/* Ligne d'ingrédient */
+.ingredient-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    background: var(--color-bg-light);
+    border-radius: var(--border-radius-sm);
+    border: 2px solid var(--color-border);
+    transition: all 0.2s ease;
+}
+
+.ingredient-row:hover {
+    border-color: var(--color-primary-start);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.ingredient-select {
+    flex: 2;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.95em;
+    background: white;
+    cursor: pointer;
+}
+
+.ingredient-weight {
+    flex: 1;
+    max-width: 120px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.95em;
+}
+
+.remove-ingredient-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.remove-ingredient-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+/* Aperçu des valeurs nutritionnelles */
+.meal-nutrition-preview {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: var(--border-radius-md);
+    margin: 20px 0;
+    text-align: center;
+    font-size: 1.05em;
+    line-height: 1.6;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Boutons d'action du formulaire */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.submit-btn,
+.cancel-btn,
+.secondary-btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.cancel-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.secondary-btn {
+    background: white;
+    color: var(--color-primary-start);
+    border: 2px solid var(--color-primary-start);
+    margin-top: 10px;
+    width: 100%;
+}
+
+.secondary-btn:hover {
+    background: var(--color-primary-start);
+    color: white;
+}
+
+/* Liste des repas */
+.meals-list-section {
+    margin-top: 30px;
+}
+
+.meals-list-section h3 {
+    color: var(--color-primary-start);
+    margin-bottom: 20px;
+    font-size: 1.3em;
+}
+
+.meals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Item de repas dans la liste */
+.meal-item {
+    background: white;
+    padding: 20px;
+    border-radius: var(--border-radius-md);
+    border: 2px solid var(--color-border);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.meal-item:hover {
+    border-color: var(--color-primary-start);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+}
+
+.meal-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.meal-name {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.meal-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.meal-edit-btn,
+.meal-delete-btn {
+    background: none;
+    border: none;
+    font-size: 1.3em;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: var(--border-radius-sm);
+    transition: all 0.2s ease;
+}
+
+.meal-edit-btn:hover {
+    background: var(--color-bg-light);
+    transform: scale(1.1);
+}
+
+.meal-delete-btn:hover {
+    background: #fee2e2;
+    transform: scale(1.1);
+}
+
+.meal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.meal-nutrition {
+    font-size: 0.95em;
+    color: var(--color-text-medium);
+    font-weight: 500;
+}
+
+.meal-ingredients {
+    font-size: 0.9em;
+    color: #6c757d;
+    font-style: italic;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border);
+}
+
+/* Badge REPAS */
+.meal-badge,
+.meal-badge-small {
+    display: inline-block;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+}
+
+.meal-badge-small {
+    font-size: 0.65em;
+    padding: 3px 8px;
+}
+
+/* Repas dans la liste d'aliments disponibles */
+.meal-item-display {
+    border-left: 4px solid #f59e0b;
+}
+
+.meal-item-display:hover {
+    border-left-color: #d97706;
+    background: linear-gradient(to right, rgba(245, 158, 11, 0.05), white);
+}
+
+/* Description de section */
+.section-description {
+    text-align: center;
+    color: #6c757d;
+    margin-bottom: 25px;
+    font-size: 1.05em;
+    line-height: 1.6;
+}
+
+/* Responsive pour les repas */
+@media (max-width: 768px) {
+    .meal-form-section {
+        padding: 20px 15px;
+    }
+    
+    .ingredient-row {
+        flex-wrap: wrap;
+    }
+    
+    .ingredient-select {
+        flex: 1 1 100%;
+    }
+    
+    .ingredient-weight {
+        flex: 1;
+        max-width: none;
+    }
+    
+    .meal-nutrition-preview {
+        font-size: 0.9em;
+        padding: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .submit-btn,
+    .cancel-btn {
+        width: 100%;
     }
 }

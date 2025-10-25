@@ -21,6 +21,7 @@
             <button class="nav-tab" data-tab="stats">📊 Statistiques</button>
             <button class="nav-tab" data-tab="goals">🎯 Objectifs</button>
             <button class="nav-tab" data-tab="foods">🥗 Aliments</button>
+            <button class="nav-tab" data-tab="meals">🍽️ Repas</button>
             <button class="nav-tab" data-tab="comparison">⚖️ Comparaison</button>
             <button class="nav-tab" data-tab="settings">⚙️ Paramètres</button>
         </div>
@@ -792,6 +793,73 @@
             <p style="color: #999; margin-bottom: 15px; font-size: 0.9em;">💡 Cliquez sur un aliment pour le modifier</p>
             <div class="foods-list" id="foodsListManage"></div>
             <p id="noResultsMessageManage" style="display: none; text-align: center; color: #999; padding: 20px;">🔍 Aucun aliment trouvé</p>
+        </div>
+    </div>
+
+    <!-- =================== CONTENU DE L'ONGLET "REPAS" =================== -->
+    <div id="meals-tab" class="tab-content">
+        <h2 class="section-title">🍽️ Mes Repas</h2>
+        <p class="section-description">
+            Créez des repas composés à partir de vos aliments existants. 
+            Vous pourrez ensuite les ajouter rapidement à votre suivi quotidien.
+        </p>
+
+        <!-- Bouton pour créer un nouveau repas -->
+        <div style="text-align: center; margin-bottom: 30px;">
+            <button id="createMealBtn" class="action-btn">➕ Créer un nouveau repas</button>
+        </div>
+
+        <!-- Formulaire de création/édition de repas -->
+        <div id="mealFormSection" class="meal-form-section" style="display: none;">
+            <h3 id="mealFormTitle">Créer un nouveau repas</h3>
+            <form id="mealForm">
+                <!-- Nom du repas -->
+                <div class="form-group">
+                    <label>📝 Nom du repas</label>
+                    <input type="text" id="mealName" placeholder="Ex: Poulet Riz Légumes" required>
+                </div>
+
+                <!-- Liste des ingrédients -->
+                <div class="form-group">
+                    <label>🥘 Ingrédients</label>
+                    <div id="mealIngredientsContainer" class="ingredients-container">
+                        <!-- Les lignes d'ingrédients seront ajoutées dynamiquement -->
+                    </div>
+                    <button type="button" id="addIngredientBtn" class="secondary-btn">➕ Ajouter un ingrédient</button>
+                </div>
+
+                <!-- Poids total de la recette (optionnel) -->
+                <div class="form-group">
+                    <label>⚖️ Poids total de la recette (optionnel)</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="number" id="mealTotalWeight" placeholder="Ex: 900" min="1" step="1" style="flex: 1;">
+                        <span style="font-weight: 600;">grammes</span>
+                    </div>
+                    <small style="color: #666; font-size: 0.9em; margin-top: 5px; display: block;">
+                        💡 Si vous entrez le poids total, le système calculera automatiquement les valeurs pour 100g.<br>
+                        Exemple : Recette de 900g → vous pourrez ajuster la portion dans le suivi quotidien.
+                    </small>
+                </div>
+
+                <!-- Aperçu des valeurs nutritionnelles -->
+                <div class="meal-nutrition-preview" id="mealNutritionPreview">
+                    <strong>Totaux nutritionnels :</strong> --
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">💾 Sauvegarder</button>
+                    <button type="button" id="cancelMealBtn" class="cancel-btn">❌ Annuler</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Liste des repas -->
+        <div class="meals-list-section">
+            <h3>📋 Mes repas créés</h3>
+            <div id="mealsListContainer" class="meals-list">
+                <!-- Les repas seront affichés ici -->
+            </div>
         </div>
     </div>
 

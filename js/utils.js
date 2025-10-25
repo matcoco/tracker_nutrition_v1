@@ -19,19 +19,28 @@ export function formatDateDisplay(d) {
 }
 
 /**
- * Calcule les totaux nutritionnels pour une journée donnée.
- * @param {object} meals - L'objet représentant les repas du jour.
+ * Calcule les totaux nutritionnels pour une journée.
+ * @param {{petit_dejeuner: Array, dejeuner: Array, diner: Array, collations: Array}} meals - Les repas de la journée.
  * @param {object} foods - Le dictionnaire de tous les aliments disponibles.
+ * @param {object} composedMeals - Le dictionnaire des repas composés (optionnel).
  * @returns {{calories: number, proteins: number, carbs: number, fats: number, sugars: number, fibers: number}}
  */
-export function calculateDayTotals(meals, foods) {
+export function calculateDayTotals(meals, foods, composedMeals = {}) {
     const totals = { calories: 0, proteins: 0, carbs: 0, fats: 0, sugars: 0, fibers: 0 };
     if (!meals || !foods) return totals;
 
     for (const mealType in meals) {
         if (Array.isArray(meals[mealType])) {
             meals[mealType].forEach(item => {
-                const food = foods[item.id];
+                let food;
+                
+                // Vérifier si c'est un repas composé
+                if (item.isMeal && composedMeals[item.id]) {
+                    food = composedMeals[item.id];
+                } else {
+                    food = foods[item.id];
+                }
+                
                 if (food) {
                     const factor = (item.weight || 0) / 100;
                     totals.calories += (food.calories || 0) * factor;
@@ -51,14 +60,23 @@ export function calculateDayTotals(meals, foods) {
  * Calcule les totaux nutritionnels pour un seul repas (un tableau d'aliments).
  * @param {Array<object>} mealItems - Le tableau d'aliments pour un repas.
  * @param {object} foods - Le dictionnaire de tous les aliments disponibles.
+ * @param {object} composedMeals - Le dictionnaire des repas composés (optionnel).
  * @returns {{calories: number, proteins: number, carbs: number, fats: number, sugars: number, fibers: number}}
  */
-export function calculateMealTotals(mealItems, foods) {
+export function calculateMealTotals(mealItems, foods, composedMeals = {}) {
     const totals = { calories: 0, proteins: 0, carbs: 0, fats: 0, sugars: 0, fibers: 0 };
     if (!mealItems || !foods) return totals;
 
     mealItems.forEach(item => {
-        const food = foods[item.id];
+        let food;
+        
+        // Vérifier si c'est un repas composé
+        if (item.isMeal && composedMeals[item.id]) {
+            food = composedMeals[item.id];
+        } else {
+            food = foods[item.id];
+        }
+        
         if (food) {
             const factor = (item.weight || 0) / 100;
             totals.calories += (food.calories || 0) * factor;
@@ -96,16 +114,25 @@ export function generateFoodId(name) {
  * Calcule le coût d'une journée
  * @param {object} meals - Les repas de la journée
  * @param {object} foods - Dictionnaire des aliments
+ * @param {object} composedMeals - Dictionnaire des repas composés (optionnel)
  * @returns {number} Le coût total en euros
  */
-export function calculateDayCost(meals, foods) {
+export function calculateDayCost(meals, foods, composedMeals = {}) {
     let cost = 0;
     if (!meals || !foods) return cost;
 
     for (const mealType in meals) {
         if (Array.isArray(meals[mealType])) {
             meals[mealType].forEach(item => {
-                const food = foods[item.id];
+                let food;
+                
+                // Vérifier si c'est un repas composé
+                if (item.isMeal && composedMeals[item.id]) {
+                    food = composedMeals[item.id];
+                } else {
+                    food = foods[item.id];
+                }
+                
                 if (food && food.price && food.priceGrams) {
                     const itemCost = (food.price / food.priceGrams) * item.weight;
                     cost += itemCost;
@@ -120,9 +147,10 @@ export function calculateDayCost(meals, foods) {
  * Calcule les coûts par repas pour une journée
  * @param {object} meals - Les repas de la journée
  * @param {object} foods - Dictionnaire des aliments
+ * @param {object} composedMeals - Dictionnaire des repas composés (optionnel)
  * @returns {object} Objet avec coûts par type de repas
  */
-export function calculateCostsByMeal(meals, foods) {
+export function calculateCostsByMeal(meals, foods, composedMeals = {}) {
     const costs = {
         'petit-dej': 0,
         'dejeuner': 0,
@@ -135,7 +163,15 @@ export function calculateCostsByMeal(meals, foods) {
     for (const mealType in costs) {
         if (Array.isArray(meals[mealType])) {
             meals[mealType].forEach(item => {
-                const food = foods[item.id];
+                let food;
+                
+                // Vérifier si c'est un repas composé
+                if (item.isMeal && composedMeals[item.id]) {
+                    food = composedMeals[item.id];
+                } else {
+                    food = foods[item.id];
+                }
+                
                 if (food && food.price && food.priceGrams) {
                     const itemCost = (food.price / food.priceGrams) * item.weight;
                     costs[mealType] += itemCost;

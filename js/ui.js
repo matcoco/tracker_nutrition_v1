@@ -228,25 +228,33 @@ export function updateWeightDisplay(weight) {
 }
 
 /**
- * Affiche la liste des aliments disponibles pour le glisser-déposer.
- * @param {object} foods - Le dictionnaire de tous les aliments.
- * @param {Function} dragStartHandler - La fonction à appeler au début du drag.
+ * Affiche les aliments disponibles dans l'onglet Suivi Quotidien.
+ * @param {object} foods - Dictionnaire des aliments.
+ * @param {Function} dragStartHandler - La fonction à appeler lors du début de drag.
  * @param {Function} quickAddHandler - La fonction à appeler pour l'ajout rapide.
  * @param {number} maxItems - Nombre maximum d'aliments à afficher (0 = tous).
+ * @param {object} meals - Dictionnaire des repas composés (optionnel).
  */
-export function displayFoods(foods, dragStartHandler, quickAddHandler, maxItems = 20) {
+export function displayFoods(foods, dragStartHandler, quickAddHandler, maxItems = 20, meals = {}) {
     elements.foodsList.innerHTML = '';
+    
+    // Combiner repas et aliments
+    const mealsArray = Object.entries(meals).map(([id, meal]) => [id, { ...meal, isMeal: true }]);
     const foodsArray = Object.entries(foods);
-    const itemsToShow = maxItems > 0 ? Math.min(maxItems, foodsArray.length) : foodsArray.length;
+    const allItems = [...mealsArray, ...foodsArray];
+    
+    const itemsToShow = maxItems > 0 ? Math.min(maxItems, allItems.length) : allItems.length;
     
     for (let i = 0; i < itemsToShow; i++) {
-        const [id, food] = foodsArray[i];
-        const el = createFoodElement(id, food, dragStartHandler, quickAddHandler);
+        const [id, item] = allItems[i];
+        const el = item.isMeal 
+            ? createMealElement(id, item, dragStartHandler, quickAddHandler)
+            : createFoodElement(id, item, dragStartHandler, quickAddHandler);
         elements.foodsList.appendChild(el);
     }
     
     // Gérer le bouton "Voir plus"
-    updateLoadMoreButton(foodsArray.length, itemsToShow);
+    updateLoadMoreButton(allItems.length, itemsToShow);
 }
 
 /**
@@ -272,6 +280,54 @@ function createFoodElement(id, food, dragStartHandler, quickAddHandler) {
             <button class="quick-action-btn" data-food-id="${id}" title="Ajouter rapidement">+</button>
         </div>
         <div class="food-calories">${parseFloat(food.calories).toFixed(1)} kcal | P: ${parseFloat(food.proteins).toFixed(1)}g | G: ${parseFloat(food.carbs).toFixed(1)}g | F: ${parseFloat(food.fibers || 0).toFixed(1)}g | L: ${parseFloat(food.fats).toFixed(1)}g${priceInfo}</div>
+    `;
+    
+    el.addEventListener('dragstart', dragStartHandler);
+    
+    // Bouton d'action rapide
+    const quickBtn = el.querySelector('.quick-action-btn');
+    quickBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showMealSelector(e.target, id, quickAddHandler, el);
+    });
+    
+    return el;
+}
+
+/**
+ * Crée un élément de repas composé
+ */
+function createMealElement(id, meal, dragStartHandler, quickAddHandler) {
+    const el = document.createElement('div');
+    el.className = 'food-item meal-item-display';
+    el.draggable = true;
+    el.dataset.foodId = id; // Utiliser foodId pour compatibilité avec le drag & drop
+    el.dataset.foodName = meal.name;
+    
+    // Calculer prix total si disponible
+    let priceInfo = '';
+    if (meal.price) {
+        priceInfo = ` | 💰 ${meal.price.toFixed(2)}€`;
+    }
+    
+    // Nombre d'ingrédients
+    const ingredientCount = meal.ingredients ? meal.ingredients.length : 0;
+    
+    el.innerHTML = `
+        <div class="food-item-header">
+            <div class="food-name">
+                <span class="meal-badge-small">REPAS</span>
+                ${meal.name}
+            </div>
+            <button class="quick-action-btn" data-food-id="${id}" title="Ajouter rapidement">+</button>
+        </div>
+        <div class="food-calories">
+            ${parseFloat(meal.calories).toFixed(1)} kcal | 
+            P: ${parseFloat(meal.proteins).toFixed(1)}g | 
+            G: ${parseFloat(meal.carbs).toFixed(1)}g | 
+            L: ${parseFloat(meal.fats).toFixed(1)}g${priceInfo}
+            <br><small style="color: #999;">📝 ${ingredientCount} ingrédient${ingredientCount > 1 ? 's' : ''}</small>
+        </div>
     `;
     
     el.addEventListener('dragstart', dragStartHandler);
@@ -398,26 +454,35 @@ export function displayFoodsManage(foods, editClickHandler, deleteClickHandler) 
 }
 
 /**
- * Affiche tous les repas de la journée.
- * @param {object} meals - L'objet contenant les 4 repas du jour.
- * @param {object} foods - Le dictionnaire de tous les aliments.
+ * Affiche les éléments dans chaque repas.
+ * @param {{petit_dejeuner: Array, dejeuner: Array, diner: Array, collations: Array}} meals - Les repas de la journée.
+ * @param {object} foods - Dictionnaire des aliments.
  * @param {Function} removeHandler - Fonction à appeler pour supprimer un aliment.
  * @param {Function} weightChangeHandler - Fonction à appeler pour changer le poids.
  * @param {Function} mealItemDragStartHandler - Fonction à appeler au début du drag d'un meal-item.
+ * @param {object} composedMeals - Dictionnaire des repas composés (optionnel).
  */
-export function displayMeals(meals, foods, removeHandler, weightChangeHandler, mealItemDragStartHandler) {
+export function displayMeals(meals, foods, removeHandler, weightChangeHandler, mealItemDragStartHandler, composedMeals = {}) {
     for (const [type, items] of Object.entries(meals)) {
         const container = document.getElementById(type);
         const summaryEl = document.getElementById(`summary-${type}`);
         if (!container || !summaryEl) continue;
 
         container.innerHTML = '';
-        const totals = calculateMealTotals(items, foods);
+        const totals = calculateMealTotals(items, foods, composedMeals);
         
         // Calculer le coût total du repas
         let mealCost = 0;
         items.forEach(item => {
-            const food = foods[item.id];
+            let food;
+            
+            // Vérifier si c'est un repas composé
+            if (item.isMeal && composedMeals[item.id]) {
+                food = composedMeals[item.id];
+            } else {
+                food = foods[item.id];
+            }
+            
             if (food && hasPrice(food)) {
                 const pricePer100g = getPricePer100g(food);
                 mealCost += (pricePer100g / 100) * item.weight;
@@ -441,16 +506,26 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, m
         `;
 
         items.forEach(item => {
-            const food = foods[item.id];
+            // Vérifier si c'est un repas composé ou un aliment simple
+            let food;
+            let isMealComposed = false;
+            if (item.isMeal && composedMeals[item.id]) {
+                food = composedMeals[item.id];
+                isMealComposed = true;
+            } else {
+                food = foods[item.id];
+            }
+            
             if (!food) return;
 
             const el = document.createElement('div');
-            el.className = 'meal-item';
+            el.className = isMealComposed ? 'meal-item composed-meal-item' : 'meal-item';
             el.draggable = true; // Rendre l'élément draggable
             el.dataset.sourceMeal = type; // Type de repas source
             el.dataset.uniqueId = item.uniqueId; // ID unique de l'item
-            el.dataset.foodId = item.id; // ID de l'aliment
+            el.dataset.foodId = item.id; // ID de l'aliment ou repas
             el.dataset.weight = item.weight; // Poids actuel (toujours en grammes)
+            if (isMealComposed) el.dataset.isMeal = 'true';
             
             const cal = (food.calories * item.weight / 100).toFixed(0);
             const prot = (food.proteins * item.weight / 100).toFixed(1);
@@ -486,9 +561,11 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, m
                 inputStep = '1';
             }
 
+            const mealBadge = isMealComposed ? '<span class="meal-badge-small">REPAS</span> ' : '';
+            
             el.innerHTML = `
                 <div class="meal-item-header">
-                    <span class="meal-item-name">${food.name}</span>
+                    <span class="meal-item-name">${mealBadge}${food.name}</span>
                     <button class="remove-btn">✕</button>
                 </div>
                 <div class="weight-input">
@@ -780,13 +857,18 @@ export function updateStepsDisplay(steps, goals = null) {
 }
 
 /**
- * Met à jour l'affichage du résumé quotidien.
+ * Met à jour le résumé quotidien affiché.
  * @param {object} meals - Les repas de la journée.
  * @param {object} foods - Dictionnaire des aliments.
  * @param {object} totals - Totaux nutritionnels.
  * @param {string} date - Date formatée.
+ * @param {object} waterData - Données d'hydratation (optionnel).
+ * @param {number} steps - Nombre de pas (optionnel).
+ * @param {array} activities - Activités sportives (optionnel).
+ * @param {object} goals - Les objectifs (optionnel).
+ * @param {object} composedMeals - Dictionnaire des repas composés (optionnel).
  */
-export function updateDailySummary(meals, foods, totals, date, waterData = 0, steps = 0, activities = [], goals = null) {
+export function updateDailySummary(meals, foods, totals, date, waterData = 0, steps = 0, activities = [], goals = null, composedMeals = {}) {
     const summaryContent = document.getElementById('dailySummaryContent');
     
     // Vérifier s'il y a des aliments
@@ -847,7 +929,17 @@ export function updateDailySummary(meals, foods, totals, date, waterData = 0, st
             let mealCal = 0, mealProt = 0, mealCarb = 0, mealFat = 0, mealCost = 0;
             
             mealItems.forEach(item => {
-                const food = foods[item.id];
+                let food;
+                let itemLabel = '';
+                
+                // Vérifier si c'est un repas composé
+                if (item.isMeal && composedMeals[item.id]) {
+                    food = composedMeals[item.id];
+                    itemLabel = '🍽️ '; // Badge pour les repas
+                } else {
+                    food = foods[item.id];
+                }
+                
                 if (food) {
                     const factor = item.weight / 100;
                     mealCal += food.calories * factor;
@@ -855,7 +947,7 @@ export function updateDailySummary(meals, foods, totals, date, waterData = 0, st
                     mealCarb += food.carbs * factor;
                     mealFat += food.fats * factor;
                     
-                    let itemInfo = `  • ${food.name} - ${item.weight}g`;
+                    let itemInfo = `  • ${itemLabel}${food.name} - ${item.weight}g`;
                     
                     // Calculer le coût de cet item
                     if (hasPrice(food)) {
@@ -907,14 +999,15 @@ export function updateDailySummary(meals, foods, totals, date, waterData = 0, st
 }
 
 /**
- * Génère le texte du résumé pour la copie.
+ * Génère le texte du résumé pour l'export / copie.
  * @param {object} meals - Les repas de la journée.
  * @param {object} foods - Dictionnaire des aliments.
  * @param {object} totals - Totaux nutritionnels.
  * @param {string} date - Date formatée.
+ * @param {object} composedMeals - Dictionnaire des repas composés (optionnel).
  * @returns {string} Le texte du résumé.
  */
-export function generateSummaryText(meals, foods, totals, date, waterData = 0, steps = 0, activities = [], goals = null) {
+export function generateSummaryText(meals, foods, totals, date, waterData = 0, steps = 0, activities = [], goals = null, composedMeals = {}) {
     let summary = `📅 ${date}\n\n`;
     let totalCost = 0;
     
@@ -964,7 +1057,17 @@ export function generateSummaryText(meals, foods, totals, date, waterData = 0, s
             let mealCal = 0, mealProt = 0, mealCarb = 0, mealFat = 0, mealCost = 0;
             
             mealItems.forEach(item => {
-                const food = foods[item.id];
+                let food;
+                let itemLabel = '';
+                
+                // Vérifier si c'est un repas composé
+                if (item.isMeal && composedMeals[item.id]) {
+                    food = composedMeals[item.id];
+                    itemLabel = '🍽️ '; // Badge pour les repas
+                } else {
+                    food = foods[item.id];
+                }
+                
                 if (food) {
                     const factor = item.weight / 100;
                     mealCal += food.calories * factor;
@@ -972,7 +1075,7 @@ export function generateSummaryText(meals, foods, totals, date, waterData = 0, s
                     mealCarb += food.carbs * factor;
                     mealFat += food.fats * factor;
                     
-                    let itemInfo = `  • ${food.name} - ${item.weight}g`;
+                    let itemInfo = `  • ${itemLabel}${food.name} - ${item.weight}g`;
                     
                     // Calculer le coût de cet item
                     if (hasPrice(food)) {
