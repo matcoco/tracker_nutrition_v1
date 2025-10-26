@@ -18,22 +18,41 @@ export function exportSelectedItems(selectedFoodIds, selectedMealIds, foods, mea
         data: {
             foods: {},
             meals: {}
+        },
+        metadata: {
+            totalFoods: 0,
+            totalMeals: 0,
+            autoDependencies: 0
         }
     };
 
-    // Ajouter les aliments sélectionnés
-    selectedFoodIds.forEach(id => {
-        if (foods[id]) {
-            exportData.data.foods[id] = foods[id];
-        }
-    });
-
-    // Ajouter les repas sélectionnés
+    // Ajouter les repas sélectionnés ET leurs dépendances automatiquement
     selectedMealIds.forEach(id => {
         if (meals[id]) {
             exportData.data.meals[id] = meals[id];
+            
+            // ✨ AUTO-INCLURE les aliments nécessaires au repas
+            if (meals[id].ingredients) {
+                meals[id].ingredients.forEach(ingredient => {
+                    const foodId = ingredient.foodId;
+                    if (foods[foodId] && !exportData.data.foods[foodId]) {
+                        exportData.data.foods[foodId] = foods[foodId];
+                        exportData.metadata.autoDependencies++;
+                    }
+                });
+            }
         }
     });
+
+    // Ajouter les aliments sélectionnés manuellement
+    selectedFoodIds.forEach(id => {
+        if (foods[id] && !exportData.data.foods[id]) {
+            exportData.data.foods[id] = foods[id];
+        }
+    });
+    
+    exportData.metadata.totalFoods = Object.keys(exportData.data.foods).length;
+    exportData.metadata.totalMeals = Object.keys(exportData.data.meals).length;
 
     // Créer et télécharger le fichier JSON
     const dataStr = JSON.stringify(exportData, null, 2);
@@ -48,8 +67,15 @@ export function exportSelectedItems(selectedFoodIds, selectedMealIds, foods, mea
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    const totalItems = selectedFoodIds.length + selectedMealIds.length;
-    showNotification(`✅ Export réussi : ${totalItems} élément(s) exporté(s) !`);
+    let message = `✅ Export réussi !\n\n`;
+    message += `📤 ${exportData.metadata.totalMeals} repas exporté(s)\n`;
+    message += `📤 ${exportData.metadata.totalFoods} aliment(s) exporté(s)`;
+    
+    if (exportData.metadata.autoDependencies > 0) {
+        message += `\n\n✨ ${exportData.metadata.autoDependencies} aliment(s) inclus automatiquement (dépendances des repas)`;
+    }
+    
+    showNotification(message);
 }
 
 /**
@@ -104,6 +130,21 @@ function validateImportData(data) {
 }
 
 /**
+ * Compare si deux aliments sont identiques (mêmes valeurs nutritionnelles)
+ * @param {Object} food1 - Premier aliment
+ * @param {Object} food2 - Deuxième aliment
+ * @returns {boolean}
+ */
+function isSameFood(food1, food2) {
+    const tolerance = 0.1; // Tolérance de 0.1 pour les arrondis
+    
+    return Math.abs(food1.calories - food2.calories) <= tolerance &&
+           Math.abs(food1.proteins - food2.proteins) <= tolerance &&
+           Math.abs(food1.carbs - food2.carbs) <= tolerance &&
+           Math.abs(food1.fats - food2.fats) <= tolerance;
+}
+
+/**
  * Détecte les conflits entre données importées et existantes
  * @param {Object} importData - Données à importer
  * @param {Object} existingFoods - Aliments existants
@@ -150,33 +191,82 @@ function detectConflicts(importData, existingFoods, existingMeals) {
 async function mergeData(importData, existingFoods, existingMeals, conflicts) {
     const result = {
         foodsAdded: 0,
+        foodsMatched: 0,
+        foodsRenamed: 0,
         mealsAdded: 0,
-        foodsIgnored: conflicts.foods.length,
-        mealsIgnored: conflicts.meals.length,
-        ignoredItems: []
+        mealsIgnored: 0,
+        details: []
     };
     
-    // Importer les aliments (ignorer les doublons)
+    // Map pour suivre les changements d'ID d'aliments (oldId -> newId)
+    const foodIdMapping = {};
+    
+    // ÉTAPE 1 : Importer les aliments (dépendances) avec gestion intelligente des conflits
     for (const [id, food] of Object.entries(importData.data.foods)) {
         if (!existingFoods[id]) {
+            // Aliment n'existe pas → l'ajouter directement
             await db.saveFood(id, food);
             result.foodsAdded++;
+            result.details.push({ type: 'food-added', name: food.name });
         } else {
-            result.ignoredItems.push({ type: 'aliment', name: food.name });
+            // Aliment existe déjà → vérifier s'il est identique
+            if (isSameFood(existingFoods[id], food)) {
+                // Valeurs identiques → utiliser l'existant
+                result.foodsMatched++;
+                result.details.push({ type: 'food-matched', name: food.name });
+            } else {
+                // Valeurs différentes → créer avec un nouveau ID pour éviter les conflits
+                const newId = `${id}-imported-${Date.now()}`;
+                const renamedFood = { ...food, name: `${food.name} (importé)` };
+                await db.saveFood(newId, renamedFood);
+                foodIdMapping[id] = newId; // Sauvegarder le mapping
+                result.foodsRenamed++;
+                result.details.push({ 
+                    type: 'food-renamed', 
+                    oldName: food.name, 
+                    newName: renamedFood.name,
+                    reason: 'Conflit détecté : valeurs nutritionnelles différentes'
+                });
+            }
         }
     }
     
-    // Importer les repas (ignorer les doublons)
+    // ÉTAPE 2 : Mettre à jour les références dans les repas si nécessaire
+    if (Object.keys(foodIdMapping).length > 0) {
+        updateMealIngredients(importData.data.meals, foodIdMapping);
+    }
+    
+    // ÉTAPE 3 : Importer les repas (maintenant toutes les dépendances existent)
     for (const [id, meal] of Object.entries(importData.data.meals)) {
         if (!existingMeals[id]) {
             await db.saveMeal(id, meal);
             result.mealsAdded++;
+            result.details.push({ type: 'meal-added', name: meal.name });
         } else {
-            result.ignoredItems.push({ type: 'repas', name: meal.name });
+            // Repas existe déjà → ignorer
+            result.mealsIgnored++;
+            result.details.push({ type: 'meal-ignored', name: meal.name });
         }
     }
     
     return result;
+}
+
+/**
+ * Met à jour les références des ingrédients dans les repas
+ * @param {Object} meals - Repas à mettre à jour
+ * @param {Object} idMapping - Map des changements d'ID (oldId -> newId)
+ */
+function updateMealIngredients(meals, idMapping) {
+    Object.values(meals).forEach(meal => {
+        if (meal.ingredients) {
+            meal.ingredients.forEach(ingredient => {
+                if (idMapping[ingredient.foodId]) {
+                    ingredient.foodId = idMapping[ingredient.foodId];
+                }
+            });
+        }
+    });
 }
 
 /**
@@ -206,7 +296,7 @@ function setupExportInterface(foods, meals) {
     // Ouvrir la modale
     exportBtn.addEventListener('click', () => {
         modal.classList.add('show');
-        populateExportList('foods', foods);
+        populateExportList('foods', foods, meals, foods);
     });
     
     // Fermer la modale
@@ -234,9 +324,9 @@ function setupExportInterface(foods, meals) {
             btn.classList.add('active');
             
             if (mode === 'foods') {
-                populateExportList('foods', foods);
+                populateExportList('foods', foods, meals, foods);
             } else {
-                populateExportList('meals', meals);
+                populateExportList('meals', meals, meals, foods);
             }
         });
     });
@@ -281,7 +371,7 @@ function setupExportInterface(foods, meals) {
 /**
  * Remplit la liste d'export
  */
-function populateExportList(mode, items) {
+function populateExportList(mode, items, meals, foods) {
     const container = document.getElementById('exportListContainer');
     if (!container) return;
     
@@ -300,11 +390,29 @@ function populateExportList(mode, items) {
         const emoji = mode === 'foods' ? '🥗' : '🍽️';
         const type = mode === 'foods' ? 'food' : 'meal';
         
+        let dependenciesHtml = '';
+        
+        // Si c'est un repas, afficher les ingrédients qui seront auto-exportés
+        if (mode === 'meals' && item.ingredients && item.ingredients.length > 0) {
+            const ingredientNames = item.ingredients
+                .map(ing => foods[ing.foodId]?.name)
+                .filter(Boolean)
+                .join(', ');
+            
+            const ingredientCount = item.ingredients.length;
+            dependenciesHtml = `
+                <div style="margin-left: 32px; margin-top: 4px; font-size: 0.85em; color: #666;">
+                    📦 Inclura automatiquement ${ingredientCount} aliment(s) : ${ingredientNames}
+                </div>
+            `;
+        }
+        
         div.innerHTML = `
-            <label>
+            <label style="display: block;">
                 <input type="checkbox" class="export-checkbox" data-id="${id}" data-type="${type}">
                 <span>${emoji} ${item.name}</span>
             </label>
+            ${dependenciesHtml}
         `;
         
         container.appendChild(div);
@@ -331,13 +439,31 @@ function setupImportInterface(foods, meals) {
         try {
             const result = await importFromFile(file, foods, meals);
             
-            // Afficher les résultats
+            // Afficher les résultats détaillés
             let message = `✅ Import terminé !\n\n`;
-            message += `📥 ${result.foodsAdded} aliment(s) ajouté(s)\n`;
-            message += `📥 ${result.mealsAdded} repas ajouté(s)\n`;
             
-            if (result.foodsIgnored > 0 || result.mealsIgnored > 0) {
-                message += `\n⚠️ ${result.foodsIgnored + result.mealsIgnored} doublon(s) ignoré(s)`;
+            // Aliments
+            if (result.foodsAdded > 0) {
+                message += `📥 ${result.foodsAdded} aliment(s) ajouté(s)\n`;
+            }
+            if (result.foodsMatched > 0) {
+                message += `✓ ${result.foodsMatched} aliment(s) correspondant(s) trouvé(s)\n`;
+            }
+            if (result.foodsRenamed > 0) {
+                message += `🔄 ${result.foodsRenamed} aliment(s) renommé(s) (conflit détecté)\n`;
+            }
+            
+            // Repas
+            if (result.mealsAdded > 0) {
+                message += `📥 ${result.mealsAdded} repas ajouté(s)\n`;
+            }
+            if (result.mealsIgnored > 0) {
+                message += `⚠️ ${result.mealsIgnored} repas ignoré(s) (doublon)\n`;
+            }
+            
+            // Message complémentaire
+            if (result.foodsMatched > 0) {
+                message += `\nℹ️ Les aliments correspondants ont été réutilisés`;
             }
             
             showNotification(message);
