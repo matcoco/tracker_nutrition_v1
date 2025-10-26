@@ -134,11 +134,10 @@ async function collectFoodConsumption(period, foods) {
     Object.values(consumption).forEach(item => {
         const food = foods[item.id];
         if (food && hasPrice(food) && item.proteinsPer100g > 0) {
-            // Prix au kilo
+            // Prix pour 100g de l'aliment
             const pricePer100g = getPricePer100g(food);
-            const pricePerKg = pricePer100g * 10;
-            // Prix pour 100g de protéines = (prix au kilo / protéines pour 100g) * 100
-            item.proteinPrice = (pricePerKg / item.proteinsPer100g) * 100;
+            // Prix pour 100g de protéines = (prix pour 100g / protéines dans 100g) * 100
+            item.proteinPrice = (pricePer100g / item.proteinsPer100g) * 100;
         } else {
             item.proteinPrice = 0;
         }
