@@ -3389,14 +3389,20 @@ h3 {
 }
 
 .meal-edit-btn,
-.meal-delete-btn {
+.meal-delete-btn,
+.meal-duplicate-btn {
     background: none;
     border: none;
     font-size: 1.3em;
     cursor: pointer;
-    padding: 5px 10px;
-    border-radius: var(--border-radius-sm);
+    padding: 6px;
+    border-radius: 4px;
     transition: all 0.2s ease;
+}
+
+.meal-duplicate-btn:hover {
+    background: #dbeafe;
+    transform: scale(1.1);
 }
 
 .meal-edit-btn:hover {

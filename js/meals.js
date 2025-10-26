@@ -126,6 +126,7 @@ function displayMealsList(meals, foods) {
                     ${meal.name}${weightInfo}
                 </div>
                 <div class="meal-actions">
+                    <button class="meal-duplicate-btn" data-meal-id="${id}" title="Dupliquer">📋</button>
                     <button class="meal-edit-btn" data-meal-id="${id}" title="Modifier">✏️</button>
                     <button class="meal-delete-btn" data-meal-id="${id}" title="Supprimer">🗑️</button>
                 </div>
@@ -148,6 +149,13 @@ function displayMealsList(meals, foods) {
         btn.addEventListener('click', (e) => {
             const mealId = e.currentTarget.dataset.mealId;
             editMeal(mealId, meals, foods);
+        });
+    });
+    
+    document.querySelectorAll('.meal-duplicate-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const mealId = e.currentTarget.dataset.mealId;
+            duplicateMeal(mealId, meals, foods);
         });
     });
     
@@ -204,12 +212,19 @@ function showMealForm(foods, meal = null) {
     formSection.style.display = 'block';
     ingredientsContainer.innerHTML = '';
     
-    // Pré-remplir si édition
+    // Pré-remplir si édition ou duplication
     if (meal) {
         document.getElementById('mealName').value = meal.name;
         document.getElementById('mealTotalWeight').value = meal.totalWeight || '';
-        document.getElementById('mealFormTitle').textContent = 'Modifier le repas';
-        document.getElementById('mealForm').dataset.editId = meal.id || '';
+        
+        // Si meal.id existe, c'est une édition, sinon c'est une duplication
+        if (meal.id) {
+            document.getElementById('mealFormTitle').textContent = 'Modifier le repas';
+            document.getElementById('mealForm').dataset.editId = meal.id;
+        } else {
+            document.getElementById('mealFormTitle').textContent = 'Créer un nouveau repas (copie)';
+            document.getElementById('mealForm').dataset.editId = '';
+        }
         
         meal.ingredients.forEach(ing => {
             addIngredientRow(foods, ing);
@@ -419,6 +434,24 @@ function editMeal(mealId, meals, foods) {
     if (!meal) return;
     
     showMealForm(foods, { ...meal, id: mealId });
+}
+
+/**
+ * Duplique un repas existant
+ */
+function duplicateMeal(mealId, meals, foods) {
+    const meal = meals[mealId];
+    if (!meal) return;
+    
+    // Créer une copie du repas avec un nouveau nom
+    const duplicatedMeal = {
+        ...meal,
+        name: `${meal.name} - Copie`
+    };
+    
+    // Ouvrir le formulaire en mode création (sans id)
+    // L'utilisateur pourra modifier le nom et les ingrédients avant de sauvegarder
+    showMealForm(foods, duplicatedMeal);
 }
 
 /**
