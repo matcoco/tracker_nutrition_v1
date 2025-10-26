@@ -1,0 +1,649 @@
+{
+  "version": "1.0",
+  "exportDate": "2025-10-26T16:45:15.609Z",
+  "appName": "Nutrition Tracker",
+  "data": {
+    "foods": {
+      "carpaccion-de-boeuf-charal": {
+        "name": "Carpaccion de boeuf ((charal) ",
+        "calories": 105,
+        "proteins": 16,
+        "carbs": 0,
+        "sugars": 0,
+        "fibers": 0,
+        "fats": 3,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 6.22,
+        "priceQuantity": 200,
+        "priceUnit": "grams"
+      },
+      "mirin-sukina": {
+        "name": "Mirin (Sukina)",
+        "calories": 239,
+        "proteins": 0,
+        "carbs": 6,
+        "sugars": 60,
+        "fibers": 0,
+        "fats": 0,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 13,
+        "priceQuantity": 792,
+        "priceUnit": "grams"
+      },
+      "sake-de-cuisine-wadakan": {
+        "name": "Sake de cuisine (Wadakan)",
+        "calories": 87,
+        "proteins": 0.3,
+        "carbs": 0.6,
+        "sugars": 0,
+        "fibers": 0,
+        "fats": 0,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 6,
+        "priceQuantity": 748,
+        "priceUnit": "grams"
+      },
+      "sucre-blanc-en-poudre-beghin-say": {
+        "name": "Sucre blanc en poudre (Beghin say)",
+        "calories": 400,
+        "proteins": 0,
+        "carbs": 0,
+        "sugars": 100,
+        "fibers": 0,
+        "fats": 0,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1.54,
+        "priceQuantity": 1000,
+        "priceUnit": "grams"
+      },
+      "oignon-blanc": {
+        "name": "Oignon blanc",
+        "calories": 40,
+        "proteins": 1.1,
+        "carbs": 5.1,
+        "sugars": 4.2,
+        "fibers": 1.7,
+        "fats": 0.1,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1,
+        "priceQuantity": 1000,
+        "priceUnit": "grams"
+      },
+      "ail-gingembre-en-pot": {
+        "name": "Ail gingembre en pot",
+        "calories": 124,
+        "proteins": 1.9,
+        "carbs": 15,
+        "sugars": 0,
+        "fibers": 1.2,
+        "fats": 5,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 2,
+        "priceQuantity": 200,
+        "priceUnit": "grams"
+      },
+      "eau": {
+        "name": "Eau",
+        "calories": 0,
+        "proteins": 0,
+        "carbs": 0,
+        "sugars": 0,
+        "fibers": 0,
+        "fats": 0,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 0.12,
+        "priceQuantity": 1000,
+        "priceUnit": "grams"
+      },
+      "sauce-soja-sale-kikkoman": {
+        "name": "Sauce soja salé (Kikkoman)",
+        "calories": 77,
+        "proteins": 10,
+        "carbs": 2.6,
+        "sugars": 0.6,
+        "fibers": 0,
+        "fats": 0,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 8.5,
+        "priceQuantity": 1040,
+        "priceUnit": "grams"
+      },
+      "pomme-de-terre": {
+        "name": "Pomme de terre",
+        "calories": 81,
+        "proteins": 1.8,
+        "carbs": 15.8,
+        "sugars": 0.9,
+        "fibers": 1.8,
+        "fats": 0.3,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 2.29,
+        "priceQuantity": 2000,
+        "priceUnit": "grams"
+      },
+      "riz-thai": {
+        "name": "Riz thai",
+        "calories": 350,
+        "proteins": 6.7,
+        "carbs": 79,
+        "sugars": 0,
+        "fibers": 0,
+        "fats": 0.7,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 14.5,
+        "priceQuantity": 10000,
+        "priceUnit": "grams"
+      },
+      "farine-t55-bio-carrefour": {
+        "name": "Farine T55 (bio carrefour)",
+        "calories": 334,
+        "proteins": 11,
+        "carbs": 68.2,
+        "sugars": 1.8,
+        "fibers": 0,
+        "fats": 1.2,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1.15,
+        "priceQuantity": 1000,
+        "priceUnit": "grams"
+      },
+      "sel": {
+        "name": "Sel",
+        "calories": 0,
+        "proteins": 0,
+        "carbs": 0,
+        "sugars": 0,
+        "fibers": 0,
+        "fats": 0,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 0.58,
+        "priceQuantity": 500,
+        "priceUnit": "grams"
+      },
+      "nouilles-udon": {
+        "name": "Nouilles Udon",
+        "calories": 140,
+        "proteins": 3.7,
+        "carbs": 30.4,
+        "sugars": 0.2,
+        "fibers": 0,
+        "fats": 0.3,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 3,
+        "priceQuantity": 800,
+        "priceUnit": "grams"
+      },
+      "creme-de-soja-bio-village": {
+        "name": "Crème de soja Bio village",
+        "calories": 186,
+        "proteins": 3,
+        "carbs": 3.1,
+        "sugars": 2.1,
+        "fibers": 0,
+        "fats": 17,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1.61,
+        "priceQuantity": 600,
+        "priceUnit": "grams"
+      },
+      "petit-pois-surgeles-eco": {
+        "name": "Petit pois surgelés (eco+)",
+        "calories": 69,
+        "proteins": 5.2,
+        "carbs": 5.9,
+        "sugars": 3.1,
+        "fibers": 4.6,
+        "fats": 0.5,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1.56,
+        "priceQuantity": 1000,
+        "priceUnit": "grams"
+      },
+      "beurre-paysan-de-breton-doux-82mg": {
+        "name": "Beurre paysan de breton doux 82%MG",
+        "calories": 743,
+        "proteins": 0.7,
+        "carbs": 0,
+        "sugars": 0.6,
+        "fibers": 0,
+        "fats": 82,
+        "price": 2.44,
+        "priceGrams": 250
+      },
+      "miso-mild-sempio-doejang": {
+        "name": "Miso mild (sempio doejang)",
+        "calories": 138,
+        "proteins": 11.9,
+        "carbs": 1.9,
+        "sugars": 12.1,
+        "fibers": 0,
+        "fats": 2.3,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 2.17,
+        "priceQuantity": 500,
+        "priceUnit": "grams"
+      },
+      "poireau-frais": {
+        "name": "Poireau (frais)",
+        "calories": 25,
+        "proteins": 1.1,
+        "carbs": 3,
+        "sugars": 0,
+        "fibers": 3.2,
+        "fats": 0.3,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1.99,
+        "priceQuantity": 1000,
+        "priceUnit": "grams"
+      },
+      "proteines-de-soja-textures-petits-morceaux": {
+        "name": "Protéines de soja texturés (petits morceaux)",
+        "calories": 352,
+        "proteins": 50,
+        "carbs": 6.3,
+        "sugars": 7.7,
+        "fibers": 14,
+        "fats": 7.5,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1.69,
+        "priceQuantity": 175,
+        "priceUnit": "grams"
+      },
+      "huile-tournesol-eco": {
+        "name": "Huile tournesol (eco+)",
+        "calories": 828,
+        "proteins": 0,
+        "carbs": 0,
+        "sugars": 0,
+        "fibers": 0,
+        "fats": 92,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1.67,
+        "priceQuantity": 916,
+        "priceUnit": "grams"
+      }
+    },
+    "meals": {
+      "boeuf-mijot-japonais": {
+        "name": "Boeuf mijoté japonais",
+        "ingredients": [
+          {
+            "foodId": "carpaccion-de-boeuf-charal",
+            "weight": 200
+          },
+          {
+            "foodId": "mirin-sukina",
+            "weight": 53
+          },
+          {
+            "foodId": "sake-de-cuisine-wadakan",
+            "weight": 45
+          },
+          {
+            "foodId": "sucre-blanc-en-poudre-beghin-say",
+            "weight": 25
+          },
+          {
+            "foodId": "oignon-blanc",
+            "weight": 100
+          },
+          {
+            "foodId": "ail-gingembre-en-pot",
+            "weight": 5
+          },
+          {
+            "foodId": "eau",
+            "weight": 60
+          }
+        ],
+        "totalWeight": 488,
+        "calories": 106.97131147540983,
+        "proteins": 6.829918032786885,
+        "carbs": 1.905737704918033,
+        "fats": 1.3012295081967213,
+        "sugars": 12.5,
+        "fibers": 0.36065573770491804,
+        "price": 1.5659041110234455,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
+      },
+      "boeuf-mijot-japonais-avec-pomme-de-terre-": {
+        "name": "Boeuf mijoté japonais (avec pomme de terre)",
+        "ingredients": [
+          {
+            "foodId": "sauce-soja-sale-kikkoman",
+            "weight": 78
+          },
+          {
+            "foodId": "mirin-sukina",
+            "weight": 66
+          },
+          {
+            "foodId": "sake-de-cuisine-wadakan",
+            "weight": 56
+          },
+          {
+            "foodId": "sucre-blanc-en-poudre-beghin-say",
+            "weight": 31
+          },
+          {
+            "foodId": "carpaccion-de-boeuf-charal",
+            "weight": 200
+          },
+          {
+            "foodId": "pomme-de-terre",
+            "weight": 150
+          },
+          {
+            "foodId": "oignon-blanc",
+            "weight": 100
+          },
+          {
+            "foodId": "ail-gingembre-en-pot",
+            "weight": 5
+          },
+          {
+            "foodId": "eau",
+            "weight": 72
+          }
+        ],
+        "totalWeight": 758,
+        "calories": 101.34828496042216,
+        "proteins": 5.786675461741425,
+        "carbs": 4.732717678100264,
+        "fats": 0.8970976253298153,
+        "sugars": 10.10791556728232,
+        "fibers": 0.5883905013192612,
+        "price": 1.1560898673213589,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
+      },
+      "boeuf-mijot-japonais-avec-riz-": {
+        "name": "Boeuf mijoté japonais (avec riz)",
+        "ingredients": [
+          {
+            "foodId": "carpaccion-de-boeuf-charal",
+            "weight": 200
+          },
+          {
+            "foodId": "mirin-sukina",
+            "weight": 53
+          },
+          {
+            "foodId": "sake-de-cuisine-wadakan",
+            "weight": 45
+          },
+          {
+            "foodId": "sucre-blanc-en-poudre-beghin-say",
+            "weight": 25
+          },
+          {
+            "foodId": "oignon-blanc",
+            "weight": 100
+          },
+          {
+            "foodId": "ail-gingembre-en-pot",
+            "weight": 5
+          },
+          {
+            "foodId": "riz-thai",
+            "weight": 70
+          },
+          {
+            "foodId": "eau",
+            "weight": 60
+          }
+        ],
+        "totalWeight": 558,
+        "calories": 137.45878136200716,
+        "proteins": 6.813620071684587,
+        "carbs": 11.57706093189964,
+        "fats": 1.2258064516129032,
+        "sugars": 10.931899641577061,
+        "fibers": 0.3154121863799283,
+        "price": 1.387654491361006,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
+      },
+      "boeuf-mijot-japonais-avec-udon-fait-maison-": {
+        "name": "Boeuf mijoté japonais (avec udon fait maison)",
+        "ingredients": [
+          {
+            "foodId": "sauce-soja-sale-kikkoman",
+            "weight": 62
+          },
+          {
+            "foodId": "mirin-sukina",
+            "weight": 53
+          },
+          {
+            "foodId": "sake-de-cuisine-wadakan",
+            "weight": 45
+          },
+          {
+            "foodId": "sucre-blanc-en-poudre-beghin-say",
+            "weight": 25
+          },
+          {
+            "foodId": "oignon-blanc",
+            "weight": 100
+          },
+          {
+            "foodId": "ail-gingembre-en-pot",
+            "weight": 5
+          },
+          {
+            "foodId": "farine-t55-bio-carrefour",
+            "weight": 75
+          },
+          {
+            "foodId": "sel",
+            "weight": 4
+          },
+          {
+            "foodId": "carpaccion-de-boeuf-charal",
+            "weight": 200
+          },
+          {
+            "foodId": "eau",
+            "weight": 34
+          }
+        ],
+        "totalWeight": 603,
+        "calories": 136.02985074626866,
+        "proteins": 7.923714759535655,
+        "carbs": 10.292205638474295,
+        "fats": 1.2023217247097844,
+        "sugars": 10.401658374792705,
+        "fibers": 0.29187396351575456,
+        "price": 1.3658561908831148,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
+      },
+      "boeuf-mijot-japonais-avec-udons-": {
+        "name": "Boeuf mijoté japonais (avec udon acheté)",
+        "ingredients": [
+          {
+            "foodId": "mirin-sukina",
+            "weight": 53
+          },
+          {
+            "foodId": "sauce-soja-sale-kikkoman",
+            "weight": 62
+          },
+          {
+            "foodId": "sucre-blanc-en-poudre-beghin-say",
+            "weight": 25
+          },
+          {
+            "foodId": "oignon-blanc",
+            "weight": 100
+          },
+          {
+            "foodId": "ail-gingembre-en-pot",
+            "weight": 5
+          },
+          {
+            "foodId": "carpaccion-de-boeuf-charal",
+            "weight": 200
+          },
+          {
+            "foodId": "sake-de-cuisine-wadakan",
+            "weight": 45
+          },
+          {
+            "foodId": "nouilles-udon",
+            "weight": 200
+          },
+          {
+            "foodId": "eau",
+            "weight": 60
+          }
+        ],
+        "totalWeight": 750,
+        "calories": 113.30133333333332,
+        "proteins": 6.257333333333333,
+        "carbs": 9.561599999999999,
+        "fats": 0.9266666666666665,
+        "sugars": 8.236266666666667,
+        "fibers": 0.23466666666666666,
+        "price": 1.1864457108033577,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
+      },
+      "cr-me-de-petit-pois": {
+        "name": "crème de petit pois",
+        "ingredients": [
+          {
+            "foodId": "creme-de-soja-bio-village",
+            "weight": 100
+          },
+          {
+            "foodId": "petit-pois-surgeles-eco",
+            "weight": 500
+          },
+          {
+            "foodId": "beurre-paysan-de-breton-doux-82mg",
+            "weight": 10
+          },
+          {
+            "foodId": "oignon-blanc",
+            "weight": 75
+          },
+          {
+            "foodId": "eau",
+            "weight": 300
+          }
+        ],
+        "totalWeight": 985,
+        "calories": 64.497461928934,
+        "proteins": 3.03502538071066,
+        "carbs": 3.6979695431472086,
+        "fats": 2.819796954314721,
+        "sugars": 2.1126903553299496,
+        "fibers": 2.464467005076142,
+        "price": 0.12722673434856174,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
+      },
+      "nouilles-udon-fait-maison-": {
+        "name": "Nouilles udon (fait maison)",
+        "ingredients": [
+          {
+            "foodId": "farine-t55-bio-carrefour",
+            "weight": 75
+          },
+          {
+            "foodId": "sel",
+            "weight": 4
+          },
+          {
+            "foodId": "eau",
+            "weight": 34
+          }
+        ],
+        "totalWeight": 113,
+        "calories": 221.68141592920355,
+        "proteins": 7.300884955752212,
+        "carbs": 45.26548672566373,
+        "fats": 0.7964601769911503,
+        "sugars": 1.1946902654867257,
+        "fibers": 0,
+        "price": 0.08404424778761062,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
+      },
+      "prot-ine-de-soja-au-miso-mild-": {
+        "name": "Protéine de soja au miso (mild)",
+        "ingredients": [
+          {
+            "foodId": "miso-mild-sempio-doejang",
+            "weight": 35
+          },
+          {
+            "foodId": "oignon-blanc",
+            "weight": 100
+          },
+          {
+            "foodId": "poireau-frais",
+            "weight": 200
+          },
+          {
+            "foodId": "proteines-de-soja-textures-petits-morceaux",
+            "weight": 45
+          },
+          {
+            "foodId": "sake-de-cuisine-wadakan",
+            "weight": 34
+          },
+          {
+            "foodId": "sauce-soja-sale-kikkoman",
+            "weight": 47
+          },
+          {
+            "foodId": "huile-tournesol-eco",
+            "weight": 14
+          },
+          {
+            "foodId": "sucre-blanc-en-poudre-beghin-say",
+            "weight": 25
+          }
+        ],
+        "totalWeight": 500,
+        "calories": 115.67800000000003,
+        "proteins": 6.953399999999999,
+        "carbs": 3.205200000000001,
+        "fats": 3.5520000000000005,
+        "sugars": 7.436400000000001,
+        "fibers": 2.88,
+        "price": 0.36007146683011315,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
+      }
+    }
+  },
+  "metadata": {
+    "totalFoods": 20,
+    "totalMeals": 8,
+    "autoDependencies": 20
+  }
+}

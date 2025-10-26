@@ -1001,7 +1001,19 @@ function handleImport(event) {
     reader.onload = async (e) => {
         try {
             const data = JSON.parse(e.target.result);
-            if (!data.foods || !data.dailyMeals) throw new Error('Format de fichier invalide.');
+            
+            // Détecter si c'est un fichier de partage sélectif
+            if (data.data && data.data.foods && data.appName === 'Nutrition Tracker') {
+                ui.showNotification('⚠️ Ce fichier est un partage d\'aliments/repas.\n\nVeuillez utiliser le bouton "📂 Importer depuis un fichier" dans la section "Partage d\'Aliments et Repas" pour importer ce type de fichier.', 'error');
+                return;
+            }
+            
+            // Vérifier le format de sauvegarde complète
+            if (!data.foods || !data.dailyMeals) {
+                ui.showNotification('❌ Format de fichier invalide.\n\nAssurez-vous d\'importer une sauvegarde complète exportée depuis cette application.', 'error');
+                return;
+            }
+            
             if (!confirm('Importer ces données ?\n⚠️ Les données actuelles seront remplacées.')) return;
             
             // Vider tous les stores

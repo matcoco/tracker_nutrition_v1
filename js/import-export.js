@@ -93,9 +93,10 @@ export async function importFromFile(file, existingFoods, existingMeals) {
             try {
                 const importData = JSON.parse(e.target.result);
                 
-                // Valider le format
-                if (!validateImportData(importData)) {
-                    throw new Error('Format de fichier invalide');
+                // Valider le format et détecter le type
+                const validation = validateImportData(importData);
+                if (!validation.valid) {
+                    throw new Error(validation.error);
                 }
                 
                 // Détecter les conflits
@@ -116,17 +117,37 @@ export async function importFromFile(file, existingFoods, existingMeals) {
 }
 
 /**
- * Valide le format des données importées
+ * Valide le format des données importées et détecte le type
  * @param {Object} data - Données à valider
- * @returns {boolean}
+ * @returns {Object} - { valid: boolean, type: string, error: string }
  */
 function validateImportData(data) {
-    if (!data || typeof data !== 'object') return false;
-    if (!data.version || !data.data) return false;
-    if (!data.data.foods || !data.data.meals) return false;
-    if (typeof data.data.foods !== 'object' || typeof data.data.meals !== 'object') return false;
+    if (!data || typeof data !== 'object') {
+        return { valid: false, error: 'Le fichier ne contient pas de données valides' };
+    }
     
-    return true;
+    // Détecter le format GLOBAL (backup complet)
+    if (data.foods && data.dailyMeals && !data.data) {
+        return { 
+            valid: false, 
+            type: 'global',
+            error: '⚠️ Ce fichier est une sauvegarde complète.\n\nVeuillez utiliser le bouton "📥 Importer les données" dans la section "Gestion des Données" pour restaurer une sauvegarde complète.' 
+        };
+    }
+    
+    // Détecter le format SÉLECTIF (partage d'aliments/repas)
+    if (data.data && data.data.foods && data.data.meals) {
+        if (typeof data.data.foods !== 'object' || typeof data.data.meals !== 'object') {
+            return { valid: false, error: 'Format des aliments ou repas invalide' };
+        }
+        return { valid: true, type: 'selective' };
+    }
+    
+    // Format non reconnu
+    return { 
+        valid: false, 
+        error: 'Format de fichier non reconnu.\n\nAssurez-vous d\'importer un fichier exporté depuis cette application.' 
+    };
 }
 
 /**
@@ -269,20 +290,33 @@ function updateMealIngredients(meals, idMapping) {
     });
 }
 
+// Flag pour éviter la réinitialisation multiple
+let isExportImportInitialized = false;
+let cachedFoodsData = {};
+let cachedMealsData = {};
+
 /**
  * Initialise l'interface d'import/export
  * @param {Object} foods - Aliments disponibles
  * @param {Object} meals - Repas disponibles
  */
 export function initImportExport(foods, meals) {
-    setupExportInterface(foods, meals);
-    setupImportInterface(foods, meals);
+    // Toujours mettre à jour les caches
+    cachedFoodsData = foods;
+    cachedMealsData = meals;
+    
+    // Initialiser seulement la première fois
+    if (!isExportImportInitialized) {
+        isExportImportInitialized = true;
+        setupExportInterface();
+        setupImportInterface();
+    }
 }
 
 /**
  * Configure l'interface d'export
  */
-function setupExportInterface(foods, meals) {
+function setupExportInterface() {
     const exportBtn = document.getElementById('exportDataBtn');
     const modal = document.getElementById('exportModal');
     const closeBtn = document.getElementById('closeExportModal');
@@ -296,7 +330,7 @@ function setupExportInterface(foods, meals) {
     // Ouvrir la modale
     exportBtn.addEventListener('click', () => {
         modal.classList.add('show');
-        populateExportList('foods', foods, meals, foods);
+        populateExportList('foods', cachedFoodsData, cachedMealsData, cachedFoodsData);
     });
     
     // Fermer la modale
@@ -324,9 +358,9 @@ function setupExportInterface(foods, meals) {
             btn.classList.add('active');
             
             if (mode === 'foods') {
-                populateExportList('foods', foods, meals, foods);
+                populateExportList('foods', cachedFoodsData, cachedMealsData, cachedFoodsData);
             } else {
-                populateExportList('meals', meals, meals, foods);
+                populateExportList('meals', cachedMealsData, cachedMealsData, cachedFoodsData);
             }
         });
     });
@@ -336,9 +370,22 @@ function setupExportInterface(foods, meals) {
     if (selectAllBtn) {
         selectAllBtn.addEventListener('click', () => {
             const checkboxes = document.querySelectorAll('.export-checkbox');
+            
+            // Vérifier qu'il y a bien des checkboxes
+            if (checkboxes.length === 0) {
+                console.warn('Aucune checkbox trouvée');
+                return;
+            }
+            
+            // Vérifier si toutes sont cochées
             const allChecked = Array.from(checkboxes).every(cb => cb.checked);
             
-            checkboxes.forEach(cb => cb.checked = !allChecked);
+            // Cocher/décocher toutes les checkboxes
+            checkboxes.forEach(cb => {
+                cb.checked = !allChecked;
+            });
+            
+            // Mettre à jour le texte du bouton
             selectAllBtn.textContent = allChecked ? '✓ Tout sélectionner' : '✗ Tout désélectionner';
         });
     }
@@ -362,7 +409,7 @@ function setupExportInterface(foods, meals) {
                 return;
             }
             
-            exportSelectedItems(selectedFoods, selectedMeals, foods, meals);
+            exportSelectedItems(selectedFoods, selectedMeals, cachedFoodsData, cachedMealsData);
             modal.classList.remove('show');
         });
     }
@@ -422,7 +469,7 @@ function populateExportList(mode, items, meals, foods) {
 /**
  * Configure l'interface d'import
  */
-function setupImportInterface(foods, meals) {
+function setupImportInterface() {
     const importBtn = document.getElementById('importDataBtn');
     const fileInput = document.getElementById('importFileInput');
     
@@ -437,7 +484,7 @@ function setupImportInterface(foods, meals) {
         if (!file) return;
         
         try {
-            const result = await importFromFile(file, foods, meals);
+            const result = await importFromFile(file, cachedFoodsData, cachedMealsData);
             
             // Afficher les résultats détaillés
             let message = `✅ Import terminé !\n\n`;
