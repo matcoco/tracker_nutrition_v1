@@ -1010,18 +1010,20 @@
                     <div class="settings-actions">
                         <div class="settings-action-item">
                             <div class="action-info">
-                                <h4>📤 Exporter les données</h4>
-                                <p>Téléchargez toutes vos données en format JSON</p>
+                                <h4>📤 Exporter toutes les données</h4>
+                                <p><strong>Sauvegarde complète :</strong> Tous les repas quotidiens, objectifs, historique, eau, pas, activités, aliments personnalisés et repas composés</p>
+                                <small style="color: #666; display: block; margin-top: 5px;">💾 Utilisez ceci pour faire une sauvegarde de sécurité</small>
                             </div>
-                            <button id="export-btn" class="settings-btn export-btn">💾 Exporter</button>
+                            <button id="export-btn" class="settings-btn export-btn">💾 Exporter tout</button>
                         </div>
                         
                         <div class="settings-action-item">
                             <div class="action-info">
-                                <h4>📥 Importer les données</h4>
-                                <p>Restaurez vos données depuis un fichier JSON</p>
+                                <h4>📥 Importer une sauvegarde complète</h4>
+                                <p><strong>⚠️ Restauration complète :</strong> Remplace toutes vos données actuelles par celles du fichier</p>
+                                <small style="color: #ef4444; display: block; margin-top: 5px;">⚠️ Action irréversible - Vos données actuelles seront écrasées</small>
                             </div>
-                            <button id="import-btn" class="settings-btn import-btn">📂 Importer</button>
+                            <button id="import-btn" class="settings-btn import-btn">📂 Restaurer une sauvegarde</button>
                             <input type="file" id="fileInput" accept=".json" style="display: none;">
                         </div>
                     </div>
@@ -1034,24 +1036,29 @@
             <div class="settings-card">
                 <div class="settings-card-header">
                     <h3>📦 Partage d'Aliments et Repas</h3>
-                    <p class="settings-description">Exportez ou importez des aliments et repas spécifiques pour les partager avec d'autres utilisateurs</p>
+                    <p class="settings-description">Partagez vos recettes et aliments personnalisés avec d'autres utilisateurs</p>
+                    <small style="color: #10b981; display: block; margin-top: 8px;">
+                        ✨ <strong>Fonctionnement :</strong> Export sélectif (vous choisissez quoi partager) • Import ajout uniquement (vos données sont conservées)
+                    </small>
                 </div>
                 <div class="settings-card-body">
                     <div class="settings-actions">
                         <div class="settings-action-item">
                             <div class="action-info">
                                 <h4>📤 Exporter une sélection</h4>
-                                <p>Choisissez les aliments et repas à exporter pour les partager</p>
+                                <p><strong>Pour partage :</strong> Choisissez les aliments et repas spécifiques à partager</p>
+                                <small style="color: #666; display: block; margin-top: 5px;">📦 Les ingrédients des repas sont automatiquement inclus</small>
                             </div>
                             <button id="exportDataBtn" class="settings-btn export-btn">✨ Sélectionner & Exporter</button>
                         </div>
                         
                         <div class="settings-action-item">
                             <div class="action-info">
-                                <h4>📥 Importer des éléments</h4>
-                                <p>Ajoutez des aliments et repas depuis un fichier partagé (les doublons sont ignorés)</p>
+                                <h4>📥 Importer des éléments partagés</h4>
+                                <p><strong>Ajout uniquement :</strong> Ajoute de nouveaux aliments/repas sans toucher à vos données existantes</p>
+                                <small style="color: #10b981; display: block; margin-top: 5px;">✓ Les doublons sont automatiquement ignorés</small>
                             </div>
-                            <button id="importDataBtn" class="settings-btn import-btn">📂 Importer depuis un fichier</button>
+                            <button id="importDataBtn" class="settings-btn import-btn">📂 Importer un partage</button>
                             <input type="file" id="importFileInput" accept=".json" style="display: none;">
                         </div>
                     </div>

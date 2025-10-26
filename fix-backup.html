@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Correcteur de Sauvegarde - Nutrition Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        .step h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+        
+        .stats {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .stats h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .stats ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .stats li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .stats li:last-child {
+            border-bottom: none;
+        }
+        
+        .fixed-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .progress {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Correcteur de Sauvegarde</h1>
+        <p class="subtitle">Convertit automatiquement l'ancien format vers le nouveau</p>
+        
+        <div class="step">
+            <h3>📋 Étape 1 : Sélectionner le fichier</h3>
+            <p>Choisissez votre fichier de sauvegarde (.json) à corriger</p>
+            <div class="file-input-wrapper">
+                <label for="fileInput" class="btn">📂 Choisir un fichier JSON</label>
+                <input type="file" id="fileInput" accept=".json">
+            </div>
+            <p id="fileName" style="margin-top: 10px; color: #666;"></p>
+        </div>
+        
+        <div class="step">
+            <h3>🔄 Étape 2 : Lancer la correction</h3>
+            <button id="fixBtn" class="btn" disabled>✨ Corriger le fichier</button>
+        </div>
+        
+        <div class="progress" id="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const fixBtn = document.getElementById('fixBtn');
+        const result = document.getElementById('result');
+        const progress = document.getElementById('progress');
+        const progressFill = document.getElementById('progressFill');
+        
+        let fileData = null;
+        let originalFileName = '';
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                originalFileName = file.name;
+                fileName.textContent = `✅ Fichier sélectionné : ${file.name}`;
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        fileData = JSON.parse(event.target.result);
+                        fixBtn.disabled = false;
+                        result.style.display = 'none';
+                    } catch (error) {
+                        result.innerHTML = `<strong>❌ Erreur :</strong> Le fichier n'est pas un JSON valide.<br>${error.message}`;
+                        result.className = 'error';
+                        result.style.display = 'block';
+                        fixBtn.disabled = true;
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+        
+        fixBtn.addEventListener('click', () => {
+            if (!fileData) return;
+            
+            fixBtn.disabled = true;
+            progress.style.display = 'block';
+            result.style.display = 'none';
+            
+            // Simuler une progression
+            let progressValue = 0;
+            const progressInterval = setInterval(() => {
+                progressValue += 10;
+                progressFill.style.width = progressValue + '%';
+                progressFill.textContent = progressValue + '%';
+                if (progressValue >= 90) clearInterval(progressInterval);
+            }, 50);
+            
+            setTimeout(() => {
+                const stats = fixBackupFormat(fileData);
+                
+                progressFill.style.width = '100%';
+                progressFill.textContent = '100%';
+                
+                setTimeout(() => {
+                    progress.style.display = 'none';
+                    displayResults(stats);
+                    fixBtn.disabled = false;
+                }, 500);
+            }, 1000);
+        });
+        
+        function fixBackupFormat(data) {
+            const stats = {
+                totalFoods: 0,
+                fixedFoods: 0,
+                alreadyGood: 0,
+                fixedList: []
+            };
+            
+            if (data.foods && Array.isArray(data.foods)) {
+                stats.totalFoods = data.foods.length;
+                
+                data.foods.forEach(food => {
+                    let wasFixed = false;
+                    
+                    // Convertir priceGrams vers priceQuantity + priceUnit
+                    if (food.hasOwnProperty('priceGrams')) {
+                        food.priceQuantity = food.priceGrams;
+                        food.priceUnit = 'grams';
+                        delete food.priceGrams;
+                        wasFixed = true;
+                        stats.fixedList.push(food.name);
+                    }
+                    
+                    // Ajouter isPortionBased si manquant
+                    if (!food.hasOwnProperty('isPortionBased')) {
+                        food.isPortionBased = false;
+                        wasFixed = true;
+                    }
+                    
+                    // Ajouter portionWeight si manquant
+                    if (!food.hasOwnProperty('portionWeight')) {
+                        food.portionWeight = null;
+                        wasFixed = true;
+                    }
+                    
+                    if (wasFixed) {
+                        stats.fixedFoods++;
+                    }
+                });
+                
+                stats.alreadyGood = stats.totalFoods - stats.fixedFoods;
+            }
+            
+            return stats;
+        }
+        
+        function displayResults(stats) {
+            let html = '<div class="success">';
+            html += '<h3>✅ Correction terminée avec succès !</h3>';
+            html += '<div class="stats">';
+            html += '<h4>📊 Statistiques :</h4>';
+            html += '<ul>';
+            html += `<li><strong>Total d'aliments :</strong> ${stats.totalFoods}</li>`;
+            html += `<li><strong>Aliments corrigés :</strong> ${stats.fixedFoods}</li>`;
+            html += `<li><strong>Aliments déjà conformes :</strong> ${stats.alreadyGood}</li>`;
+            html += '</ul>';
+            
+            if (stats.fixedList.length > 0) {
+                html += '<h4 style="margin-top: 15px;">📋 Aliments corrigés :</h4>';
+                html += '<div class="fixed-list"><ul>';
+                stats.fixedList.forEach((name, i) => {
+                    html += `<li>${i + 1}. ${name}</li>`;
+                });
+                html += '</ul></div>';
+            }
+            
+            html += '</div>';
+            html += '<button class="btn" onclick="downloadCorrectedFile()" style="margin-top: 20px;">💾 Télécharger le fichier corrigé</button>';
+            html += '</div>';
+            
+            result.innerHTML = html;
+            result.className = 'success';
+            result.style.display = 'block';
+        }
+        
+        function downloadCorrectedFile() {
+            const correctedData = JSON.stringify(fileData, null, 2);
+            const blob = new Blob([correctedData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = originalFileName.replace('.json', '_CORRECTED.json');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Fichier téléchargé avec succès !\n\nVous pouvez maintenant l\'importer dans l\'application.');
+        }
+    </script>
+</body>
+</html>
