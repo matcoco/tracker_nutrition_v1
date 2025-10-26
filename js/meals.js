@@ -112,8 +112,16 @@ function displayMealsList(meals, foods) {
         }).filter(Boolean).join(', ');
         
         let priceInfo = '';
+        let totalPriceInfo = '';
+        
         if (meal.price) {
             priceInfo = ` | 💰 ${meal.price.toFixed(2)}€/100g`;
+            
+            // Calculer le prix total de la recette complète
+            if (meal.totalWeight) {
+                const totalPrice = (meal.price / 100) * meal.totalWeight;
+                totalPriceInfo = `<div style="color: #10b981; font-weight: 600; margin-top: 5px;">💰 Prix total : ${totalPrice.toFixed(2)}€ (recette complète)</div>`;
+            }
         }
         
         // Afficher le poids total si défini
@@ -136,6 +144,7 @@ function displayMealsList(meals, foods) {
                 <div class="meal-nutrition">
                     ${meal.calories.toFixed(0)} kcal | P: ${meal.proteins.toFixed(1)}g | G: ${meal.carbs.toFixed(1)}g | L: ${meal.fats.toFixed(1)}g${priceInfo} ${nutritionLabel}
                 </div>
+                ${totalPriceInfo}
                 <div class="meal-ingredients">
                     📝 ${ingredientsList}
                 </div>
@@ -360,9 +369,19 @@ function updateMealPreview(foods) {
     const preview = document.getElementById('mealNutritionPreview');
     if (preview) {
         let priceInfo = '';
+        let totalPriceInfo = '';
+        
+        // Calculer les valeurs nutritionnelles totales (avant conversion pour 100g)
+        const totalNutrition = calculateMealNutrition(ingredients, foods);
+        
         if (nutrition.price) {
             const priceLabel = totalWeight ? '/100g' : '';
             priceInfo = ` | 💰 ${nutrition.price.toFixed(2)}€${priceLabel}`;
+        }
+        
+        // Afficher le prix total de la recette
+        if (totalNutrition.price && totalWeight > 0) {
+            totalPriceInfo = `<br><strong>💰 Prix total de la recette :</strong> ${totalNutrition.price.toFixed(2)}€ (pour ${totalWeight}g)`;
         }
         
         preview.innerHTML = `
@@ -370,7 +389,7 @@ function updateMealPreview(foods) {
             ${nutrition.calories.toFixed(0)} kcal | 
             Protéines: ${nutrition.proteins.toFixed(1)}g | 
             Glucides: ${nutrition.carbs.toFixed(1)}g | 
-            Lipides: ${nutrition.fats.toFixed(1)}g${priceInfo}
+            Lipides: ${nutrition.fats.toFixed(1)}g${priceInfo}${totalPriceInfo}
         `;
     }
 }
