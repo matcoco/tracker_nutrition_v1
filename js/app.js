@@ -1081,7 +1081,7 @@ function setupEventListeners() {
                 meals.initMeals(state.foods);
             }
             if (tabName === 'comparison') {
-                foodComparison.initComparison(state.foods);
+                foodComparison.initComparison(state.foods, state.meals);
             }
         }
     });

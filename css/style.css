@@ -888,6 +888,68 @@ h3 {
     flex: 1;
 }
 
+/* Styles pour la modal de confirmation */
+.modal-confirm {
+    max-width: 500px;
+    text-align: center;
+}
+
+.modal-confirm-icon {
+    font-size: 4em;
+    margin-bottom: 15px;
+    animation: scaleIn 0.4s ease-out;
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+.modal-confirm h3 {
+    margin-bottom: 15px;
+    color: var(--color-text-dark);
+    font-size: 1.5em;
+}
+
+.modal-confirm-text {
+    color: var(--color-text);
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.modal-confirm-text strong {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.modal-confirm-warning {
+    color: #f59e0b;
+    font-size: 0.95em;
+    margin-bottom: 25px;
+    padding: 10px;
+    background: rgba(245, 158, 11, 0.1);
+    border-radius: 8px;
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
 /* =============================================
    11. ONGLET OBJECTIFS - UI AMÉLIORÉE
    ============================================= */
@@ -2819,6 +2881,42 @@ h3 {
 /* =============================================
    ONGLET COMPARAISON D'ALIMENTS
    ============================================= */
+
+/* Toggle pour choisir entre Aliments et Repas */
+.comparison-mode-toggle {
+    display: flex;
+    gap: 0;
+    background: var(--color-bg-light);
+    border-radius: 12px;
+    padding: 6px;
+    width: fit-content;
+    margin: 0 auto 30px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.mode-toggle-btn {
+    padding: 12px 32px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--color-text-muted);
+    position: relative;
+}
+
+.mode-toggle-btn:hover:not(.active) {
+    color: var(--color-primary-start);
+}
+
+.mode-toggle-btn.active {
+    background: white;
+    color: var(--color-primary-start);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
 
 /* Section de sélection */
 .comparison-selector {
