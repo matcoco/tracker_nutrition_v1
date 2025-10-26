@@ -11,6 +11,7 @@ import * as dbUtils from './db-utils.js';
 import * as foodAnalysis from './food-analysis.js';
 import * as foodComparison from './food-comparison.js';
 import * as meals from './meals.js';
+import * as importExport from './import-export.js';
 
 // --- ÉTAT GLOBAL DE L'APPLICATION ---
 let state = {
@@ -1082,6 +1083,9 @@ function setupEventListeners() {
             }
             if (tabName === 'comparison') {
                 foodComparison.initComparison(state.foods, state.meals);
+            }
+            if (tabName === 'settings') {
+                importExport.initImportExport(state.foods, state.meals);
             }
         }
     });

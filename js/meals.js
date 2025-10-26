@@ -115,7 +115,7 @@ function displayMealsList(meals, foods) {
         let totalPriceInfo = '';
         
         if (meal.price) {
-            priceInfo = ` | 💰 ${meal.price.toFixed(2)}€/100g`;
+            priceInfo = ` | 💰 ${meal.price.toFixed(2)}€`;
             
             // Calculer le prix total de la recette complète
             if (meal.totalWeight) {
@@ -126,7 +126,7 @@ function displayMealsList(meals, foods) {
         
         // Afficher le poids total si défini
         const weightInfo = meal.totalWeight ? ` (recette de ${meal.totalWeight}g)` : '';
-        const nutritionLabel = meal.totalWeight ? 'pour 100g' : '';
+        const nutritionLabel = meal.totalWeight ? ' (valeurs pour 100g)' : '';
         
         el.innerHTML = `
             <div class="meal-item-header">

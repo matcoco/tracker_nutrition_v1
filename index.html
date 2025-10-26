@@ -1029,6 +1029,36 @@
             </div>
         </div>
 
+        <!-- Section Partage d'Aliments et Repas -->
+        <div class="settings-section">
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h3>📦 Partage d'Aliments et Repas</h3>
+                    <p class="settings-description">Exportez ou importez des aliments et repas spécifiques pour les partager avec d'autres utilisateurs</p>
+                </div>
+                <div class="settings-card-body">
+                    <div class="settings-actions">
+                        <div class="settings-action-item">
+                            <div class="action-info">
+                                <h4>📤 Exporter une sélection</h4>
+                                <p>Choisissez les aliments et repas à exporter pour les partager</p>
+                            </div>
+                            <button id="exportDataBtn" class="settings-btn export-btn">✨ Sélectionner & Exporter</button>
+                        </div>
+                        
+                        <div class="settings-action-item">
+                            <div class="action-info">
+                                <h4>📥 Importer des éléments</h4>
+                                <p>Ajoutez des aliments et repas depuis un fichier partagé (les doublons sont ignorés)</p>
+                            </div>
+                            <button id="importDataBtn" class="settings-btn import-btn">📂 Importer depuis un fichier</button>
+                            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Section Zone Dangereuse -->
         <div class="settings-section">
             <div class="settings-card danger-card">
@@ -1242,6 +1272,38 @@
             <div class="modal-buttons">
                 <button type="button" class="reset-btn" id="cancelDeleteMealBtn">Annuler</button>
                 <button type="button" class="delete-btn" id="confirmDeleteMealBtn">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =============================================
+         MODALE D'EXPORT DE SÉLECTION
+    ============================================= -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeExportModal">&times;</button>
+            <h3>📤 Exporter une sélection</h3>
+            
+            <!-- Toggle entre aliments et repas -->
+            <div class="export-mode-toggle" style="margin: 20px 0;">
+                <button class="export-toggle-btn active" data-mode="foods">
+                    🥗 Aliments
+                </button>
+                <button class="export-toggle-btn" data-mode="meals">
+                    🍽️ Repas
+                </button>
+            </div>
+            
+            <!-- Liste des éléments à sélectionner -->
+            <div class="export-list-wrapper" style="max-height: 400px; overflow-y: auto; border: 2px solid #e5e7eb; border-radius: 8px; padding: 15px; background: #f9fafb;">
+                <div id="exportListContainer">
+                    <!-- Les items seront ajoutés dynamiquement -->
+                </div>
+            </div>
+            
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <button type="button" id="selectAllExportBtn" class="reset-btn">✓ Tout sélectionner</button>
+                <button type="button" id="confirmExportBtn" class="add-btn">📤 Exporter la sélection</button>
             </div>
         </div>
     </div>
