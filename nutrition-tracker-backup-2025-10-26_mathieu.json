@@ -1,6 +1,6 @@
 {
-  "version": "1.3",
-  "exportDate": "2025-10-24T19:51:24.837Z",
+  "version": "1.4",
+  "exportDate": "2025-10-26T18:48:24.096Z",
   "foods": [
     {
       "id": "accras-de-morue-recette-epicee-carrefour",
@@ -12,7 +12,10 @@
       "fibers": 1.6,
       "fats": 11,
       "price": 3,
-      "priceGrams": 200
+      "priceQuantity": 200,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "amande-grillee-papapero",
@@ -24,7 +27,10 @@
       "fibers": 0,
       "fats": 58,
       "price": 3.81,
-      "priceGrams": 100
+      "priceQuantity": 100,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "amandes-non-salees-vico",
@@ -36,7 +42,10 @@
       "fibers": 12,
       "fats": 53,
       "price": 3.56,
-      "priceGrams": 180
+      "priceQuantity": 180,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "beurre-doux-paturages",
@@ -48,7 +57,10 @@
       "fibers": 0.5,
       "fats": 82,
       "price": 2.51,
-      "priceGrams": 250
+      "priceQuantity": 250,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "blanc-de-poulet-tranches",
@@ -60,7 +72,10 @@
       "fibers": 0.9,
       "fats": 1.7,
       "price": 7.35,
-      "priceGrams": 600
+      "priceQuantity": 600,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "brioche-nature-boulangerie",
@@ -70,7 +85,9 @@
       "carbs": 36,
       "sugars": 13,
       "fibers": 3,
-      "fats": 19
+      "fats": 19,
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "brocolis-saint-eloi-surgeles",
@@ -82,7 +99,40 @@
       "fibers": 2.9,
       "fats": 0.5,
       "price": 2.23,
-      "priceGrams": 900
+      "priceQuantity": 900,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
+    },
+    {
+      "id": "burger-280-raclette-mcdo",
+      "name": "Burger 280 raclette Mcdo",
+      "calories": 349.1666666666667,
+      "proteins": 20.416666666666668,
+      "carbs": 20.541666666666668,
+      "sugars": 0.7083333333333334,
+      "fibers": 1.25,
+      "fats": 20,
+      "isPortionBased": true,
+      "portionWeight": 240,
+      "price": 10.2,
+      "priceQuantity": 1,
+      "priceUnit": "portions"
+    },
+    {
+      "id": "burger-mcextreme-mcdo-2-steaks",
+      "name": "Burger McExtreme mcdo 2 steaks",
+      "calories": 312.10526315789474,
+      "proteins": 18.94736842105263,
+      "carbs": 8.157894736842104,
+      "sugars": 2.631578947368421,
+      "fibers": 0.6578947368421052,
+      "fats": 21.289473684210527,
+      "isPortionBased": true,
+      "portionWeight": 380,
+      "price": 12.25,
+      "priceQuantity": 1,
+      "priceUnit": "portions"
     },
     {
       "id": "comte-paturages",
@@ -94,7 +144,10 @@
       "fibers": 0.5,
       "fats": 34,
       "price": 4.84,
-      "priceGrams": 350
+      "priceQuantity": 350,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "demi-baguette-de-campagne-chabrior-bio",
@@ -106,7 +159,10 @@
       "fibers": 3.6,
       "fats": 0.4,
       "price": 2.37,
-      "priceGrams": 250
+      "priceQuantity": 250,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "fanta-100ml-mcdonalds",
@@ -118,7 +174,10 @@
       "fibers": 0,
       "fats": 0,
       "price": 3.1,
-      "priceGrams": 400
+      "priceQuantity": 400,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "farine-de-ble-type-65",
@@ -130,7 +189,10 @@
       "fibers": 3.6,
       "fats": 1.1,
       "price": null,
-      "priceGrams": null
+      "priceQuantity": null,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "frites-mccain-650g-cote-brasserie",
@@ -142,7 +204,10 @@
       "fibers": 4.5,
       "fats": 6,
       "price": 2.4,
-      "priceGrams": 650
+      "priceQuantity": 650,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "fromage-blanc-paturage",
@@ -154,7 +219,10 @@
       "fibers": 0.5,
       "fats": 3.2,
       "price": 1.95,
-      "priceGrams": 1000
+      "priceQuantity": 1000,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "fusilli-protein-",
@@ -166,7 +234,10 @@
       "fibers": 3.1,
       "fats": 1.7,
       "price": 2.19,
-      "priceGrams": 400
+      "priceQuantity": 400,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "grignotte-poulet",
@@ -178,7 +249,10 @@
       "fibers": 0.5,
       "fats": 2.8,
       "price": 2.52,
-      "priceGrams": 170
+      "priceQuantity": 170,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "haricot-rouge-saint-eloi",
@@ -190,7 +264,10 @@
       "fibers": 6.3,
       "fats": 0.7,
       "price": 1.37,
-      "priceGrams": 500
+      "priceQuantity": 500,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "haricots-verts-cassegrain",
@@ -202,19 +279,25 @@
       "fibers": 2.6,
       "fats": 0.5,
       "price": 3.1,
-      "priceGrams": 390
+      "priceQuantity": 390,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "haricots-verts-saint-eloi",
       "name": "Haricots verts Saint Eloi",
-      "calories": 36,
-      "proteins": 1.7,
-      "carbs": 33,
-      "sugars": 1.1,
-      "fibers": 2.6,
+      "calories": 31,
+      "proteins": 2.2,
+      "carbs": 1.1,
+      "sugars": 1.8,
+      "fibers": 2.9,
       "fats": 0.5,
       "price": 1.87,
-      "priceGrams": 1000
+      "priceQuantity": 1000,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "huile-de-coco",
@@ -226,7 +309,10 @@
       "fibers": 0.5,
       "fats": 92.8,
       "price": null,
-      "priceGrams": null
+      "priceQuantity": null,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "huile-de-noisette-berinoix",
@@ -238,7 +324,10 @@
       "fibers": 0,
       "fats": 100,
       "price": 8.72,
-      "priceGrams": 500
+      "priceQuantity": 500,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "huile-de-tournesol-bouton-dor",
@@ -250,7 +339,10 @@
       "fibers": 0,
       "fats": 100,
       "price": 3.64,
-      "priceGrams": 750
+      "priceQuantity": 750,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "jaune-doeuf",
@@ -262,7 +354,10 @@
       "fibers": 0,
       "fats": 31,
       "price": 10.9,
-      "priceGrams": 1500
+      "priceQuantity": 1500,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "jkieffer-sans-alcool-jaune",
@@ -274,7 +369,25 @@
       "fibers": 0,
       "fats": 0,
       "price": 2.9,
-      "priceGrams": 748
+      "priceQuantity": 748,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
+    },
+    {
+      "id": "jus-dorange-minute-maid-mcdo-25cl",
+      "name": "Jus d'orange minute Maid Mcdo 25cl",
+      "calories": 52.800000000000004,
+      "proteins": 0.8800000000000001,
+      "carbs": 0,
+      "sugars": 11.200000000000001,
+      "fibers": 0,
+      "fats": -0.04000000000000001,
+      "isPortionBased": true,
+      "portionWeight": 250,
+      "price": 2.6,
+      "priceQuantity": 1,
+      "priceUnit": "portions"
     },
     {
       "id": "kiwi-vert",
@@ -286,7 +399,10 @@
       "fibers": 3,
       "fats": 0.5,
       "price": 0.8,
-      "priceGrams": 105
+      "priceQuantity": 105,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "la-poelee-du-marche",
@@ -298,7 +414,25 @@
       "fibers": 3.4,
       "fats": 2.2,
       "price": 3.49,
-      "priceGrams": 750
+      "priceQuantity": 750,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
+    },
+    {
+      "id": "lait-demi-ecreme-frechard",
+      "name": "Lait démi écrémé Fréchard",
+      "calories": 46,
+      "proteins": 3.2,
+      "carbs": 0,
+      "sugars": 4.8,
+      "fibers": 0,
+      "fats": 1.5,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.6,
+      "priceQuantity": 1000,
+      "priceUnit": "grams"
     },
     {
       "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
@@ -310,7 +444,55 @@
       "fibers": 3.7,
       "fats": 0.5,
       "price": 2.11,
-      "priceGrams": 820
+      "priceQuantity": 820,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
+    },
+    {
+      "id": "levure-de-boulangerie-extra",
+      "name": "Levure de boulangerie Extra",
+      "calories": 355,
+      "proteins": 48,
+      "carbs": 24,
+      "sugars": 1,
+      "fibers": 12.9,
+      "fats": 6,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 0.97,
+      "priceQuantity": 50,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "mcflurry-mms-nappage-chocolat",
+      "name": "McFlurry M&M's nappage chocolat",
+      "calories": 253.33333333333334,
+      "proteins": 5.277777777777778,
+      "carbs": 13.88888888888889,
+      "sugars": 34.44444444444444,
+      "fibers": 1.0555555555555556,
+      "fats": 7.222222222222222,
+      "isPortionBased": true,
+      "portionWeight": 180,
+      "price": 4.4,
+      "priceQuantity": 1,
+      "priceUnit": "portions"
+    },
+    {
+      "id": "moyenne-frite-mcdo",
+      "name": "Moyenne frite Mcdo",
+      "calories": 258.0357142857143,
+      "proteins": 3.0357142857142856,
+      "carbs": 31.875000000000004,
+      "sugars": 0.26785714285714285,
+      "fibers": 3.125,
+      "fats": 12.5,
+      "isPortionBased": true,
+      "portionWeight": 112,
+      "price": 4,
+      "priceQuantity": 1,
+      "priceUnit": "portions"
     },
     {
       "id": "oeuf-entier",
@@ -322,7 +504,10 @@
       "fibers": 0,
       "fats": 9.9,
       "price": 10.9,
-      "priceGrams": 1500
+      "priceQuantity": 1500,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "olive-verte-a-la-farce-de-poivron",
@@ -334,7 +519,10 @@
       "fibers": 2.8,
       "fats": 15.2,
       "price": 1.62,
-      "priceGrams": 120
+      "priceQuantity": 120,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "orange",
@@ -346,7 +534,10 @@
       "fibers": 2.7,
       "fats": 0.1,
       "price": 2.89,
-      "priceGrams": 1500
+      "priceQuantity": 1500,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "pain-au-chocolat",
@@ -358,7 +549,10 @@
       "fibers": 2.1,
       "fats": 14,
       "price": 1.2,
-      "priceGrams": 80
+      "priceQuantity": 80,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "pate-complete-penne-bio-village",
@@ -370,7 +564,10 @@
       "fibers": 12,
       "fats": 2,
       "price": 1.9,
-      "priceGrams": 500
+      "priceQuantity": 500,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "pizza-maison-artichaut",
@@ -380,7 +577,9 @@
       "carbs": 19,
       "sugars": 2,
       "fibers": 2.5,
-      "fats": 14
+      "fats": 14,
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "poivrons-cuisines-cassegrain",
@@ -392,7 +591,10 @@
       "fibers": 3.7,
       "fats": 3.2,
       "price": 3.79,
-      "priceGrams": 375
+      "priceQuantity": 375,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "pomme-gala",
@@ -404,7 +606,10 @@
       "fibers": 2.7,
       "fats": 0.1,
       "price": 2.99,
-      "priceGrams": 2000
+      "priceQuantity": 2000,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "potatoes-mccain-aux-herbes",
@@ -416,7 +621,10 @@
       "fibers": 3,
       "fats": 5,
       "price": 2.71,
-      "priceGrams": 780
+      "priceQuantity": 780,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "potatoes-paprika",
@@ -428,7 +636,10 @@
       "fibers": 3,
       "fats": 3.1,
       "price": 1.2,
-      "priceGrams": 600
+      "priceQuantity": 600,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "raisin-vert",
@@ -440,7 +651,10 @@
       "fibers": 2,
       "fats": 0.2,
       "price": null,
-      "priceGrams": null
+      "priceQuantity": null,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "saint-nectaire-laitier",
@@ -452,7 +666,10 @@
       "fibers": 0,
       "fats": 27,
       "price": 2.5,
-      "priceGrams": 200
+      "priceQuantity": 200,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "sandwich-sodebo-rosette",
@@ -464,7 +681,10 @@
       "fibers": 4.3,
       "fats": 14,
       "price": 1.49,
-      "priceGrams": 125
+      "priceQuantity": 125,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "scheppes-tonic",
@@ -476,7 +696,10 @@
       "fibers": 0,
       "fats": 0,
       "price": 1.72,
-      "priceGrams": 1500
+      "priceQuantity": 1500,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "skyr-nature-yoplait",
@@ -488,7 +711,10 @@
       "fibers": 0,
       "fats": 0.5,
       "price": 4.09,
-      "priceGrams": 850
+      "priceQuantity": 850,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "son-de-ble",
@@ -500,7 +726,10 @@
       "fibers": 40,
       "fats": 2.5,
       "price": 3.08,
-      "priceGrams": 250
+      "priceQuantity": 250,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "steack-hache-charal-15mg",
@@ -512,7 +741,10 @@
       "fibers": 0,
       "fats": 15,
       "price": 13.43,
-      "priceGrams": 1000
+      "priceQuantity": 1000,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "sucre-roux-de-canne",
@@ -523,7 +755,10 @@
       "sugars": 95,
       "fats": 0.5,
       "price": null,
-      "priceGrams": null
+      "priceQuantity": null,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "sucrine",
@@ -535,7 +770,10 @@
       "fibers": 1,
       "fats": 0.2,
       "price": 1.29,
-      "priceGrams": 420
+      "priceQuantity": 420,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "tablette-chocolat-57-cacao",
@@ -546,7 +784,10 @@
       "sugars": 43,
       "fats": 37,
       "price": null,
-      "priceGrams": null
+      "priceQuantity": null,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "tarte-au-thon-maison",
@@ -556,7 +797,9 @@
       "carbs": 15,
       "sugars": 2,
       "fibers": 1.4,
-      "fats": 7.5
+      "fats": 7.5,
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "thon-odyssee",
@@ -568,7 +811,10 @@
       "fibers": 0.5,
       "fats": 1.4,
       "price": 3.57,
-      "priceGrams": 279
+      "priceQuantity": 279,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "tomates-cerises-du-maroc",
@@ -580,7 +826,10 @@
       "fibers": 1.2,
       "fats": 0.5,
       "price": 0.99,
-      "priceGrams": 250
+      "priceQuantity": 250,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "tranche-pain-complet-la-boulangere-bio",
@@ -592,7 +841,10 @@
       "fibers": 5.3,
       "fats": 4.2,
       "price": null,
-      "priceGrams": null
+      "priceQuantity": null,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "viande-de-porc-offre-speciale",
@@ -604,7 +856,10 @@
       "fibers": 0.5,
       "fats": 14.6,
       "price": 9,
-      "priceGrams": 2200
+      "priceQuantity": 2200,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
     },
     {
       "id": "whey-100-concentree",
@@ -616,7 +871,56 @@
       "fibers": 0.5,
       "fats": 5.8,
       "price": 34,
-      "priceGrams": 2000
+      "priceQuantity": 2000,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
+    }
+  ],
+  "meals": [
+    {
+      "id": "brioche-thermomix",
+      "name": "Brioche Thermomix",
+      "ingredients": [
+        {
+          "foodId": "lait-demi-ecreme-frechard",
+          "weight": 160
+        },
+        {
+          "foodId": "levure-de-boulangerie-extra",
+          "weight": 20
+        },
+        {
+          "foodId": "sucre-roux-de-canne",
+          "weight": 60
+        },
+        {
+          "foodId": "oeuf-entier",
+          "weight": 112
+        },
+        {
+          "foodId": "jaune-doeuf",
+          "weight": 16
+        },
+        {
+          "foodId": "farine-de-ble-type-65",
+          "weight": 500
+        },
+        {
+          "foodId": "beurre-doux-paturages",
+          "weight": 100
+        }
+      ],
+      "totalWeight": 900,
+      "calories": 344.97777777777776,
+      "proteins": 9.695555555555554,
+      "carbs": 40.488,
+      "fats": 11.938666666666666,
+      "sugars": 8.22888888888889,
+      "fibers": 2.342222222222222,
+      "price": 0.28645925925925925,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
     }
   ],
   "dailyMeals": [
@@ -2716,6 +3020,16 @@
             "id": "orange",
             "weight": 311,
             "uniqueId": 1761334565037
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761335779531
+          },
+          {
+            "id": "test",
+            "weight": 100,
+            "uniqueId": 1761338971891
           }
         ],
         "snack": [
@@ -2737,6 +3051,102 @@
         ]
       },
       "weight": 77.8
+    },
+    {
+      "date": "2025-10-25",
+      "meals": {
+        "petit-dej": [],
+        "dejeuner": [
+          {
+            "id": "burger-mcextreme-mcdo-2-steaks",
+            "weight": 380,
+            "uniqueId": 1761407816285
+          },
+          {
+            "id": "burger-280-raclette-mcdo",
+            "weight": 240,
+            "uniqueId": 1761408533292
+          },
+          {
+            "id": "moyenne-frite-mcdo",
+            "weight": 112,
+            "uniqueId": 1761408536158
+          },
+          {
+            "id": "mcflurry-mms-nappage-chocolat",
+            "weight": 180,
+            "uniqueId": 1761409131813
+          },
+          {
+            "id": "jus-dorange-minute-maid-mcdo-25cl",
+            "weight": 250,
+            "uniqueId": 1761419848668
+          }
+        ],
+        "diner": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1761412042583
+          }
+        ],
+        "snack": [
+          {
+            "id": "brioche-thermomix",
+            "isMeal": true,
+            "weight": 74,
+            "uniqueId": 1761419505511
+          }
+        ]
+      },
+      "weight": 77.3
+    },
+    {
+      "date": "2025-10-26",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1761504305377
+          },
+          {
+            "id": "saint-nectaire-laitier",
+            "weight": 51,
+            "uniqueId": 1761504314329
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1761504329310
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761504335227
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 120,
+            "uniqueId": 1761504340409
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 10,
+            "uniqueId": 1761504394739
+          }
+        ],
+        "dejeuner": [],
+        "diner": [],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 30,
+            "uniqueId": 1761504383557
+          }
+        ]
+      },
+      "weight": 77.3
     }
   ],
   "goals": [
@@ -3170,6 +3580,42 @@
           "ml": 300
         }
       ]
+    },
+    {
+      "date": "2025-10-25",
+      "totalMl": 900,
+      "history": [
+        {
+          "time": "09:47",
+          "ml": 300
+        },
+        {
+          "time": "17:04",
+          "ml": 300
+        },
+        {
+          "time": "19:08",
+          "ml": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-26",
+      "totalMl": 900,
+      "history": [
+        {
+          "time": "19:46",
+          "ml": 300
+        },
+        {
+          "time": "19:47",
+          "ml": 300
+        },
+        {
+          "time": "19:47",
+          "ml": 300
+        }
+      ]
     }
   ],
   "dailySteps": [
@@ -3244,6 +3690,10 @@
     {
       "date": "2025-10-23",
       "steps": 14420
+    },
+    {
+      "date": "2025-10-24",
+      "steps": 13500
     }
   ],
   "dailyActivities": [
@@ -3478,6 +3928,29 @@
           "type": "🚶 Marche",
           "duration": 30,
           "calories": 127
+        }
+      ]
+    },
+    {
+      "date": "2025-10-24",
+      "activities": [
+        {
+          "id": 1761335707394,
+          "type": "🚶 Marche",
+          "duration": 30,
+          "calories": 100
+        },
+        {
+          "id": 1761335716512,
+          "type": "💪 HIIT",
+          "duration": 30,
+          "calories": 200
+        },
+        {
+          "id": 1761335741251,
+          "type": "🏋️ Musculation",
+          "duration": 30,
+          "calories": 80
         }
       ]
     }

@@ -1037,6 +1037,16 @@ function handleImport(event) {
             if (data.customActivities) await db.bulkPut('customActivities', data.customActivities);
             
             await init(true);
+            
+            // Réinitialiser le module meals pour forcer le rafraîchissement
+            meals.resetInitialization();
+            
+            // Si on est sur l'onglet repas, rafraîchir immédiatement
+            const currentTab = document.querySelector('.tab-btn.active')?.dataset.tab;
+            if (currentTab === 'meals') {
+                meals.refreshMealsDisplay(state.meals, state.foods);
+            }
+            
             ui.showNotification('Importation réussie !');
         } catch (error) {
             ui.showNotification(error.message, 'error');

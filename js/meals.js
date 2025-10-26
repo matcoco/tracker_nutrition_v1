@@ -617,3 +617,22 @@ export async function reloadMeals() {
     mealsData = await db.loadMeals();
     return mealsData;
 }
+
+/**
+ * Rafraîchit l'affichage des repas avec les données actuelles
+ * @param {object} meals - Dictionnaire des repas (optionnel)
+ * @param {object} foods - Dictionnaire des aliments
+ */
+export function refreshMealsDisplay(meals, foods) {
+    if (meals) {
+        mealsData = meals;
+    }
+    displayMealsList(mealsData, foods);
+}
+
+/**
+ * Réinitialise le module (utile après un import de données)
+ */
+export function resetInitialization() {
+    isInitialized = false;
+}
