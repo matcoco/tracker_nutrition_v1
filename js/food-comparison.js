@@ -9,6 +9,8 @@ let selectedFoods = {
 };
 let isInitialized = false; // Flag pour éviter la réinitialisation multiple
 let cachedFoods = {}; // Cache local des aliments
+let cachedMeals = {}; // Cache local des repas
+let currentMode = 'foods'; // 'foods' ou 'meals'
 
 /**
  * Calcule le prix pour 100g d'un aliment
@@ -52,31 +54,100 @@ function hasPrice(food) {
 /**
  * Initialise l'onglet de comparaison
  * @param {object} foods - Dictionnaire des aliments
+ * @param {object} meals - Dictionnaire des repas (optionnel)
  */
-export function initComparison(foods) {
-    // Toujours mettre à jour le cache des aliments
+export function initComparison(foods, meals = {}) {
+    // Toujours mettre à jour les caches
     cachedFoods = foods;
+    cachedMeals = meals;
     
     // Configurer les listeners et peupler (seulement la première fois)
     if (!isInitialized) {
         isInitialized = true;
-        populateFoodSelects(foods);
-        setupSearchFilters(foods);
+        setupModeToggle();
+        populateSelects(currentMode === 'foods' ? foods : meals);
+        setupSearchFilters();
         setupEventListeners();
     } else {
-        // Si déjà initialisé, juste vérifier si les options sont vides
-        const select1 = document.getElementById('comparisonFood1');
-        if (select1.options.length <= 1) { // Seulement l'option par défaut
-            populateFoodSelects(foods);
-        }
+        // Si déjà initialisé, mettre à jour selon le mode actuel
+        populateSelects(currentMode === 'foods' ? foods : meals);
     }
 }
 
 /**
- * Remplit les dropdowns avec tous les aliments disponibles
- * @param {object} foods - Dictionnaire des aliments
+ * Configure le toggle pour basculer entre aliments et repas
  */
-function populateFoodSelects(foods) {
+function setupModeToggle() {
+    const toggleBtns = document.querySelectorAll('.mode-toggle-btn');
+    
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mode = btn.dataset.mode;
+            if (mode === currentMode) return;
+            
+            // Changer le mode
+            currentMode = mode;
+            
+            // Mettre à jour l'UI
+            toggleBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Mettre à jour les labels et le texte
+            updateComparisonLabels(mode);
+            
+            // Réinitialiser les sélections
+            resetSelections();
+            
+            // Repeupler les selects
+            const data = mode === 'foods' ? cachedFoods : cachedMeals;
+            populateSelects(data);
+            
+            // Cacher les résultats
+            document.getElementById('comparisonResults').style.display = 'none';
+        });
+    });
+}
+
+/**
+ * Met à jour les labels selon le mode sélectionné
+ */
+function updateComparisonLabels(mode) {
+    const isFoods = mode === 'foods';
+    const emoji = isFoods ? '🥗' : '🍽️';
+    const type = isFoods ? 'aliment' : 'repas';
+    const typePlural = isFoods ? 'aliments' : 'repas';
+    
+    document.getElementById('comparisonTitle').textContent = `🔍 Sélectionner les ${typePlural} à comparer`;
+    document.getElementById('comparisonDescription').textContent = `Comparez de 2 à 3 ${typePlural} pour voir leurs différences nutritionnelles`;
+    
+    document.getElementById('comparisonLabel1').textContent = `${emoji} Premier ${type}`;
+    document.getElementById('comparisonLabel2').textContent = `${emoji} Deuxième ${type}`;
+    document.getElementById('comparisonLabel3').textContent = `${emoji} Troisième ${type} (optionnel)`;
+}
+
+/**
+ * Réinitialise les sélections
+ */
+function resetSelections() {
+    document.getElementById('comparisonFood1').value = '';
+    document.getElementById('comparisonFood2').value = '';
+    document.getElementById('comparisonFood3').value = '';
+    document.getElementById('comparisonSearch1').value = '';
+    document.getElementById('comparisonSearch2').value = '';
+    document.getElementById('comparisonSearch3').value = '';
+    
+    selectedFoods.food1 = null;
+    selectedFoods.food2 = null;
+    selectedFoods.food3 = null;
+    
+    updateCompareButtonState();
+}
+
+/**
+ * Remplit les dropdowns avec tous les éléments disponibles (aliments ou repas)
+ * @param {object} items - Dictionnaire des aliments ou repas
+ */
+function populateSelects(items) {
     const selects = [
         document.getElementById('comparisonFood1'),
         document.getElementById('comparisonFood2'),
@@ -90,16 +161,16 @@ function populateFoodSelects(foods) {
         // Garder l'option par défaut
         select.innerHTML = '<option value="">-- Sélectionner --</option>';
         
-        // Ajouter tous les aliments
-        Object.entries(foods).forEach(([id, food]) => {
+        // Ajouter tous les éléments
+        Object.entries(items).forEach(([id, item]) => {
             const option = document.createElement('option');
             option.value = id;
-            option.textContent = food.name;
+            option.textContent = item.name;
             select.appendChild(option);
         });
         
         // Restaurer la valeur sélectionnée si elle existe toujours
-        if (currentValue && foods[currentValue]) {
+        if (currentValue && items[currentValue]) {
             select.value = currentValue;
         }
     });
@@ -107,9 +178,8 @@ function populateFoodSelects(foods) {
 
 /**
  * Configure les filtres de recherche pour chaque dropdown
- * @param {object} foods - Dictionnaire des aliments
  */
-function setupSearchFilters(foods) {
+function setupSearchFilters() {
     for (let i = 1; i <= 3; i++) {
         const searchInput = document.getElementById(`comparisonSearch${i}`);
         const select = document.getElementById(`comparisonFood${i}`);
@@ -117,6 +187,7 @@ function setupSearchFilters(foods) {
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
             const options = select.querySelectorAll('option');
+            const data = currentMode === 'foods' ? cachedFoods : cachedMeals;
             
             options.forEach(option => {
                 if (option.value === '') {
@@ -124,8 +195,8 @@ function setupSearchFilters(foods) {
                     return;
                 }
                 
-                const foodName = foods[option.value]?.name.toLowerCase() || '';
-                option.style.display = foodName.includes(query) ? '' : 'none';
+                const itemName = data[option.value]?.name.toLowerCase() || '';
+                option.style.display = itemName.includes(query) ? '' : 'none';
             });
         });
     }
@@ -168,7 +239,7 @@ function updateCompareButtonState() {
 }
 
 /**
- * Effectue la comparaison des aliments sélectionnés
+ * Effectue la comparaison des éléments sélectionnés (aliments ou repas)
  */
 export function performComparison() {
     const food1Id = document.getElementById('comparisonFood1').value;
@@ -179,16 +250,19 @@ export function performComparison() {
         return;
     }
     
-    // Vérifier que les aliments existent dans le cache
-    if (!cachedFoods[food1Id] || !cachedFoods[food2Id]) {
-        console.error('Aliments introuvables dans le cache');
+    // Utiliser le cache approprié selon le mode
+    const cache = currentMode === 'foods' ? cachedFoods : cachedMeals;
+    
+    // Vérifier que les éléments existent dans le cache
+    if (!cache[food1Id] || !cache[food2Id]) {
+        console.error('Éléments introuvables dans le cache');
         return;
     }
     
-    // Utiliser le cache local des aliments
-    selectedFoods.food1 = { id: food1Id, ...cachedFoods[food1Id] };
-    selectedFoods.food2 = { id: food2Id, ...cachedFoods[food2Id] };
-    selectedFoods.food3 = (food3Id && cachedFoods[food3Id]) ? { id: food3Id, ...cachedFoods[food3Id] } : null;
+    // Utiliser le cache local
+    selectedFoods.food1 = { id: food1Id, ...cache[food1Id] };
+    selectedFoods.food2 = { id: food2Id, ...cache[food2Id] };
+    selectedFoods.food3 = (food3Id && cache[food3Id]) ? { id: food3Id, ...cache[food3Id] } : null;
     
     // Afficher les résultats
     document.getElementById('comparisonResults').style.display = 'block';

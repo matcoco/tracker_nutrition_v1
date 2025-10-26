@@ -1,6 +1,7 @@
 // js/meals.js - Gestion des repas composés
 
 import * as db from './db.js';
+import { showNotification } from './ui.js';
 
 let mealsData = {};
 let isInitialized = false;
@@ -281,8 +282,34 @@ function addIngredientRow(foods, ingredient = null) {
         updateMealPreview(foods);
     });
     
-    row.querySelector('.ingredient-select').addEventListener('change', () => updateMealPreview(foods));
-    row.querySelector('.ingredient-weight').addEventListener('input', () => updateMealPreview(foods));
+    row.querySelector('.ingredient-select').addEventListener('change', () => {
+        updateMealPreview(foods);
+        updateTotalWeightFromIngredients();
+    });
+    row.querySelector('.ingredient-weight').addEventListener('input', () => {
+        updateMealPreview(foods);
+        updateTotalWeightFromIngredients();
+    });
+}
+
+/**
+ * Calcule et met à jour le poids total depuis les ingrédients
+ */
+function updateTotalWeightFromIngredients() {
+    const rows = document.querySelectorAll('.ingredient-row');
+    let calculatedWeight = 0;
+    
+    rows.forEach(row => {
+        const weight = parseFloat(row.querySelector('.ingredient-weight').value) || 0;
+        calculatedWeight += weight;
+    });
+    
+    // Mettre à jour le champ uniquement si l'utilisateur ne l'a pas modifié manuellement
+    const totalWeightInput = document.getElementById('mealTotalWeight');
+    if (calculatedWeight > 0) {
+        totalWeightInput.value = calculatedWeight;
+        totalWeightInput.setAttribute('data-calculated', calculatedWeight);
+    }
 }
 
 /**
@@ -291,6 +318,7 @@ function addIngredientRow(foods, ingredient = null) {
 function updateMealPreview(foods) {
     const rows = document.querySelectorAll('.ingredient-row');
     const ingredients = [];
+    let calculatedWeight = 0;
     
     rows.forEach(row => {
         const foodId = row.querySelector('.ingredient-select').value;
@@ -298,15 +326,22 @@ function updateMealPreview(foods) {
         
         if (foodId && weight > 0) {
             ingredients.push({ foodId, weight });
+            calculatedWeight += weight;
         }
     });
     
-    let nutrition = calculateMealNutrition(ingredients, foods);
-    const totalWeight = parseFloat(document.getElementById('mealTotalWeight').value) || null;
+    // Mettre à jour automatiquement le champ poids total
+    const totalWeightInput = document.getElementById('mealTotalWeight');
+    if (calculatedWeight > 0 && !totalWeightInput.value) {
+        totalWeightInput.value = calculatedWeight;
+    }
     
-    // Si un poids total est renseigné, recalculer pour 100g
+    let nutrition = calculateMealNutrition(ingredients, foods);
+    const totalWeight = parseFloat(totalWeightInput.value) || calculatedWeight;
+    
+    // Toujours recalculer pour 100g avec le poids total
     let displayLabel = 'Totaux nutritionnels';
-    if (totalWeight && totalWeight > 0) {
+    if (totalWeight > 0) {
         const factor = 100 / totalWeight;
         nutrition = {
             calories: nutrition.calories * factor,
@@ -348,7 +383,7 @@ async function saveMealFromForm(foods) {
     const editId = document.getElementById('mealForm').dataset.editId;
     
     if (!name) {
-        alert('Veuillez entrer un nom pour le repas');
+        showNotification('⚠️ Veuillez entrer un nom pour le repas', 'error');
         return;
     }
     
@@ -366,21 +401,26 @@ async function saveMealFromForm(foods) {
     });
     
     if (ingredients.length === 0) {
-        alert('Veuillez ajouter au moins un ingrédient');
+        showNotification('⚠️ Veuillez ajouter au moins un ingrédient', 'error');
         return;
     }
     
     // Créer l'ID
     const id = editId || name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     
-    // Récupérer le poids total si renseigné
-    const totalWeight = parseFloat(document.getElementById('mealTotalWeight').value) || null;
+    // Récupérer ou calculer le poids total
+    let totalWeight = parseFloat(document.getElementById('mealTotalWeight').value);
+    
+    // Si pas de poids total, calculer automatiquement
+    if (!totalWeight || totalWeight <= 0) {
+        totalWeight = ingredients.reduce((sum, ing) => sum + ing.weight, 0);
+    }
     
     // Calculer les valeurs nutritionnelles totales
     let nutrition = calculateMealNutrition(ingredients, foods);
     
-    // Si un poids total est renseigné, recalculer pour 100g
-    if (totalWeight && totalWeight > 0) {
+    // Toujours recalculer pour 100g avec le poids total
+    if (totalWeight > 0) {
         const factor = 100 / totalWeight;
         nutrition = {
             calories: nutrition.calories * factor,
@@ -416,14 +456,14 @@ async function saveMealFromForm(foods) {
     displayMealsList(mealsData, foods);
     hideMealForm();
     
+    // Notification de succès
+    const action = editId ? 'modifié' : 'créé';
+    showNotification(`✅ Repas "${meal.name}" ${action} avec succès !`);
+    
     // Rafraîchir la liste d'aliments disponibles dans le Suivi Quotidien
     if (window.refreshAvailableFoods) {
         window.refreshAvailableFoods();
     }
-    
-    // Notification
-    const message = editId ? 'Repas modifié !' : 'Repas créé !';
-    showNotification(message);
 }
 
 /**
@@ -452,19 +492,70 @@ function duplicateMeal(mealId, meals, foods) {
     // Ouvrir le formulaire en mode création (sans id)
     // L'utilisateur pourra modifier le nom et les ingrédients avant de sauvegarder
     showMealForm(foods, duplicatedMeal);
+    
+    // Notification
+    showNotification(`📋 Repas "${meal.name}" dupliqué ! Modifiez-le et sauvegardez.`);
 }
 
 /**
- * Supprime un repas
+ * Affiche la modal de confirmation de suppression
  */
-async function deleteMeal(mealId, meals, foods) {
-    const meal = meals[mealId];
-    if (!meal) return;
+function showDeleteMealModal(mealId, mealName, meals, foods) {
+    const modal = document.getElementById('deleteMealModal');
+    const mealNameElement = document.getElementById('deleteMealName');
+    const confirmBtn = document.getElementById('confirmDeleteMealBtn');
+    const cancelBtn = document.getElementById('cancelDeleteMealBtn');
     
-    if (!confirm(`Voulez-vous vraiment supprimer le repas "${meal.name}" ?`)) {
-        return;
-    }
+    // Afficher le nom du repas
+    mealNameElement.textContent = `"${mealName}"`;
     
+    // Afficher la modal
+    modal.classList.add('show');
+    
+    // Gestionnaire de confirmation
+    const handleConfirm = async () => {
+        await performDeleteMeal(mealId, mealName, meals, foods);
+        closeDeleteMealModal();
+    };
+    
+    // Gestionnaire d'annulation
+    const handleCancel = () => {
+        closeDeleteMealModal();
+    };
+    
+    // Fermer en cliquant en dehors
+    const handleOutsideClick = (e) => {
+        if (e.target === modal) {
+            closeDeleteMealModal();
+        }
+    };
+    
+    // Nettoyer les anciens event listeners
+    confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+    cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+    
+    // Obtenir les nouveaux éléments
+    const newConfirmBtn = document.getElementById('confirmDeleteMealBtn');
+    const newCancelBtn = document.getElementById('cancelDeleteMealBtn');
+    
+    // Ajouter les event listeners
+    newConfirmBtn.addEventListener('click', handleConfirm);
+    newCancelBtn.addEventListener('click', handleCancel);
+    modal.addEventListener('click', handleOutsideClick);
+}
+
+/**
+ * Ferme la modal de confirmation de suppression
+ */
+function closeDeleteMealModal() {
+    const modal = document.getElementById('deleteMealModal');
+    modal.classList.remove('show');
+}
+
+/**
+ * Effectue la suppression du repas
+ */
+async function performDeleteMeal(mealId, mealName, meals, foods) {
     await db.deleteMeal(mealId);
     delete mealsData[mealId];
     
@@ -480,19 +571,17 @@ async function deleteMeal(mealId, meals, foods) {
         window.refreshAvailableFoods();
     }
     
-    showNotification('Repas supprimé !');
+    showNotification(`🗑️ Repas "${mealName}" supprimé avec succès !`);
 }
 
 /**
- * Affiche une notification
+ * Supprime un repas (point d'entrée)
  */
-function showNotification(message) {
-    // Utilise la fonction de notification existante si disponible
-    if (window.showNotification) {
-        window.showNotification(message);
-    } else {
-        alert(message);
-    }
+function deleteMeal(mealId, meals, foods) {
+    const meal = meals[mealId];
+    if (!meal) return;
+    
+    showDeleteMealModal(mealId, meal.name, meals, foods);
 }
 
 /**

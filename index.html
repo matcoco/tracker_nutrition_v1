@@ -828,16 +828,16 @@
                     <button type="button" id="addIngredientBtn" class="secondary-btn">➕ Ajouter un ingrédient</button>
                 </div>
 
-                <!-- Poids total de la recette (optionnel) -->
+                <!-- Poids total de la recette -->
                 <div class="form-group">
-                    <label>⚖️ Poids total de la recette (optionnel)</label>
+                    <label>⚖️ Poids total de la recette</label>
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <input type="number" id="mealTotalWeight" placeholder="Ex: 900" min="1" step="1" style="flex: 1;">
+                        <input type="number" id="mealTotalWeight" placeholder="Calculé automatiquement..." min="1" step="1" style="flex: 1;">
                         <span style="font-weight: 600;">grammes</span>
                     </div>
                     <small style="color: #666; font-size: 0.9em; margin-top: 5px; display: block;">
-                        💡 Si vous entrez le poids total, le système calculera automatiquement les valeurs pour 100g.<br>
-                        Exemple : Recette de 900g → vous pourrez ajuster la portion dans le suivi quotidien.
+                        ✨ <strong>Calculé automatiquement</strong> en additionnant les ingrédients.<br>
+                        💡 Vous pouvez l'ajuster manuellement (ex: si la recette perd de l'eau à la cuisson).
                     </small>
                 </div>
 
@@ -865,19 +865,29 @@
 
     <!-- =================== CONTENU DE L'ONGLET "COMPARAISON" =================== -->
     <div id="comparison-tab" class="tab-content">
-        <h2 class="section-title">⚖️ Comparaison d'Aliments</h2>
+        <h2 class="section-title">⚖️ Comparaison</h2>
+        
+        <!-- Toggle pour choisir entre Aliments et Repas -->
+        <div class="comparison-mode-toggle">
+            <button class="mode-toggle-btn active" data-mode="foods">
+                🥗 Aliments
+            </button>
+            <button class="mode-toggle-btn" data-mode="meals">
+                🍽️ Repas
+            </button>
+        </div>
         
         <!-- Section de sélection des aliments -->
         <div class="comparison-selector">
             <div class="selector-card">
-                <h3>🔍 Sélectionner les aliments à comparer</h3>
-                <p class="selector-description">Comparez de 2 à 3 aliments pour voir leurs différences nutritionnelles</p>
+                <h3 id="comparisonTitle">🔍 Sélectionner les aliments à comparer</h3>
+                <p class="selector-description" id="comparisonDescription">Comparez de 2 à 3 aliments pour voir leurs différences nutritionnelles</p>
                 
                 <div class="food-selectors">
                     <div class="selector-item">
-                        <label>🥗 Premier aliment</label>
+                        <label id="comparisonLabel1">🥗 Premier aliment</label>
                         <div class="search-container">
-                            <input type="text" id="comparisonSearch1" placeholder="Rechercher un aliment..." class="search-input">
+                            <input type="text" id="comparisonSearch1" placeholder="Rechercher..." class="search-input">
                         </div>
                         <select id="comparisonFood1" class="comparison-select">
                             <option value="">-- Sélectionner --</option>
@@ -885,9 +895,9 @@
                     </div>
                     
                     <div class="selector-item">
-                        <label>🍖 Deuxième aliment</label>
+                        <label id="comparisonLabel2">🍖 Deuxième aliment</label>
                         <div class="search-container">
-                            <input type="text" id="comparisonSearch2" placeholder="Rechercher un aliment..." class="search-input">
+                            <input type="text" id="comparisonSearch2" placeholder="Rechercher..." class="search-input">
                         </div>
                         <select id="comparisonFood2" class="comparison-select">
                             <option value="">-- Sélectionner --</option>
@@ -895,9 +905,9 @@
                     </div>
                     
                     <div class="selector-item">
-                        <label>🥑 Troisième aliment (optionnel)</label>
+                        <label id="comparisonLabel3">🥑 Troisième aliment (optionnel)</label>
                         <div class="search-container">
-                            <input type="text" id="comparisonSearch3" placeholder="Rechercher un aliment..." class="search-input">
+                            <input type="text" id="comparisonSearch3" placeholder="Rechercher..." class="search-input">
                         </div>
                         <select id="comparisonFood3" class="comparison-select">
                             <option value="">-- Sélectionner --</option>
@@ -1211,6 +1221,28 @@
                     <button type="button" class="reset-btn" id="cancelEditActivityBtn">Annuler</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- =============================================
+         MODALE DE CONFIRMATION DE SUPPRESSION DE REPAS
+    ============================================= -->
+    <div id="deleteMealModal" class="modal">
+        <div class="modal-content modal-confirm">
+            <div class="modal-confirm-icon">
+                🗑️
+            </div>
+            <h3>Supprimer ce repas ?</h3>
+            <p class="modal-confirm-text">
+                Êtes-vous sûr de vouloir supprimer le repas <strong id="deleteMealName"></strong> ?
+            </p>
+            <p class="modal-confirm-warning">
+                ⚠️ Cette action est irréversible.
+            </p>
+            <div class="modal-buttons">
+                <button type="button" class="reset-btn" id="cancelDeleteMealBtn">Annuler</button>
+                <button type="button" class="delete-btn" id="confirmDeleteMealBtn">Supprimer</button>
+            </div>
         </div>
     </div>
 
