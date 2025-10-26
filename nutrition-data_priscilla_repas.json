@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "exportDate": "2025-10-26T16:45:15.609Z",
+  "exportDate": "2025-10-26T18:55:00.952Z",
   "appName": "Nutrition Tracker",
   "data": {
     "foods": {
@@ -223,7 +223,10 @@
         "fibers": 0,
         "fats": 82,
         "price": 2.44,
-        "priceGrams": 250
+        "priceQuantity": 250,
+        "priceUnit": "grams",
+        "isPortionBased": false,
+        "portionWeight": null
       },
       "miso-mild-sempio-doejang": {
         "name": "Miso mild (sempio doejang)",
@@ -279,6 +282,48 @@
         "portionWeight": null,
         "price": 1.67,
         "priceQuantity": 916,
+        "priceUnit": "grams"
+      },
+      "champignons-bruns-leclerc": {
+        "name": "Champignons bruns (leclerc)",
+        "calories": 27,
+        "proteins": 2.5,
+        "carbs": 3.7,
+        "sugars": 1.7,
+        "fibers": 0,
+        "fats": 0,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1.79,
+        "priceQuantity": 250,
+        "priceUnit": "grams"
+      },
+      "ricotta-riche-en-proteines--60-mg-casa-azzurra": {
+        "name": "Ricotta riche en protéines -60% MG (casa azzurra)",
+        "calories": 95,
+        "proteins": 8.5,
+        "carbs": 1.1,
+        "sugars": 2.9,
+        "fibers": 0,
+        "fats": 5,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 1.89,
+        "priceQuantity": 250,
+        "priceUnit": "grams"
+      },
+      "chataignes-pelees-au-feu-notre-jardin": {
+        "name": "Chataignes pelées au feu (notre jardin)",
+        "calories": 159,
+        "proteins": 2.8,
+        "carbs": 24,
+        "sugars": 8,
+        "fibers": 5.4,
+        "fats": 1,
+        "isPortionBased": false,
+        "portionWeight": null,
+        "price": 5.09,
+        "priceQuantity": 420,
         "priceUnit": "grams"
       }
     },
@@ -638,12 +683,90 @@
         "price": 0.36007146683011315,
         "priceQuantity": 100,
         "priceUnit": "grams"
+      },
+      "soupe-champignon-chataignes": {
+        "name": "Soupe champignon/chataignes (ricotta)",
+        "ingredients": [
+          {
+            "foodId": "champignons-bruns-leclerc",
+            "weight": 400
+          },
+          {
+            "foodId": "ricotta-riche-en-proteines--60-mg-casa-azzurra",
+            "weight": 30
+          },
+          {
+            "foodId": "chataignes-pelees-au-feu-notre-jardin",
+            "weight": 200
+          },
+          {
+            "foodId": "oignon-blanc",
+            "weight": 75
+          },
+          {
+            "foodId": "beurre-paysan-de-breton-doux-82mg",
+            "weight": 20
+          },
+          {
+            "foodId": "eau",
+            "weight": 600
+          }
+        ],
+        "totalWeight": 1325,
+        "calories": 47.781132075471696,
+        "proteins": 1.4426415094339622,
+        "carbs": 5.053207547169811,
+        "fats": 1.5075471698113208,
+        "sugars": 2.0332075471698112,
+        "fibers": 0.9113207547169812,
+        "price": 0.4420233602875112,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
+      },
+      "soupe-champignon-chataignes-soja-": {
+        "name": "Soupe champignon/chataignes (soja)",
+        "ingredients": [
+          {
+            "foodId": "champignons-bruns-leclerc",
+            "weight": 400
+          },
+          {
+            "foodId": "chataignes-pelees-au-feu-notre-jardin",
+            "weight": 200
+          },
+          {
+            "foodId": "oignon-blanc",
+            "weight": 75
+          },
+          {
+            "foodId": "beurre-paysan-de-breton-doux-82mg",
+            "weight": 20
+          },
+          {
+            "foodId": "eau",
+            "weight": 600
+          },
+          {
+            "foodId": "creme-de-soja-bio-village",
+            "weight": 30
+          }
+        ],
+        "totalWeight": 1355,
+        "calories": 48.738007380073796,
+        "proteins": 1.288929889298893,
+        "carbs": 4.985608856088561,
+        "fats": 1.7398523985239855,
+        "sugars": 1.9704797047970481,
+        "fibers": 0.8911439114391144,
+        "price": 0.4214398172553155,
+        "priceQuantity": 100,
+        "priceUnit": "grams"
       }
     }
   },
   "metadata": {
-    "totalFoods": 20,
-    "totalMeals": 8,
-    "autoDependencies": 20
+    "totalFoods": 23,
+    "totalMeals": 10,
+    "autoDependencies": 23
   }
 }
