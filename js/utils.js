@@ -111,6 +111,34 @@ export function generateFoodId(name) {
 }
 
 /**
+ * Calcule le prix pour 100g d'un aliment
+ * Gère les anciennes données (priceGrams) et les nouvelles (priceQuantity + priceUnit)
+ * @param {object} food - L'aliment
+ * @returns {number|null} - Prix pour 100g ou null si non disponible
+ */
+function getPricePer100g(food) {
+    if (!food.price) return null;
+    
+    // Nouveau format : priceQuantity + priceUnit
+    if (food.priceQuantity && food.priceUnit) {
+        if (food.priceUnit === 'grams') {
+            return (food.price / food.priceQuantity) * 100;
+        } else if (food.priceUnit === 'portions') {
+            const portionWeight = food.portionWeight || 100;
+            const totalGrams = food.priceQuantity * portionWeight;
+            return (food.price / totalGrams) * 100;
+        }
+    }
+    
+    // Ancien format (rétrocompatibilité) : priceGrams
+    if (food.priceGrams) {
+        return (food.price / food.priceGrams) * 100;
+    }
+    
+    return null;
+}
+
+/**
  * Calcule le coût d'une journée
  * @param {object} meals - Les repas de la journée
  * @param {object} foods - Dictionnaire des aliments
@@ -133,9 +161,12 @@ export function calculateDayCost(meals, foods, composedMeals = {}) {
                     food = foods[item.id];
                 }
                 
-                if (food && food.price && food.priceGrams) {
-                    const itemCost = (food.price / food.priceGrams) * item.weight;
-                    cost += itemCost;
+                if (food && food.price) {
+                    const pricePer100g = getPricePer100g(food);
+                    if (pricePer100g !== null) {
+                        const itemCost = (pricePer100g / 100) * item.weight;
+                        cost += itemCost;
+                    }
                 }
             });
         }
@@ -172,9 +203,12 @@ export function calculateCostsByMeal(meals, foods, composedMeals = {}) {
                     food = foods[item.id];
                 }
                 
-                if (food && food.price && food.priceGrams) {
-                    const itemCost = (food.price / food.priceGrams) * item.weight;
-                    costs[mealType] += itemCost;
+                if (food && food.price) {
+                    const pricePer100g = getPricePer100g(food);
+                    if (pricePer100g !== null) {
+                        const itemCost = (pricePer100g / 100) * item.weight;
+                        costs[mealType] += itemCost;
+                    }
                 }
             });
         }
