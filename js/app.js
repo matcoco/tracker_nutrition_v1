@@ -25,6 +25,7 @@ let state = {
     currentFoodAnalysisPeriod: 7, // Période pour l'analyse par aliment
     draggedFoodId: null,
     draggedMealItem: null, // Pour stocker les infos du meal-item déplacé
+    draggedElement: null,  // Stocke la référence DOM
     goals: null,
     displayedFoodsCount: 20,
     maxFoodsPerLoad: 20,
@@ -51,7 +52,7 @@ async function loadCurrentDay() {
         state.activities = [];
     }
     
-    ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, handleMealItemDragStart, state.meals);
+    ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, state.meals);
     const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
     ui.updateSummary(totals, state.goals);
     ui.updateWeightDisplay(weight);
@@ -92,45 +93,88 @@ function handleDragStart(event) {
     event.target.classList.add('dragging');
 }
 
-function handleMealItemDragStart(event) {
-    // Vérifier que c'est bien un meal-item
-    const mealItem = event.target.closest('.meal-item');
-    if (!mealItem) return;
-    
-    // Stocker les infos du meal-item déplacé
-    state.draggedMealItem = {
-        sourceMeal: mealItem.dataset.sourceMeal,
-        uniqueId: parseInt(mealItem.dataset.uniqueId, 10),
-        foodId: mealItem.dataset.foodId,
-        weight: parseFloat(mealItem.dataset.weight)
-    };
-    state.draggedFoodId = null; // Reset food id
-    mealItem.classList.add('dragging');
-    
-    // S'assurer que le dataTransfer est configuré pour le drag
-    event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData('text/html', mealItem.innerHTML);
-}
-
 function handleDragEnd(event) {
     // Retirer la classe dragging de l'élément (food-item ou meal-item)
     const draggingElement = event.target.closest('.food-item') || event.target.closest('.meal-item') || event.target;
-    draggingElement.classList.remove('dragging');
+    if (draggingElement) {
+        draggingElement.classList.remove('dragging');
+    }
     
-    // Reset des états
-    state.draggedFoodId = null;
-    state.draggedMealItem = null;
+    // Retirer toutes les classes drag-over des meal-columns
+    document.querySelectorAll('.meal-column.drag-over').forEach(col => {
+        col.classList.remove('drag-over');
+    });
+    
+    // Ne pas nettoyer ici: le drop a besoin des variables globales
+    // Le nettoyage complet est effectué à la fin de handleDrop()
 }
 
 async function handleDrop(event) {
     event.preventDefault();
+    event.stopPropagation();
+    console.log('📦 DROP déclenché !', event.currentTarget.dataset.meal);
+    console.log('   draggedMealElement:', window.draggedMealElement);
+    console.log('   draggedMealData:', window.draggedMealData);
+    
     const targetMealType = event.currentTarget.dataset.meal;
     event.currentTarget.classList.remove('drag-over');
     
+    // Nettoyer toutes les autres classes drag-over
+    document.querySelectorAll('.meal-column.drag-over').forEach(col => {
+        if (col !== event.currentTarget) {
+            col.classList.remove('drag-over');
+        }
+    });
+    
     const meals = await db.loadDayMeals(state.currentDate);
     
-    // CAS 1 : Drop d'un aliment ou repas depuis la liste disponible
-    if (state.draggedFoodId) {
+    console.log('🔍 Test conditions:');
+    console.log('   window.draggedMealElement:', window.draggedMealElement);
+    console.log('   window.draggedMealData:', window.draggedMealData);
+    console.log('   state.draggedFoodId:', state.draggedFoodId);
+    
+    // CAS 1 (PRIORITAIRE) : Drop d'un meal-item depuis un autre repas (APPROCHE DE L'EXEMPLE)
+    if (window.draggedMealElement && window.draggedMealData) {
+        console.log('🎯 ENTRÉE dans le if meal-item !');
+        const sourceMeal = window.draggedMealData.sourceMeal;
+        
+        // Si on déplace vers le même repas, ne rien faire
+        if (sourceMeal === targetMealType) {
+            console.log('⚠️ Même repas, pas de déplacement');
+            // Nettoyer l'état avant de sortir
+            state.draggedFoodId = null;
+            window.draggedMealElement = null;
+            window.draggedMealData = null;
+            return;
+        }
+        
+        console.log('✅ Déplacement de', sourceMeal, 'vers', targetMealType);
+        
+        // Déplacement logique: mettre à jour la BDD
+        meals[sourceMeal] = meals[sourceMeal].filter(item => item.uniqueId !== window.draggedMealData.uniqueId);
+        meals[targetMealType].push({
+            id: window.draggedMealData.foodId,
+            weight: window.draggedMealData.weight,
+            isMeal: window.draggedMealData.isMeal || false,
+            uniqueId: window.draggedMealData.uniqueId // Garder le même uniqueId
+        });
+        
+        await db.saveDayMeals(state.currentDate, meals);
+        console.log('💾 BDD mise à jour');
+        
+        // Re-render des repas pour mettre à jour les en-têtes et refléter l'état (fiable)
+        ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, state.meals);
+        // Mettre à jour le résumé de la journée
+        const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
+        ui.updateSummary(totals, state.goals);
+        
+        ui.showNotification(`Aliment déplacé vers ${getMealName(targetMealType)} !`);
+    }
+    
+    // CAS 2 : Drop d'un aliment ou repas depuis la liste disponible
+    else if (state.draggedFoodId) {
+        console.log('➕ Ajout depuis la liste:', state.draggedFoodId);
+        
         // Vérifier si c'est un repas composé
         if (state.meals[state.draggedFoodId]) {
             // C'est un repas → l'ajouter comme bloc (pas de décomposition)
@@ -142,7 +186,10 @@ async function handleDrop(event) {
                 uniqueId: Date.now()
             });
             await db.saveDayMeals(state.currentDate, meals);
-            loadCurrentDay();
+            // Re-render repas + résumé
+            ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, state.meals);
+            const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
+            ui.updateSummary(totals, state.goals);
             ui.showNotification(`${meal.name} ajouté !`);
         }
         // Sinon, c'est un aliment simple
@@ -152,33 +199,18 @@ async function handleDrop(event) {
             const defaultWeight = (food.isPortionBased && food.portionWeight) ? food.portionWeight : 100;
             meals[targetMealType].push({ id: state.draggedFoodId, weight: defaultWeight, uniqueId: Date.now() });
             await db.saveDayMeals(state.currentDate, meals);
-            loadCurrentDay();
+            // Re-render repas + résumé
+            ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, state.meals);
+            const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
+            ui.updateSummary(totals, state.goals);
         }
     }
     
-    // CAS 2 : Drop d'un meal-item depuis un autre repas
-    else if (state.draggedMealItem) {
-        const sourceMeal = state.draggedMealItem.sourceMeal;
-        
-        // Si on déplace vers le même repas, ne rien faire
-        if (sourceMeal === targetMealType) {
-            return;
-        }
-        
-        // Retirer l'item du repas source
-        meals[sourceMeal] = meals[sourceMeal].filter(item => item.uniqueId !== state.draggedMealItem.uniqueId);
-        
-        // Ajouter l'item au repas cible avec le même poids
-        meals[targetMealType].push({
-            id: state.draggedMealItem.foodId,
-            weight: state.draggedMealItem.weight,
-            uniqueId: Date.now() // Nouveau uniqueId
-        });
-        
-        await db.saveDayMeals(state.currentDate, meals);
-        loadCurrentDay();
-        ui.showNotification(`Aliment déplacé vers ${getMealName(targetMealType)} !`);
-    }
+    // Nettoyer l'état à la fin du drop
+    state.draggedFoodId = null;
+    state.draggedMealItem = null;
+    window.draggedMealElement = null;
+    window.draggedMealData = null;
 }
 
 // Fonction helper pour obtenir le nom du repas
@@ -1188,10 +1220,21 @@ function setupEventListeners() {
     document.getElementById('cancelWellnessBtn').addEventListener('click', handleCancelWellnessEdit);
     
     document.querySelectorAll('.meal-column').forEach(col => {
-        col.addEventListener('dragover', e => { e.preventDefault(); col.classList.add('drag-over'); });
-        col.addEventListener('dragleave', e => col.classList.remove('drag-over'));
+        col.addEventListener('dragover', (e) => { 
+            e.preventDefault(); 
+            e.stopPropagation();
+            col.classList.add('drag-over'); 
+        });
+        col.addEventListener('dragleave', (e) => {
+            // Ne retirer drag-over que si on quitte vraiment la meal-column (pas juste un enfant)
+            if (e.target === col || !col.contains(e.relatedTarget)) {
+                col.classList.remove('drag-over');
+            }
+        });
         col.addEventListener('drop', handleDrop);
     });
+    
+    // Nettoyer l'état à la fin du drag (comme dans l'exemple)
     document.body.addEventListener('dragend', handleDragEnd);
     document.getElementById('addFoodForm').addEventListener('submit', handleAddFood);
     document.getElementById('editFoodForm').addEventListener('submit', handleUpdateFood);

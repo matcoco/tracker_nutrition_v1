@@ -459,10 +459,9 @@ export function displayFoodsManage(foods, editClickHandler, deleteClickHandler) 
  * @param {object} foods - Dictionnaire des aliments.
  * @param {Function} removeHandler - Fonction à appeler pour supprimer un aliment.
  * @param {Function} weightChangeHandler - Fonction à appeler pour changer le poids.
- * @param {Function} mealItemDragStartHandler - Fonction à appeler au début du drag d'un meal-item.
  * @param {object} composedMeals - Dictionnaire des repas composés (optionnel).
  */
-export function displayMeals(meals, foods, removeHandler, weightChangeHandler, mealItemDragStartHandler, composedMeals = {}) {
+export function displayMeals(meals, foods, removeHandler, weightChangeHandler, composedMeals = {}) {
     for (const [type, items] of Object.entries(meals)) {
         const container = document.getElementById(type);
         const summaryEl = document.getElementById(`summary-${type}`);
@@ -577,6 +576,41 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, m
 
             el.querySelector('.remove-btn').onclick = () => removeHandler(type, item.uniqueId);
             
+            // ATTACHER LES LISTENERS DE DRAG
+            console.log('🔧 Attachement des listeners pour', item.id, '- draggable:', el.draggable);
+            
+            // TEST: mousedown pour voir si l'élément reçoit les événements
+            el.addEventListener('mousedown', function(e) {
+                console.log('🖱️ MOUSEDOWN sur meal-item:', this.dataset.foodId, '- target:', e.target.tagName);
+            });
+            
+            el.addEventListener('dragstart', function(e) {
+                console.log('🚀 DRAGSTART déclenché !', this.dataset.foodId);
+                
+                // COMME DANS L'EXEMPLE : stocker this (la référence DOM)
+                window.draggedMealElement = this;
+                
+                // Stocker aussi les données pour la BDD
+                window.draggedMealData = {
+                    sourceMeal: this.dataset.sourceMeal,
+                    uniqueId: parseInt(this.dataset.uniqueId, 10),
+                    foodId: this.dataset.foodId,
+                    weight: parseFloat(this.dataset.weight),
+                    isMeal: this.dataset.isMeal === 'true'
+                };
+                
+                // Effet visuel
+                setTimeout(() => this.classList.add('dragging'), 0);
+            });
+            
+            el.addEventListener('dragend', function() {
+                console.log('✋ DRAGEND déclenché');
+                this.classList.remove('dragging');
+                // NE PAS nettoyer window.draggedMealElement ici !
+                // Le nettoyage se fera dans handleDrop après utilisation
+            });
+            
+            // Maintenant on configure le contenu et l'input
             const weightInput = el.querySelector('input[type="number"]');
             weightInput.onchange = (e) => {
                 let valueInGrams = parseFloat(e.target.value);
@@ -586,28 +620,6 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, m
                 }
                 weightChangeHandler(type, item.uniqueId, valueInGrams);
             };
-            
-            // Empêcher le drag quand on interagit avec l'input ou le bouton
-            weightInput.addEventListener('mousedown', (e) => {
-                el.setAttribute('draggable', 'false');
-            });
-            weightInput.addEventListener('blur', () => {
-                el.setAttribute('draggable', 'true');
-            });
-            
-            const removeBtn = el.querySelector('.remove-btn');
-            removeBtn.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-                el.setAttribute('draggable', 'false');
-            });
-            removeBtn.addEventListener('mouseup', () => {
-                setTimeout(() => el.setAttribute('draggable', 'true'), 100);
-            });
-            
-            // Ajouter le handler de dragstart pour le déplacement entre repas
-            if (mealItemDragStartHandler) {
-                el.addEventListener('dragstart', mealItemDragStartHandler);
-            }
             
             container.appendChild(el);
         });
