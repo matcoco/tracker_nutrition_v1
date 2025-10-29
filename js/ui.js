@@ -526,12 +526,42 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
             el.dataset.weight = item.weight; // Poids actuel (toujours en grammes)
             if (isMealComposed) el.dataset.isMeal = 'true';
             
-            const cal = (food.calories * item.weight / 100).toFixed(0);
-            const prot = (food.proteins * item.weight / 100).toFixed(1);
-            const carb = (food.carbs * item.weight / 100).toFixed(1);
-            const fat = (food.fats * item.weight / 100).toFixed(1);
-            const sug = (food.sugars * item.weight / 100).toFixed(1);
-            const fib = ((food.fibers || 0) * item.weight / 100).toFixed(1);
+            // Calcul des macros : utiliser customPortions si disponible
+            let cal, prot, carb, fat, sug, fib;
+            
+            if (isMealComposed && item.customPortions) {
+                // Repas avec portions personnalisées
+                let totals = { calories: 0, proteins: 0, carbs: 0, fats: 0, sugars: 0, fibers: 0 };
+                
+                food.ingredients.forEach(ing => {
+                    const ingredientFood = foods[ing.foodId];
+                    const weight = item.customPortions[ing.foodId] || 0;
+                    
+                    if (ingredientFood && weight > 0) {
+                        totals.calories += (ingredientFood.calories * weight / 100);
+                        totals.proteins += (ingredientFood.proteins * weight / 100);
+                        totals.carbs += (ingredientFood.carbs * weight / 100);
+                        totals.fats += (ingredientFood.fats * weight / 100);
+                        totals.sugars += ((ingredientFood.sugars || 0) * weight / 100);
+                        totals.fibers += ((ingredientFood.fibers || 0) * weight / 100);
+                    }
+                });
+                
+                cal = totals.calories.toFixed(0);
+                prot = totals.proteins.toFixed(1);
+                carb = totals.carbs.toFixed(1);
+                fat = totals.fats.toFixed(1);
+                sug = totals.sugars.toFixed(1);
+                fib = totals.fibers.toFixed(1);
+            } else {
+                // Calcul normal
+                cal = (food.calories * item.weight / 100).toFixed(0);
+                prot = (food.proteins * item.weight / 100).toFixed(1);
+                carb = (food.carbs * item.weight / 100).toFixed(1);
+                fat = (food.fats * item.weight / 100).toFixed(1);
+                sug = (food.sugars * item.weight / 100).toFixed(1);
+                fib = ((food.fibers || 0) * item.weight / 100).toFixed(1);
+            }
             
             // Calculer le coût si disponible
             let costInfo = '';
@@ -562,19 +592,48 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
 
             const mealBadge = isMealComposed ? '<span class="meal-badge-small">REPAS</span> ' : '';
             
+            // Vérifier si le repas a des portions ajustables
+            const isAdjustable = isMealComposed && food.isPortionAdjustable;
+            
+            // Si ajustable, afficher bouton au lieu du champ de poids
+            let weightSection = '';
+            if (isAdjustable) {
+                weightSection = `
+                    <button class="adjust-portions-btn" data-unique-id="${item.uniqueId}" title="Ajuster les portions">
+                        ⚙️ Ajuster
+                    </button>
+                `;
+            } else {
+                weightSection = `
+                    <div class="weight-input">
+                        <input type="number" value="${displayValue}" min="0.1" step="${inputStep}">
+                        <span>${displayUnit}</span>
+                    </div>
+                `;
+            }
+            
             el.innerHTML = `
                 <div class="meal-item-header">
                     <span class="meal-item-name">${mealBadge}${food.name}</span>
                     <button class="remove-btn">✕</button>
                 </div>
-                <div class="weight-input">
-                    <input type="number" value="${displayValue}" min="0.1" step="${inputStep}">
-                    <span>${displayUnit}</span>
-                </div>
+                ${weightSection}
                 <div class="meal-item-macros">${cal} kcal | P: ${prot}g | G: ${carb}g | F: ${fib}g | L: ${fat}g | S: ${sug}g${costInfo}</div>
             `;
 
             el.querySelector('.remove-btn').onclick = () => removeHandler(type, item.uniqueId);
+            
+            // Si bouton ajuster présent, attacher le listener
+            const adjustBtn = el.querySelector('.adjust-portions-btn');
+            if (adjustBtn && isAdjustable) {
+                adjustBtn.onclick = (e) => {
+                    e.stopPropagation(); // Empêcher le drag
+                    // Appeler le handler global avec les données nécessaires
+                    if (window.handleAdjustPortions) {
+                        window.handleAdjustPortions(type, item.uniqueId, item.id, item.customPortions);
+                    }
+                };
+            }
             
             // ATTACHER LES LISTENERS DE DRAG
             console.log('🔧 Attachement des listeners pour', item.id, '- draggable:', el.draggable);
@@ -610,16 +669,18 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
                 // Le nettoyage se fera dans handleDrop après utilisation
             });
             
-            // Maintenant on configure le contenu et l'input
+            // Maintenant on configure l'input SI il existe (pas de repas ajustable)
             const weightInput = el.querySelector('input[type="number"]');
-            weightInput.onchange = (e) => {
-                let valueInGrams = parseFloat(e.target.value);
-                // Si c'est basé sur des portions, convertir en grammes
-                if (isPortionBased && portionWeight) {
-                    valueInGrams = valueInGrams * portionWeight;
-                }
-                weightChangeHandler(type, item.uniqueId, valueInGrams);
-            };
+            if (weightInput) {
+                weightInput.onchange = (e) => {
+                    let valueInGrams = parseFloat(e.target.value);
+                    // Si c'est basé sur des portions, convertir en grammes
+                    if (isPortionBased && portionWeight) {
+                        valueInGrams = valueInGrams * portionWeight;
+                    }
+                    weightChangeHandler(type, item.uniqueId, valueInGrams);
+                };
+            }
             
             container.appendChild(el);
         });

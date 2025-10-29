@@ -1,6 +1,6 @@
 {
   "version": "1.4",
-  "exportDate": "2025-10-26T18:48:24.096Z",
+  "exportDate": "2025-10-28T21:26:13.183Z",
   "foods": [
     {
       "id": "accras-de-morue-recette-epicee-carrefour",
@@ -16,6 +16,21 @@
       "priceUnit": "grams",
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "ail-gingembre-en-pot",
+      "name": "Ail gingembre en pot",
+      "calories": 124,
+      "proteins": 1.9,
+      "carbs": 15,
+      "sugars": 0,
+      "fibers": 1.2,
+      "fats": 5,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 2,
+      "priceQuantity": 200,
+      "priceUnit": "grams"
     },
     {
       "id": "amande-grillee-papapero",
@@ -59,6 +74,33 @@
       "price": 2.51,
       "priceQuantity": 250,
       "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
+    },
+    {
+      "id": "beurre-paysan-de-breton-doux-82mg",
+      "name": "Beurre paysan de breton doux 82%MG",
+      "calories": 743,
+      "proteins": 0.7,
+      "carbs": 0,
+      "sugars": 0.6,
+      "fibers": 0,
+      "fats": 82,
+      "price": 2.44,
+      "priceQuantity": 250,
+      "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
+    },
+    {
+      "id": "biscuits-gerble-chocolat-noir",
+      "name": "Biscuits Gerblé Chocolat noir",
+      "calories": 427,
+      "proteins": 6.9,
+      "carbs": 59.5,
+      "sugars": 0.5,
+      "fibers": 8.8,
+      "fats": 20,
       "isPortionBased": false,
       "portionWeight": null
     },
@@ -135,6 +177,51 @@
       "priceUnit": "portions"
     },
     {
+      "id": "carpaccion-de-boeuf-charal",
+      "name": "Carpaccion de boeuf ((charal) ",
+      "calories": 105,
+      "proteins": 16,
+      "carbs": 0,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 3,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 6.22,
+      "priceQuantity": 200,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "champignons-bruns-leclerc",
+      "name": "Champignons bruns (leclerc)",
+      "calories": 27,
+      "proteins": 2.5,
+      "carbs": 3.7,
+      "sugars": 1.7,
+      "fibers": 0,
+      "fats": 0,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.79,
+      "priceQuantity": 250,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "chataignes-pelees-au-feu-notre-jardin",
+      "name": "Chataignes pelées au feu (notre jardin)",
+      "calories": 159,
+      "proteins": 2.8,
+      "carbs": 24,
+      "sugars": 8,
+      "fibers": 5.4,
+      "fats": 1,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 5.09,
+      "priceQuantity": 420,
+      "priceUnit": "grams"
+    },
+    {
       "id": "comte-paturages",
       "name": "Comté Pâturages",
       "calories": 410,
@@ -150,6 +237,21 @@
       "portionWeight": null
     },
     {
+      "id": "creme-de-soja-bio-village",
+      "name": "Crème de soja Bio village",
+      "calories": 186,
+      "proteins": 3,
+      "carbs": 3.1,
+      "sugars": 2.1,
+      "fibers": 0,
+      "fats": 17,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.61,
+      "priceQuantity": 600,
+      "priceUnit": "grams"
+    },
+    {
       "id": "demi-baguette-de-campagne-chabrior-bio",
       "name": "Demi baguette de campagne Chabrior BIO",
       "calories": 277,
@@ -163,6 +265,21 @@
       "priceUnit": "grams",
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "eau",
+      "name": "Eau",
+      "calories": 0,
+      "proteins": 0,
+      "carbs": 0,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 0,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 0.12,
+      "priceQuantity": 1000,
+      "priceUnit": "grams"
     },
     {
       "id": "fanta-100ml-mcdonalds",
@@ -195,6 +312,21 @@
       "portionWeight": null
     },
     {
+      "id": "farine-t55-bio-carrefour",
+      "name": "Farine T55 (bio carrefour)",
+      "calories": 334,
+      "proteins": 11,
+      "carbs": 68.2,
+      "sugars": 1.8,
+      "fibers": 0,
+      "fats": 1.2,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.15,
+      "priceQuantity": 1000,
+      "priceUnit": "grams"
+    },
+    {
       "id": "frites-mccain-650g-cote-brasserie",
       "name": "Frites McCain 650g coté brasserie",
       "calories": 165,
@@ -206,6 +338,18 @@
       "price": 2.4,
       "priceQuantity": 650,
       "priceUnit": "grams",
+      "isPortionBased": false,
+      "portionWeight": null
+    },
+    {
+      "id": "fromage-a-raclette-standard",
+      "name": "Fromage à raclette standard",
+      "calories": 367,
+      "proteins": 25,
+      "carbs": 0.7,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 29.6,
       "isPortionBased": false,
       "portionWeight": null
     },
@@ -223,6 +367,21 @@
       "priceUnit": "grams",
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "fromage-tomme-de-vache-perch-en-tomme",
+      "name": "Fromage Tomme de vache Perch en Tomme",
+      "calories": 340,
+      "proteins": 18.5,
+      "carbs": 0,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 28,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 5.6,
+      "priceQuantity": 300,
+      "priceUnit": "grams"
     },
     {
       "id": "fusilli-protein-",
@@ -343,6 +502,21 @@
       "priceUnit": "grams",
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "huile-tournesol-eco",
+      "name": "Huile tournesol (eco+)",
+      "calories": 828,
+      "proteins": 0,
+      "carbs": 0,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 92,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.67,
+      "priceQuantity": 916,
+      "priceUnit": "grams"
     },
     {
       "id": "jaune-doeuf",
@@ -480,6 +654,36 @@
       "priceUnit": "portions"
     },
     {
+      "id": "mirin-sukina",
+      "name": "Mirin (Sukina)",
+      "calories": 239,
+      "proteins": 0,
+      "carbs": 6,
+      "sugars": 60,
+      "fibers": 0,
+      "fats": 0,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 13,
+      "priceQuantity": 792,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "miso-mild-sempio-doejang",
+      "name": "Miso mild (sempio doejang)",
+      "calories": 138,
+      "proteins": 11.9,
+      "carbs": 1.9,
+      "sugars": 12.1,
+      "fibers": 0,
+      "fats": 2.3,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 2.17,
+      "priceQuantity": 500,
+      "priceUnit": "grams"
+    },
+    {
       "id": "moyenne-frite-mcdo",
       "name": "Moyenne frite Mcdo",
       "calories": 258.0357142857143,
@@ -495,6 +699,21 @@
       "priceUnit": "portions"
     },
     {
+      "id": "nouilles-udon",
+      "name": "Nouilles Udon",
+      "calories": 140,
+      "proteins": 3.7,
+      "carbs": 30.4,
+      "sugars": 0.2,
+      "fibers": 0,
+      "fats": 0.3,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 3,
+      "priceQuantity": 800,
+      "priceUnit": "grams"
+    },
+    {
       "id": "oeuf-entier",
       "name": "Oeuf entier",
       "calories": 147,
@@ -508,6 +727,21 @@
       "priceUnit": "grams",
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "oignon-blanc",
+      "name": "Oignon blanc",
+      "calories": 40,
+      "proteins": 1.1,
+      "carbs": 5.1,
+      "sugars": 4.2,
+      "fibers": 1.7,
+      "fats": 0.1,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1,
+      "priceQuantity": 1000,
+      "priceUnit": "grams"
     },
     {
       "id": "olive-verte-a-la-farce-de-poivron",
@@ -555,6 +789,18 @@
       "portionWeight": null
     },
     {
+      "id": "pate-a-tartiner-bio",
+      "name": "Pâte à tartiner BIO",
+      "calories": 523.7,
+      "proteins": 6.7,
+      "carbs": 3,
+      "sugars": 57.9,
+      "fibers": 3.7,
+      "fats": 27.6,
+      "isPortionBased": false,
+      "portionWeight": null
+    },
+    {
       "id": "pate-complete-penne-bio-village",
       "name": "Pâte Complète PENNE Bio village",
       "calories": 336,
@@ -570,6 +816,21 @@
       "portionWeight": null
     },
     {
+      "id": "petit-pois-surgeles-eco",
+      "name": "Petit pois surgelés (eco+)",
+      "calories": 69,
+      "proteins": 5.2,
+      "carbs": 5.9,
+      "sugars": 3.1,
+      "fibers": 4.6,
+      "fats": 0.5,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.56,
+      "priceQuantity": 1000,
+      "priceUnit": "grams"
+    },
+    {
       "id": "pizza-maison-artichaut",
       "name": "Pizza maison artichaut",
       "calories": 250,
@@ -580,6 +841,21 @@
       "fats": 14,
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "poireau-frais",
+      "name": "Poireau (frais)",
+      "calories": 25,
+      "proteins": 1.1,
+      "carbs": 3,
+      "sugars": 0,
+      "fibers": 3.2,
+      "fats": 0.3,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.99,
+      "priceQuantity": 1000,
+      "priceUnit": "grams"
     },
     {
       "id": "poivrons-cuisines-cassegrain",
@@ -595,6 +871,21 @@
       "priceUnit": "grams",
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "pomme-de-terre",
+      "name": "Pomme de terre",
+      "calories": 81,
+      "proteins": 1.8,
+      "carbs": 15.8,
+      "sugars": 0.9,
+      "fibers": 1.8,
+      "fats": 0.3,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 2.29,
+      "priceQuantity": 2000,
+      "priceUnit": "grams"
     },
     {
       "id": "pomme-gala",
@@ -642,6 +933,21 @@
       "portionWeight": null
     },
     {
+      "id": "proteines-de-soja-textures-petits-morceaux",
+      "name": "Protéines de soja texturés (petits morceaux)",
+      "calories": 352,
+      "proteins": 50,
+      "carbs": 6.3,
+      "sugars": 7.7,
+      "fibers": 14,
+      "fats": 7.5,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.69,
+      "priceQuantity": 175,
+      "priceUnit": "grams"
+    },
+    {
       "id": "raisin-vert",
       "name": "Raisin vert",
       "calories": 69,
@@ -655,6 +961,66 @@
       "priceUnit": "grams",
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "rhum-blanc-charrette",
+      "name": "Rhum blanc Charrette ",
+      "calories": 241.9,
+      "proteins": 0,
+      "carbs": 0,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 0,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 20,
+      "priceQuantity": 1000,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "ricotta-riche-en-proteines--60-mg-casa-azzurra",
+      "name": "Ricotta riche en protéines -60% MG (casa azzurra)",
+      "calories": 95,
+      "proteins": 8.5,
+      "carbs": 1.1,
+      "sugars": 2.9,
+      "fibers": 0,
+      "fats": 5,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.89,
+      "priceQuantity": 250,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "riz-bio-saint-eloi-semi-complet",
+      "name": "Riz Bio Saint Eloi semi complet",
+      "calories": 343,
+      "proteins": 7.9,
+      "carbs": 73,
+      "sugars": 0,
+      "fibers": 3.3,
+      "fats": 1.4,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 2.39,
+      "priceQuantity": 500,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "riz-thai",
+      "name": "Riz thai",
+      "calories": 350,
+      "proteins": 6.7,
+      "carbs": 79,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 0.7,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 14.5,
+      "priceQuantity": 10000,
+      "priceUnit": "grams"
     },
     {
       "id": "saint-nectaire-laitier",
@@ -672,6 +1038,21 @@
       "portionWeight": null
     },
     {
+      "id": "sake-de-cuisine-wadakan",
+      "name": "Sake de cuisine (Wadakan)",
+      "calories": 87,
+      "proteins": 0.3,
+      "carbs": 0.6,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 0,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 6,
+      "priceQuantity": 748,
+      "priceUnit": "grams"
+    },
+    {
       "id": "sandwich-sodebo-rosette",
       "name": "Sandwich Sodebo Rosette",
       "calories": 291,
@@ -687,6 +1068,21 @@
       "portionWeight": null
     },
     {
+      "id": "sauce-soja-sale-kikkoman",
+      "name": "Sauce soja salé (Kikkoman)",
+      "calories": 77,
+      "proteins": 10,
+      "carbs": 2.6,
+      "sugars": 0.6,
+      "fibers": 0,
+      "fats": 0,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 8.5,
+      "priceQuantity": 1040,
+      "priceUnit": "grams"
+    },
+    {
       "id": "scheppes-tonic",
       "name": "Scheppes tonic",
       "calories": 19,
@@ -700,6 +1096,21 @@
       "priceUnit": "grams",
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "sel",
+      "name": "Sel",
+      "calories": 0,
+      "proteins": 0,
+      "carbs": 0,
+      "sugars": 0,
+      "fibers": 0,
+      "fats": 0,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 0.58,
+      "priceQuantity": 500,
+      "priceUnit": "grams"
     },
     {
       "id": "skyr-nature-yoplait",
@@ -745,6 +1156,21 @@
       "priceUnit": "grams",
       "isPortionBased": false,
       "portionWeight": null
+    },
+    {
+      "id": "sucre-blanc-en-poudre-beghin-say",
+      "name": "Sucre blanc en poudre (Beghin say)",
+      "calories": 400,
+      "proteins": 0,
+      "carbs": 0,
+      "sugars": 100,
+      "fibers": 0,
+      "fats": 0,
+      "isPortionBased": false,
+      "portionWeight": null,
+      "price": 1.54,
+      "priceQuantity": 1000,
+      "priceUnit": "grams"
     },
     {
       "id": "sucre-roux-de-canne",
@@ -879,6 +1305,258 @@
   ],
   "meals": [
     {
+      "id": "boeuf-mijot-japonais",
+      "name": "Boeuf mijoté japonais",
+      "ingredients": [
+        {
+          "foodId": "carpaccion-de-boeuf-charal",
+          "weight": 200
+        },
+        {
+          "foodId": "mirin-sukina",
+          "weight": 53
+        },
+        {
+          "foodId": "sake-de-cuisine-wadakan",
+          "weight": 45
+        },
+        {
+          "foodId": "sucre-blanc-en-poudre-beghin-say",
+          "weight": 25
+        },
+        {
+          "foodId": "oignon-blanc",
+          "weight": 100
+        },
+        {
+          "foodId": "ail-gingembre-en-pot",
+          "weight": 5
+        },
+        {
+          "foodId": "eau",
+          "weight": 60
+        }
+      ],
+      "totalWeight": 488,
+      "calories": 106.97131147540983,
+      "proteins": 6.829918032786885,
+      "carbs": 1.905737704918033,
+      "fats": 1.3012295081967213,
+      "sugars": 12.5,
+      "fibers": 0.36065573770491804,
+      "price": 1.5659041110234455,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "boeuf-mijot-japonais-avec-pomme-de-terre-",
+      "name": "Boeuf mijoté japonais (avec pomme de terre)",
+      "ingredients": [
+        {
+          "foodId": "sauce-soja-sale-kikkoman",
+          "weight": 78
+        },
+        {
+          "foodId": "mirin-sukina",
+          "weight": 66
+        },
+        {
+          "foodId": "sake-de-cuisine-wadakan",
+          "weight": 56
+        },
+        {
+          "foodId": "sucre-blanc-en-poudre-beghin-say",
+          "weight": 31
+        },
+        {
+          "foodId": "carpaccion-de-boeuf-charal",
+          "weight": 200
+        },
+        {
+          "foodId": "pomme-de-terre",
+          "weight": 150
+        },
+        {
+          "foodId": "oignon-blanc",
+          "weight": 100
+        },
+        {
+          "foodId": "ail-gingembre-en-pot",
+          "weight": 5
+        },
+        {
+          "foodId": "eau",
+          "weight": 72
+        }
+      ],
+      "totalWeight": 758,
+      "calories": 101.34828496042216,
+      "proteins": 5.786675461741425,
+      "carbs": 4.732717678100264,
+      "fats": 0.8970976253298153,
+      "sugars": 10.10791556728232,
+      "fibers": 0.5883905013192612,
+      "price": 1.1560898673213589,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "boeuf-mijot-japonais-avec-riz-",
+      "name": "Boeuf mijoté japonais (avec riz)",
+      "ingredients": [
+        {
+          "foodId": "carpaccion-de-boeuf-charal",
+          "weight": 200
+        },
+        {
+          "foodId": "mirin-sukina",
+          "weight": 53
+        },
+        {
+          "foodId": "sake-de-cuisine-wadakan",
+          "weight": 45
+        },
+        {
+          "foodId": "sucre-blanc-en-poudre-beghin-say",
+          "weight": 25
+        },
+        {
+          "foodId": "oignon-blanc",
+          "weight": 100
+        },
+        {
+          "foodId": "ail-gingembre-en-pot",
+          "weight": 5
+        },
+        {
+          "foodId": "riz-thai",
+          "weight": 70
+        },
+        {
+          "foodId": "eau",
+          "weight": 60
+        }
+      ],
+      "totalWeight": 558,
+      "calories": 137.45878136200716,
+      "proteins": 6.813620071684587,
+      "carbs": 11.57706093189964,
+      "fats": 1.2258064516129032,
+      "sugars": 10.931899641577061,
+      "fibers": 0.3154121863799283,
+      "price": 1.387654491361006,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "boeuf-mijot-japonais-avec-udon-fait-maison-",
+      "name": "Boeuf mijoté japonais (avec udon fait maison)",
+      "ingredients": [
+        {
+          "foodId": "sauce-soja-sale-kikkoman",
+          "weight": 62
+        },
+        {
+          "foodId": "mirin-sukina",
+          "weight": 53
+        },
+        {
+          "foodId": "sake-de-cuisine-wadakan",
+          "weight": 45
+        },
+        {
+          "foodId": "sucre-blanc-en-poudre-beghin-say",
+          "weight": 25
+        },
+        {
+          "foodId": "oignon-blanc",
+          "weight": 100
+        },
+        {
+          "foodId": "ail-gingembre-en-pot",
+          "weight": 5
+        },
+        {
+          "foodId": "farine-t55-bio-carrefour",
+          "weight": 75
+        },
+        {
+          "foodId": "sel",
+          "weight": 4
+        },
+        {
+          "foodId": "carpaccion-de-boeuf-charal",
+          "weight": 200
+        },
+        {
+          "foodId": "eau",
+          "weight": 34
+        }
+      ],
+      "totalWeight": 603,
+      "calories": 136.02985074626866,
+      "proteins": 7.923714759535655,
+      "carbs": 10.292205638474295,
+      "fats": 1.2023217247097844,
+      "sugars": 10.401658374792705,
+      "fibers": 0.29187396351575456,
+      "price": 1.3658561908831148,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "boeuf-mijot-japonais-avec-udons-",
+      "name": "Boeuf mijoté japonais (avec udon acheté)",
+      "ingredients": [
+        {
+          "foodId": "mirin-sukina",
+          "weight": 53
+        },
+        {
+          "foodId": "sauce-soja-sale-kikkoman",
+          "weight": 62
+        },
+        {
+          "foodId": "sucre-blanc-en-poudre-beghin-say",
+          "weight": 25
+        },
+        {
+          "foodId": "oignon-blanc",
+          "weight": 100
+        },
+        {
+          "foodId": "ail-gingembre-en-pot",
+          "weight": 5
+        },
+        {
+          "foodId": "carpaccion-de-boeuf-charal",
+          "weight": 200
+        },
+        {
+          "foodId": "sake-de-cuisine-wadakan",
+          "weight": 45
+        },
+        {
+          "foodId": "nouilles-udon",
+          "weight": 200
+        },
+        {
+          "foodId": "eau",
+          "weight": 60
+        }
+      ],
+      "totalWeight": 750,
+      "calories": 113.30133333333332,
+      "proteins": 6.257333333333333,
+      "carbs": 9.561599999999999,
+      "fats": 0.9266666666666665,
+      "sugars": 8.236266666666667,
+      "fibers": 0.23466666666666666,
+      "price": 1.1864457108033577,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
       "id": "brioche-thermomix",
       "name": "Brioche Thermomix",
       "ingredients": [
@@ -919,6 +1597,230 @@
       "sugars": 8.22888888888889,
       "fibers": 2.342222222222222,
       "price": 0.28645925925925925,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "cr-me-de-petit-pois",
+      "name": "crème de petit pois",
+      "ingredients": [
+        {
+          "foodId": "creme-de-soja-bio-village",
+          "weight": 100
+        },
+        {
+          "foodId": "petit-pois-surgeles-eco",
+          "weight": 500
+        },
+        {
+          "foodId": "beurre-paysan-de-breton-doux-82mg",
+          "weight": 10
+        },
+        {
+          "foodId": "oignon-blanc",
+          "weight": 75
+        },
+        {
+          "foodId": "eau",
+          "weight": 300
+        }
+      ],
+      "totalWeight": 985,
+      "calories": 64.497461928934,
+      "proteins": 3.03502538071066,
+      "carbs": 3.6979695431472086,
+      "fats": 2.819796954314721,
+      "sugars": 2.1126903553299496,
+      "fibers": 2.464467005076142,
+      "price": 0.12722673434856174,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "cr-pes-thermomix",
+      "name": "Crêpes Thermomix",
+      "ingredients": [
+        {
+          "foodId": "farine-t55-bio-carrefour",
+          "weight": 250
+        },
+        {
+          "foodId": "oeuf-entier",
+          "weight": 112
+        },
+        {
+          "foodId": "lait-demi-ecreme-frechard",
+          "weight": 500
+        },
+        {
+          "foodId": "rhum-blanc-charrette",
+          "weight": 20
+        }
+      ],
+      "totalWeight": 882,
+      "calories": 144.9002267573696,
+      "proteins": 6.519274376417234,
+      "carbs": 19.419954648526076,
+      "fats": 2.447619047619048,
+      "sugars": 3.3201814058956916,
+      "fibers": 0,
+      "price": 0.26092592592592595,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "nouilles-udon-fait-maison-",
+      "name": "Nouilles udon (fait maison)",
+      "ingredients": [
+        {
+          "foodId": "farine-t55-bio-carrefour",
+          "weight": 75
+        },
+        {
+          "foodId": "sel",
+          "weight": 4
+        },
+        {
+          "foodId": "eau",
+          "weight": 34
+        }
+      ],
+      "totalWeight": 113,
+      "calories": 221.68141592920355,
+      "proteins": 7.300884955752212,
+      "carbs": 45.26548672566373,
+      "fats": 0.7964601769911503,
+      "sugars": 1.1946902654867257,
+      "fibers": 0,
+      "price": 0.08404424778761062,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "prot-ine-de-soja-au-miso-mild-",
+      "name": "Protéine de soja au miso (mild)",
+      "ingredients": [
+        {
+          "foodId": "miso-mild-sempio-doejang",
+          "weight": 35
+        },
+        {
+          "foodId": "oignon-blanc",
+          "weight": 100
+        },
+        {
+          "foodId": "poireau-frais",
+          "weight": 200
+        },
+        {
+          "foodId": "proteines-de-soja-textures-petits-morceaux",
+          "weight": 45
+        },
+        {
+          "foodId": "sake-de-cuisine-wadakan",
+          "weight": 34
+        },
+        {
+          "foodId": "sauce-soja-sale-kikkoman",
+          "weight": 47
+        },
+        {
+          "foodId": "huile-tournesol-eco",
+          "weight": 14
+        },
+        {
+          "foodId": "sucre-blanc-en-poudre-beghin-say",
+          "weight": 25
+        }
+      ],
+      "totalWeight": 500,
+      "calories": 115.67800000000003,
+      "proteins": 6.953399999999999,
+      "carbs": 3.205200000000001,
+      "fats": 3.5520000000000005,
+      "sugars": 7.436400000000001,
+      "fibers": 2.88,
+      "price": 0.36007146683011315,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "soupe-champignon-chataignes",
+      "name": "Soupe champignon/chataignes (ricotta)",
+      "ingredients": [
+        {
+          "foodId": "champignons-bruns-leclerc",
+          "weight": 400
+        },
+        {
+          "foodId": "ricotta-riche-en-proteines--60-mg-casa-azzurra",
+          "weight": 30
+        },
+        {
+          "foodId": "chataignes-pelees-au-feu-notre-jardin",
+          "weight": 200
+        },
+        {
+          "foodId": "oignon-blanc",
+          "weight": 75
+        },
+        {
+          "foodId": "beurre-paysan-de-breton-doux-82mg",
+          "weight": 20
+        },
+        {
+          "foodId": "eau",
+          "weight": 600
+        }
+      ],
+      "totalWeight": 1325,
+      "calories": 47.781132075471696,
+      "proteins": 1.4426415094339622,
+      "carbs": 5.053207547169811,
+      "fats": 1.5075471698113208,
+      "sugars": 2.0332075471698112,
+      "fibers": 0.9113207547169812,
+      "price": 0.4420233602875112,
+      "priceQuantity": 100,
+      "priceUnit": "grams"
+    },
+    {
+      "id": "soupe-champignon-chataignes-soja-",
+      "name": "Soupe champignon/chataignes (soja)",
+      "ingredients": [
+        {
+          "foodId": "champignons-bruns-leclerc",
+          "weight": 400
+        },
+        {
+          "foodId": "chataignes-pelees-au-feu-notre-jardin",
+          "weight": 200
+        },
+        {
+          "foodId": "oignon-blanc",
+          "weight": 75
+        },
+        {
+          "foodId": "beurre-paysan-de-breton-doux-82mg",
+          "weight": 20
+        },
+        {
+          "foodId": "eau",
+          "weight": 600
+        },
+        {
+          "foodId": "creme-de-soja-bio-village",
+          "weight": 30
+        }
+      ],
+      "totalWeight": 1355,
+      "calories": 48.738007380073796,
+      "proteins": 1.288929889298893,
+      "carbs": 4.985608856088561,
+      "fats": 1.7398523985239855,
+      "sugars": 1.9704797047970481,
+      "fibers": 0.8911439114391144,
+      "price": 0.4214398172553155,
       "priceQuantity": 100,
       "priceUnit": "grams"
     }
@@ -3108,45 +4010,247 @@
           {
             "id": "demi-baguette-de-campagne-chabrior-bio",
             "weight": 120,
-            "uniqueId": 1761504305377
-          },
-          {
-            "id": "saint-nectaire-laitier",
-            "weight": 51,
-            "uniqueId": 1761504314329
+            "uniqueId": 1761681833168
           },
           {
             "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
             "weight": 100,
-            "uniqueId": 1761504329310
-          },
-          {
-            "id": "huile-de-noisette-berinoix",
-            "weight": 8,
-            "uniqueId": 1761504335227
-          },
-          {
-            "id": "oeuf-entier",
-            "weight": 120,
-            "uniqueId": 1761504340409
+            "uniqueId": 1761681935076
           },
           {
             "id": "beurre-doux-paturages",
             "weight": 10,
-            "uniqueId": 1761504394739
+            "uniqueId": 1761682033052
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761682039185
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 112,
+            "uniqueId": 1761682279301
           }
         ],
-        "dejeuner": [],
+        "dejeuner": [
+          {
+            "id": "pomme-de-terre",
+            "weight": 300,
+            "isMeal": false,
+            "uniqueId": 1761682304632
+          },
+          {
+            "id": "fromage-a-raclette-standard",
+            "weight": 250,
+            "uniqueId": 1761686677607
+          }
+        ],
         "diner": [],
         "snack": [
           {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1761681797136
+          },
+          {
             "id": "whey-100-concentree",
-            "weight": 30,
-            "uniqueId": 1761504383557
+            "weight": 70,
+            "uniqueId": 1761681803652
           }
         ]
       },
       "weight": 77.3
+    },
+    {
+      "date": "2025-10-27",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "oeuf-entier",
+            "weight": 112,
+            "uniqueId": 1761680534214
+          },
+          {
+            "id": "fromage-tomme-de-vache-perch-en-tomme",
+            "weight": 50,
+            "uniqueId": 1761680539797
+          },
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1761680547363
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1761680553862
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 9.1,
+            "uniqueId": 1761680559763
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761680566129
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 250,
+            "uniqueId": 1761680931751
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 125,
+            "uniqueId": 1761680941868
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 93,
+            "uniqueId": 1761680947967
+          }
+        ],
+        "diner": [
+          {
+            "id": "viande-de-porc-offre-speciale",
+            "weight": 160,
+            "uniqueId": 1761680986797
+          },
+          {
+            "id": "riz-bio-saint-eloi-semi-complet",
+            "weight": 101.1,
+            "uniqueId": 1761681325423
+          }
+        ],
+        "snack": [
+          {
+            "id": "whey-100-concentree",
+            "weight": 40,
+            "uniqueId": 1761680822427
+          },
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1761680829430
+          }
+        ]
+      },
+      "weight": 78.7
+    },
+    {
+      "date": "2025-10-28",
+      "meals": {
+        "petit-dej": [
+          {
+            "id": "demi-baguette-de-campagne-chabrior-bio",
+            "weight": 120,
+            "uniqueId": 1761679703126
+          },
+          {
+            "id": "fromage-tomme-de-vache-perch-en-tomme",
+            "weight": 50,
+            "uniqueId": 1761681435365
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 100,
+            "uniqueId": 1761681439865
+          },
+          {
+            "id": "beurre-doux-paturages",
+            "weight": 8.1,
+            "uniqueId": 1761681446231
+          },
+          {
+            "id": "huile-de-noisette-berinoix",
+            "weight": 8,
+            "uniqueId": 1761681452363
+          },
+          {
+            "id": "oeuf-entier",
+            "weight": 120,
+            "uniqueId": 1761681511092
+          }
+        ],
+        "dejeuner": [
+          {
+            "id": "biscuits-gerble-chocolat-noir",
+            "weight": 126,
+            "uniqueId": 1761678554245
+          },
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 150,
+            "uniqueId": 1761679623715
+          },
+          {
+            "id": "thon-odyssee",
+            "weight": 91.1,
+            "uniqueId": 1761679631132
+          },
+          {
+            "id": "tomates-cerises-du-maroc",
+            "weight": 125,
+            "uniqueId": 1761679637681
+          }
+        ],
+        "diner": [
+          {
+            "id": "haricots-verts-saint-eloi",
+            "weight": 140,
+            "uniqueId": 1761677949896
+          },
+          {
+            "id": "viande-de-porc-offre-speciale",
+            "weight": 86,
+            "uniqueId": 1761677984736
+          },
+          {
+            "id": "lentilles-cuisinees-a-lauvergnate-raynal-et-roquelaure",
+            "weight": 86,
+            "uniqueId": 1761678009099
+          },
+          {
+            "id": "prot-ine-de-soja-au-miso-mild-",
+            "isMeal": true,
+            "weight": 70,
+            "uniqueId": 1761678186456
+          },
+          {
+            "id": "blanc-de-poulet-tranches",
+            "weight": 60,
+            "uniqueId": 1761678811426
+          },
+          {
+            "id": "cr-pes-thermomix",
+            "isMeal": true,
+            "weight": 77,
+            "uniqueId": 1761683753958
+          },
+          {
+            "id": "pate-a-tartiner-bio",
+            "weight": 20,
+            "uniqueId": 1761683791589
+          }
+        ],
+        "snack": [
+          {
+            "id": "skyr-nature-yoplait",
+            "weight": 150,
+            "uniqueId": 1761681400633
+          },
+          {
+            "id": "whey-100-concentree",
+            "weight": 40,
+            "uniqueId": 1761681407316
+          }
+        ]
+      },
+      "weight": 78
     }
   ],
   "goals": [
@@ -3601,18 +4705,90 @@
     },
     {
       "date": "2025-10-26",
-      "totalMl": 900,
+      "totalMl": 1500,
       "history": [
         {
-          "time": "19:46",
+          "time": "21:00",
           "ml": 300
         },
         {
-          "time": "19:47",
+          "time": "21:00",
           "ml": 300
         },
         {
-          "time": "19:47",
+          "time": "21:00",
+          "ml": 300
+        },
+        {
+          "time": "21:00",
+          "ml": 300
+        },
+        {
+          "time": "21:00",
+          "ml": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-27",
+      "totalMl": 2100,
+      "history": [
+        {
+          "time": "20:43",
+          "ml": 300
+        },
+        {
+          "time": "20:43",
+          "ml": 300
+        },
+        {
+          "time": "20:43",
+          "ml": 300
+        },
+        {
+          "time": "20:43",
+          "ml": 300
+        },
+        {
+          "time": "20:43",
+          "ml": 300
+        },
+        {
+          "time": "20:43",
+          "ml": 300
+        },
+        {
+          "time": "20:43",
+          "ml": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-28",
+      "totalMl": 2000,
+      "history": [
+        {
+          "time": "20:27",
+          "ml": 300
+        },
+        {
+          "time": "20:27",
+          "ml": 300
+        },
+        {
+          "time": "20:27",
+          "ml": 500
+        },
+        {
+          "time": "20:27",
+          "ml": 300
+        },
+        {
+          "time": "20:27",
+          "ml": 300
+        },
+        {
+          "time": "20:28",
           "ml": 300
         }
       ]
@@ -3694,6 +4870,22 @@
     {
       "date": "2025-10-24",
       "steps": 13500
+    },
+    {
+      "date": "2025-10-25",
+      "steps": 5500
+    },
+    {
+      "date": "2025-10-26",
+      "steps": 13140
+    },
+    {
+      "date": "2025-10-27",
+      "steps": 17412
+    },
+    {
+      "date": "2025-10-28",
+      "steps": 6185
     }
   ],
   "dailyActivities": [
@@ -3951,6 +5143,34 @@
           "type": "🏋️ Musculation",
           "duration": 30,
           "calories": 80
+        }
+      ]
+    },
+    {
+      "date": "2025-10-26",
+      "activities": [
+        {
+          "id": 1761686661679,
+          "type": "🚶 Marche",
+          "duration": 45,
+          "calories": 300
+        }
+      ]
+    },
+    {
+      "date": "2025-10-27",
+      "activities": [
+        {
+          "id": 1761680790437,
+          "type": "🚶 Marche",
+          "duration": 30,
+          "calories": 120
+        },
+        {
+          "id": 1761680798058,
+          "type": "🏋️ Musculation",
+          "duration": 30,
+          "calories": 120
         }
       ]
     }

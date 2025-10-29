@@ -841,6 +841,19 @@
                     </small>
                 </div>
 
+                <!-- Checkbox Portions ajustables -->
+                <div class="form-group" style="margin-top: 20px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px solid transparent; transition: all 0.2s;">
+                        <input type="checkbox" id="mealIsPortionAdjustable" style="width: 20px; height: 20px; cursor: pointer;">
+                        <div style="flex: 1;">
+                            <strong style="font-size: 1em; color: var(--color-primary);">⚙️ Portions ajustables</strong>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                Permet d'ajuster individuellement les quantités de chaque ingrédient lors de l'ajout au suivi quotidien
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
                 <!-- Aperçu des valeurs nutritionnelles -->
                 <div class="meal-nutrition-preview" id="mealNutritionPreview">
                     <strong>Totaux nutritionnels :</strong> --
@@ -1315,6 +1328,41 @@
         </div>
     </div>
 
+    <!-- =============================================
+         MODALE D'AJUSTEMENT DES PORTIONS
+    ============================================= -->
+    <div id="adjustPortionsModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close-btn" id="closeAdjustPortionsModal">&times;</button>
+            <h3>⚙️ Ajuster les portions</h3>
+            <p id="adjustPortionsMealName" style="text-align: center; color: #666; margin-bottom: 20px; font-weight: 600;"></p>
+            
+            <!-- Conteneur des ingrédients ajustables -->
+            <div id="adjustPortionsContainer" style="display: flex; flex-direction: column; gap: 15px; margin: 20px 0;">
+                <!-- Les lignes d'ingrédients seront ajoutées dynamiquement -->
+            </div>
+            
+            <!-- Aperçu nutritionnel en temps réel -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 12px; color: white; margin: 20px 0;">
+                <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; opacity: 0.9;">📊 Totaux nutritionnels :</div>
+                <div id="adjustPortionsNutrition" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 0.95em;">
+                    <div><strong>Calories:</strong> <span id="adjustCal">0</span> kcal</div>
+                    <div><strong>Protéines:</strong> <span id="adjustProt">0</span>g</div>
+                    <div><strong>Glucides:</strong> <span id="adjustCarbs">0</span>g</div>
+                    <div><strong>Lipides:</strong> <span id="adjustFat">0</span>g</div>
+                    <div><strong>Fibres:</strong> <span id="adjustFib">0</span>g</div>
+                    <div><strong>Sucres:</strong> <span id="adjustSug">0</span>g</div>
+                </div>
+            </div>
+            
+            <!-- Boutons d'action -->
+            <div class="modal-buttons">
+                <button type="button" id="cancelAdjustPortionsBtn" class="cancel-btn">❌ Annuler</button>
+                <button type="button" id="confirmAdjustPortionsBtn" class="submit-btn">✓ Valider</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Script pour gérer les labels dynamiques -->
     <script>
         function updatePriceLabel(prefix) {
@@ -1362,7 +1410,7 @@
     </script>
 
     <!-- Le script principal de l'application, chargé à la fin -->
-    <script src="js/app.js?v=20251028-1922" type="module"></script>
+    <script src="js/app.js?v=20251029-0703" type="module"></script>
 </body>
 
 </html>
