@@ -258,8 +258,9 @@ const getResponsiveOptions = (hasGoals = false, isDonut = false) => {
  * @param {number|string} period - Le nombre de jours pour la période ou 'all'.
  * @param {object} foods - Le dictionnaire de tous les aliments.
  * @param {object|null} goals - Les objectifs nutritionnels (optionnel).
+ * @param {object} composedMeals - Dictionnaire des repas composés (optionnel).
  */
-export async function updateCharts(period, foods, goals = null) {
+export async function updateCharts(period, foods, goals = null, composedMeals = {}) {
     // Charger les données
     let rawData;
     if (period === 'all') {
@@ -293,7 +294,7 @@ export async function updateCharts(period, foods, goals = null) {
         // Convertir en tableau et calculer les totaux
         rawData = Object.values(dataByDate)
             .map(day => {
-                const dayTotals = calculateDayTotals(day.meals || { 'petit-dej': [], 'dejeuner': [], 'diner': [], 'snack': [] }, foods);
+                const dayTotals = calculateDayTotals(day.meals || { 'petit-dej': [], 'dejeuner': [], 'diner': [], 'snack': [] }, foods, composedMeals);
                 return {
                     date: day.date,
                     weight: day.weight || null,
@@ -304,7 +305,7 @@ export async function updateCharts(period, foods, goals = null) {
             })
             .sort((a, b) => new Date(a.date) - new Date(b.date));
     } else {
-        rawData = await loadPeriodMeals(period, foods);
+        rawData = await loadPeriodMeals(period, foods, composedMeals);
     }
     
     // Déterminer le mode de regroupement
@@ -656,14 +657,15 @@ window.addEventListener('resize', () => {
 });
 
 /**
- * Met à jour les graphiques de moyennes hebdomadaires/mensuelles.
- * @param {string} periodType - 'week' ou 'month'
+ * Met à jour les graphiques de moyennes.
+ * @param {string} periodType - Type de période ('week' ou 'month')
  * @param {object} foods - Le dictionnaire de tous les aliments.
  * @param {object|null} goals - Les objectifs nutritionnels (optionnel).
+ * @param {object} composedMeals - Dictionnaire des repas composés (optionnel).
  */
-export async function updateAverageCharts(periodType, foods, goals = null) {
+export async function updateAverageCharts(periodType, foods, goals = null, composedMeals = {}) {
     const numPeriods = periodType === 'week' ? 12 : 6; // 12 semaines ou 6 mois
-    const data = await loadAverages(periodType, numPeriods, foods);
+    const data = await loadAverages(periodType, numPeriods, foods, composedMeals);
     const labels = data.map(d => d.label);
     
     // --- Graphique Moyenne Calories ---

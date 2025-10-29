@@ -1184,8 +1184,10 @@ function updateAdjustmentPreview() {
         carbs: 0,
         fats: 0,
         fibers: 0,
-        sugars: 0
+        sugars: 0,
+        cost: 0
     };
+    let hasCost = false;
     
     rows.forEach(row => {
         const foodId = row.dataset.foodId;
@@ -1199,16 +1201,34 @@ function updateAdjustmentPreview() {
             totals.fats += (food.fats * weight / 100);
             totals.fibers += ((food.fibers || 0) * weight / 100);
             totals.sugars += ((food.sugars || 0) * weight / 100);
+            
+            // Calculer le coût si disponible
+            if (food.price) {
+                const pricePer100g = food.priceUnit === 'portions' && food.portionWeight
+                    ? (food.price / food.priceGrams) * 100
+                    : (food.price / food.priceGrams) * 100;
+                totals.cost += (pricePer100g / 100) * weight;
+                hasCost = true;
+            }
         }
     });
     
-    // Mettre à jour l'affichage
+    // Mettre à jour l'affichage nutritionnel
     document.getElementById('adjustCal').textContent = totals.calories.toFixed(0);
     document.getElementById('adjustProt').textContent = totals.proteins.toFixed(1);
     document.getElementById('adjustCarbs').textContent = totals.carbs.toFixed(1);
     document.getElementById('adjustFat').textContent = totals.fats.toFixed(1);
     document.getElementById('adjustFib').textContent = totals.fibers.toFixed(1);
     document.getElementById('adjustSug').textContent = totals.sugars.toFixed(1);
+    
+    // Afficher le coût si au moins un ingrédient a un prix
+    const costSection = document.getElementById('adjustCostSection');
+    if (hasCost) {
+        document.getElementById('adjustCost').textContent = totals.cost.toFixed(2);
+        costSection.style.display = 'block';
+    } else {
+        costSection.style.display = 'none';
+    }
 }
 
 /**
@@ -1268,8 +1288,8 @@ function setupEventListeners() {
             const tabName = e.target.dataset.tab;
             ui.switchTab(tabName);
             if (tabName === 'stats') {
-                charts.updateCharts(state.currentPeriod, state.foods, state.goals);
-                charts.updateAverageCharts(state.currentAveragePeriod, state.foods, state.goals);
+                charts.updateCharts(state.currentPeriod, state.foods, state.goals, state.meals);
+                charts.updateAverageCharts(state.currentAveragePeriod, state.foods, state.goals, state.meals);
                 costs.updateCostCharts(state.currentCostPeriod, state.foods, state.meals);
                 try {
                     activityCharts.updateActivityCharts(state.currentActivityPeriod);
@@ -1295,7 +1315,7 @@ function setupEventListeners() {
             state.currentPeriod = periodValue === 'all' ? 'all' : parseInt(periodValue, 10);
             document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
-            charts.updateCharts(state.currentPeriod, state.foods, state.goals);
+            charts.updateCharts(state.currentPeriod, state.foods, state.goals, state.meals);
         }
     });
     
@@ -1306,7 +1326,7 @@ function setupEventListeners() {
                 state.currentAveragePeriod = e.target.dataset.avgPeriod;
                 document.querySelectorAll('.average-period-btn').forEach(btn => btn.classList.remove('active'));
                 e.target.classList.add('active');
-                charts.updateAverageCharts(state.currentAveragePeriod, state.foods, state.goals);
+                charts.updateAverageCharts(state.currentAveragePeriod, state.foods, state.goals, state.meals);
             }
             // Event listener pour les boutons de période des coûts
             if (e.target.matches('.cost-period-btn')) {

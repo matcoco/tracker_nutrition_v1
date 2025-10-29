@@ -217,16 +217,44 @@ async function createTopCostsChart(period, foods, composedMeals = {}) {
                         food = foods[item.id];
                     }
                     
-                    if (food && hasPrice(food)) {
-                        const pricePer100g = getPricePer100g(food);
-                        const itemCost = (pricePer100g / 100) * item.weight;
-                        if (!foodCosts[item.id]) {
-                            foodCosts[item.id] = {
-                                name: food.name,
-                                cost: 0
-                            };
+                    if (food) {
+                        let itemCost = 0;
+                        
+                        // CAS 1 : Repas avec customPortions -> calculer à partir des ingrédients
+                        if (item.isMeal && item.customPortions && food.ingredients) {
+                            food.ingredients.forEach(ing => {
+                                const ingredientFood = foods[ing.foodId];
+                                const weight = item.customPortions[ing.foodId] || 0;
+                                
+                                if (ingredientFood && weight > 0 && ingredientFood.price) {
+                                    const pricePer100g = getPricePer100g(ingredientFood);
+                                    if (pricePer100g !== null) {
+                                        itemCost += (pricePer100g / 100) * weight;
+                                    }
+                                }
+                            });
                         }
-                        foodCosts[item.id].cost += itemCost;
+                        // CAS 2 : Repas ajustable sans customPortions -> prix déjà total
+                        else if (item.isMeal && food.isPortionAdjustable && food.price) {
+                            itemCost = food.price;
+                        }
+                        // CAS 3 : Calcul normal
+                        else if (hasPrice(food)) {
+                            const pricePer100g = getPricePer100g(food);
+                            if (pricePer100g !== null) {
+                                itemCost = (pricePer100g / 100) * item.weight;
+                            }
+                        }
+                        
+                        if (itemCost > 0) {
+                            if (!foodCosts[item.id]) {
+                                foodCosts[item.id] = {
+                                    name: food.name,
+                                    cost: 0
+                                };
+                            }
+                            foodCosts[item.id].cost += itemCost;
+                        }
                     }
                 });
             }

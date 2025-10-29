@@ -118,7 +118,7 @@ export function loadDayWeight(date) {
     });
 }
 
-export async function loadPeriodMeals(days, foods) {
+export async function loadPeriodMeals(days, foods, composedMeals = {}) {
     const data = [];
     const endDate = new Date();
     for (let i = days - 1; i >= 0; i--) {
@@ -126,7 +126,7 @@ export async function loadPeriodMeals(days, foods) {
         targetDate.setDate(targetDate.getDate() - i);
         const meals = await loadDayMeals(targetDate);
         const weight = await loadDayWeight(targetDate);
-        const dayTotals = calculateDayTotals(meals, foods);
+        const dayTotals = calculateDayTotals(meals, foods, composedMeals);
         data.push({ date: formatDateKey(targetDate), weight, ...dayTotals });
     }
     return data;
@@ -419,9 +419,10 @@ export async function loadPeriodSteps(numDays) {
  * @param {string} periodType - 'week' ou 'month'
  * @param {number} numPeriods - Nombre de périodes à récupérer
  * @param {object} foods - Dictionnaire des aliments
+ * @param {object} composedMeals - Dictionnaire des repas composés (optionnel)
  * @returns {Promise<Array>} Tableau des moyennes par période
  */
-export async function loadAverages(periodType, numPeriods, foods) {
+export async function loadAverages(periodType, numPeriods, foods, composedMeals = {}) {
     const today = new Date();
     const averages = [];
     
@@ -462,7 +463,7 @@ export async function loadAverages(periodType, numPeriods, foods) {
         const currentDate = new Date(startDate);
         while (currentDate <= endDate) {
             const meals = await loadDayMeals(currentDate);
-            const totals = calculateDayTotals(meals, foods);
+            const totals = calculateDayTotals(meals, foods, composedMeals);
             const weight = await loadDayWeight(currentDate);
             const waterData = await loadDayWater(currentDate);
             const stepsData = await loadDaySteps(currentDate);
