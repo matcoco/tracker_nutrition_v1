@@ -124,9 +124,21 @@ function displayMealsList(meals, foods) {
             }
         }
         
-        // Afficher le poids total si défini
-        const weightInfo = meal.totalWeight ? ` (recette de ${meal.totalWeight}g)` : '';
-        const nutritionLabel = meal.totalWeight ? ' (valeurs pour 100g)' : '';
+        // Adapter l'affichage selon le mode du repas
+        let weightInfo = '';
+        let nutritionLabel = '';
+        
+        if (meal.isPortionAdjustable) {
+            // Portions ajustables : valeurs totales de la recette
+            weightInfo = meal.totalWeight ? ` (${meal.totalWeight}g)` : '';
+            nutritionLabel = '<strong style="color: #10b981;">(valeurs TOTALES)</strong>';
+            // Le prix est déjà le prix total, pas besoin de totalPriceInfo
+            totalPriceInfo = '';
+        } else {
+            // Mode normal : valeurs pour 100g
+            weightInfo = meal.totalWeight ? ` (recette de ${meal.totalWeight}g)` : '';
+            nutritionLabel = meal.totalWeight ? ' (valeurs pour 100g)' : '';
+        }
         
         // Badge pour portions ajustables
         const adjustableBadge = meal.isPortionAdjustable 
@@ -448,8 +460,9 @@ async function saveMealFromForm(foods) {
     // Calculer les valeurs nutritionnelles totales
     let nutrition = calculateMealNutrition(ingredients, foods);
     
-    // Toujours recalculer pour 100g avec le poids total
-    if (totalWeight > 0) {
+    // Si le repas N'EST PAS ajustable, recalculer pour 100g (comportement normal)
+    // Si le repas EST ajustable, conserver les valeurs totales de la recette complète
+    if (!isPortionAdjustable && totalWeight > 0) {
         const factor = 100 / totalWeight;
         nutrition = {
             calories: nutrition.calories * factor,
@@ -462,6 +475,10 @@ async function saveMealFromForm(foods) {
             priceQuantity: nutrition.price ? 100 : undefined,
             priceUnit: nutrition.price ? 'grams' : undefined
         };
+    } else if (isPortionAdjustable && nutrition.price) {
+        // Pour les repas ajustables, garder le prix total mais indiquer que c'est pour la recette
+        nutrition.priceQuantity = totalWeight;
+        nutrition.priceUnit = 'grams';
     }
     
     // Créer l'objet repas
