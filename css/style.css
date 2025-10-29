@@ -191,6 +191,25 @@ h3 {
 }
 .remove-btn:hover { background: #c23616; }
 
+.adjust-portions-btn {
+    background: var(--color-success);
+    color: var(--color-text-light);
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9em;
+    transition: all 0.2s;
+    width: 100%;
+    margin: 8px 0;
+}
+.adjust-portions-btn:hover { 
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
 /* =============================================
    6. SUIVI QUOTIDIEN (TRACKER)
    ============================================= */

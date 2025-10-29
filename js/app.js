@@ -1116,6 +1116,152 @@ async function handleReset() {
 
 // --- INITIALISATION ---
 
+// =================== AJUSTEMENT DES PORTIONS ===================
+
+// Variable pour stocker le contexte de l'ajustement en cours
+let currentAdjustment = null;
+
+/**
+ * Ouvre la modale d'ajustement des portions
+ */
+function handleAdjustPortions(mealType, uniqueId, mealId, customPortions) {
+    const meal = state.meals[mealId];
+    if (!meal || !meal.isPortionAdjustable) return;
+    
+    // Stocker le contexte
+    currentAdjustment = {
+        mealType,
+        uniqueId,
+        mealId,
+        meal
+    };
+    
+    // Remplir la modale
+    document.getElementById('adjustPortionsMealName').textContent = meal.name;
+    const container = document.getElementById('adjustPortionsContainer');
+    container.innerHTML = '';
+    
+    // Créer une ligne pour chaque ingrédient
+    meal.ingredients.forEach(ing => {
+        const food = state.foods[ing.foodId];
+        if (!food) return;
+        
+        // Utiliser customPortions si existe, sinon valeur par défaut
+        const currentWeight = (customPortions && customPortions[ing.foodId]) || ing.weight;
+        
+        const row = document.createElement('div');
+        row.style.cssText = 'display: flex; align-items: center; gap: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px;';
+        row.dataset.foodId = ing.foodId;
+        
+        row.innerHTML = `
+            <span style="flex: 1; font-weight: 500;">${food.name}</span>
+            <input type="number" class="portion-input" value="${currentWeight}" min="0" step="1" 
+                   style="width: 80px; padding: 8px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 1em;">
+            <span style="font-weight: 600; color: #666;">g</span>
+        `;
+        
+        // Listener pour mise à jour en temps réel
+        row.querySelector('.portion-input').addEventListener('input', updateAdjustmentPreview);
+        
+        container.appendChild(row);
+    });
+    
+    // Calculer et afficher l'aperçu initial
+    updateAdjustmentPreview();
+    
+    // Afficher la modale
+    ui.showModal('adjustPortionsModal');
+}
+
+/**
+ * Met à jour l'aperçu nutritionnel en temps réel
+ */
+function updateAdjustmentPreview() {
+    const rows = document.querySelectorAll('#adjustPortionsContainer > div');
+    let totals = {
+        calories: 0,
+        proteins: 0,
+        carbs: 0,
+        fats: 0,
+        fibers: 0,
+        sugars: 0
+    };
+    
+    rows.forEach(row => {
+        const foodId = row.dataset.foodId;
+        const weight = parseFloat(row.querySelector('.portion-input').value) || 0;
+        const food = state.foods[foodId];
+        
+        if (food && weight > 0) {
+            totals.calories += (food.calories * weight / 100);
+            totals.proteins += (food.proteins * weight / 100);
+            totals.carbs += (food.carbs * weight / 100);
+            totals.fats += (food.fats * weight / 100);
+            totals.fibers += ((food.fibers || 0) * weight / 100);
+            totals.sugars += ((food.sugars || 0) * weight / 100);
+        }
+    });
+    
+    // Mettre à jour l'affichage
+    document.getElementById('adjustCal').textContent = totals.calories.toFixed(0);
+    document.getElementById('adjustProt').textContent = totals.proteins.toFixed(1);
+    document.getElementById('adjustCarbs').textContent = totals.carbs.toFixed(1);
+    document.getElementById('adjustFat').textContent = totals.fats.toFixed(1);
+    document.getElementById('adjustFib').textContent = totals.fibers.toFixed(1);
+    document.getElementById('adjustSug').textContent = totals.sugars.toFixed(1);
+}
+
+/**
+ * Ferme la modale d'ajustement
+ */
+function closeAdjustPortionsModal() {
+    ui.hideModal('adjustPortionsModal');
+    currentAdjustment = null;
+}
+
+/**
+ * Sauvegarde les portions ajustées
+ */
+async function saveAdjustedPortions() {
+    if (!currentAdjustment) return;
+    
+    const { mealType, uniqueId } = currentAdjustment;
+    
+    // Récupérer les nouvelles portions
+    const rows = document.querySelectorAll('#adjustPortionsContainer > div');
+    const customPortions = {};
+    
+    rows.forEach(row => {
+        const foodId = row.dataset.foodId;
+        const weight = parseFloat(row.querySelector('.portion-input').value) || 0;
+        if (weight > 0) {
+            customPortions[foodId] = weight;
+        }
+    });
+    
+    // Mettre à jour dans la BDD
+    const meals = await db.loadDayMeals(state.currentDate);
+    const mealItems = meals[mealType];
+    const itemIndex = mealItems.findIndex(item => item.uniqueId === uniqueId);
+    
+    if (itemIndex !== -1) {
+        mealItems[itemIndex].customPortions = customPortions;
+        await db.saveDayMeals(state.currentDate, meals);
+        
+        // Recharger l'affichage
+        loadCurrentDay();
+        
+        ui.showNotification('✅ Portions ajustées avec succès !');
+    }
+    
+    closeAdjustPortionsModal();
+}
+
+// Exposer la fonction globalement pour ui.js
+window.handleAdjustPortions = handleAdjustPortions;
+
+// =================== FIN AJUSTEMENT DES PORTIONS ===================
+
 function setupEventListeners() {
     document.querySelector('.nav-tabs').addEventListener('click', e => {
         if (e.target.matches('.nav-tab')) {
@@ -1287,6 +1433,14 @@ function setupEventListeners() {
     document.querySelector('.modal-close-btn').addEventListener('click', ui.closeEditModal);
     document.getElementById('editFoodModal').addEventListener('click', e => {
         if (e.target === e.currentTarget) ui.closeEditModal();
+    });
+    
+    // Modale d'ajustement des portions
+    document.getElementById('closeAdjustPortionsModal').addEventListener('click', closeAdjustPortionsModal);
+    document.getElementById('cancelAdjustPortionsBtn').addEventListener('click', closeAdjustPortionsModal);
+    document.getElementById('confirmAdjustPortionsBtn').addEventListener('click', saveAdjustedPortions);
+    document.getElementById('adjustPortionsModal').addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeAdjustPortionsModal();
     });
 }
 

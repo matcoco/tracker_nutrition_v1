@@ -128,10 +128,15 @@ function displayMealsList(meals, foods) {
         const weightInfo = meal.totalWeight ? ` (recette de ${meal.totalWeight}g)` : '';
         const nutritionLabel = meal.totalWeight ? ' (valeurs pour 100g)' : '';
         
+        // Badge pour portions ajustables
+        const adjustableBadge = meal.isPortionAdjustable 
+            ? '<span class="meal-badge" style="background: #10b981; margin-left: 5px;" title="Portions ajustables individuellement">⚙️ AJUSTABLE</span>' 
+            : '';
+        
         el.innerHTML = `
             <div class="meal-item-header">
                 <div class="meal-name">
-                    <span class="meal-badge">REPAS</span>
+                    <span class="meal-badge">REPAS</span>${adjustableBadge}
                     ${meal.name}${weightInfo}
                 </div>
                 <div class="meal-actions">
@@ -226,6 +231,7 @@ function showMealForm(foods, meal = null) {
     if (meal) {
         document.getElementById('mealName').value = meal.name;
         document.getElementById('mealTotalWeight').value = meal.totalWeight || '';
+        document.getElementById('mealIsPortionAdjustable').checked = meal.isPortionAdjustable || false;
         
         // Si meal.id existe, c'est une édition, sinon c'est une duplication
         if (meal.id) {
@@ -242,6 +248,7 @@ function showMealForm(foods, meal = null) {
     } else {
         document.getElementById('mealName').value = '';
         document.getElementById('mealTotalWeight').value = '';
+        document.getElementById('mealIsPortionAdjustable').checked = false;
         document.getElementById('mealFormTitle').textContent = 'Créer un nouveau repas';
         document.getElementById('mealForm').dataset.editId = '';
         addIngredientRow(foods); // Ajouter une ligne vide par défaut
@@ -435,6 +442,9 @@ async function saveMealFromForm(foods) {
         totalWeight = ingredients.reduce((sum, ing) => sum + ing.weight, 0);
     }
     
+    // Récupérer le flag "Portions ajustables"
+    const isPortionAdjustable = document.getElementById('mealIsPortionAdjustable').checked;
+    
     // Calculer les valeurs nutritionnelles totales
     let nutrition = calculateMealNutrition(ingredients, foods);
     
@@ -459,6 +469,7 @@ async function saveMealFromForm(foods) {
         name,
         ingredients,
         totalWeight, // Stocker le poids total pour référence
+        isPortionAdjustable, // Flag pour activer l'ajustement individuel des portions
         ...nutrition
     };
     

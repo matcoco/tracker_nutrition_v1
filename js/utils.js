@@ -42,13 +42,32 @@ export function calculateDayTotals(meals, foods, composedMeals = {}) {
                 }
                 
                 if (food) {
-                    const factor = (item.weight || 0) / 100;
-                    totals.calories += (food.calories || 0) * factor;
-                    totals.proteins += (food.proteins || 0) * factor;
-                    totals.carbs += (food.carbs || 0) * factor;
-                    totals.fats += (food.fats || 0) * factor;
-                    totals.sugars += (food.sugars || 0) * factor;
-                    totals.fibers += (food.fibers || 0) * factor;
+                    // Si customPortions existe, calculer à partir des ingrédients
+                    if (item.isMeal && item.customPortions && food.ingredients) {
+                        food.ingredients.forEach(ing => {
+                            const ingredientFood = foods[ing.foodId];
+                            const weight = item.customPortions[ing.foodId] || 0;
+                            
+                            if (ingredientFood && weight > 0) {
+                                const factor = weight / 100;
+                                totals.calories += (ingredientFood.calories || 0) * factor;
+                                totals.proteins += (ingredientFood.proteins || 0) * factor;
+                                totals.carbs += (ingredientFood.carbs || 0) * factor;
+                                totals.fats += (ingredientFood.fats || 0) * factor;
+                                totals.sugars += (ingredientFood.sugars || 0) * factor;
+                                totals.fibers += (ingredientFood.fibers || 0) * factor;
+                            }
+                        });
+                    } else {
+                        // Calcul normal
+                        const factor = (item.weight || 0) / 100;
+                        totals.calories += (food.calories || 0) * factor;
+                        totals.proteins += (food.proteins || 0) * factor;
+                        totals.carbs += (food.carbs || 0) * factor;
+                        totals.fats += (food.fats || 0) * factor;
+                        totals.sugars += (food.sugars || 0) * factor;
+                        totals.fibers += (food.fibers || 0) * factor;
+                    }
                 }
             });
         }
@@ -78,13 +97,32 @@ export function calculateMealTotals(mealItems, foods, composedMeals = {}) {
         }
         
         if (food) {
-            const factor = (item.weight || 0) / 100;
-            totals.calories += (food.calories || 0) * factor;
-            totals.proteins += (food.proteins || 0) * factor;
-            totals.carbs += (food.carbs || 0) * factor;
-            totals.fats += (food.fats || 0) * factor;
-            totals.sugars += (food.sugars || 0) * factor;
-            totals.fibers += (food.fibers || 0) * factor;
+            // Si customPortions existe, calculer à partir des ingrédients
+            if (item.isMeal && item.customPortions && food.ingredients) {
+                food.ingredients.forEach(ing => {
+                    const ingredientFood = foods[ing.foodId];
+                    const weight = item.customPortions[ing.foodId] || 0;
+                    
+                    if (ingredientFood && weight > 0) {
+                        const factor = weight / 100;
+                        totals.calories += (ingredientFood.calories || 0) * factor;
+                        totals.proteins += (ingredientFood.proteins || 0) * factor;
+                        totals.carbs += (ingredientFood.carbs || 0) * factor;
+                        totals.fats += (ingredientFood.fats || 0) * factor;
+                        totals.sugars += (ingredientFood.sugars || 0) * factor;
+                        totals.fibers += (ingredientFood.fibers || 0) * factor;
+                    }
+                });
+            } else {
+                // Calcul normal
+                const factor = (item.weight || 0) / 100;
+                totals.calories += (food.calories || 0) * factor;
+                totals.proteins += (food.proteins || 0) * factor;
+                totals.carbs += (food.carbs || 0) * factor;
+                totals.fats += (food.fats || 0) * factor;
+                totals.sugars += (food.sugars || 0) * factor;
+                totals.fibers += (food.fibers || 0) * factor;
+            }
         }
     });
     return totals;
