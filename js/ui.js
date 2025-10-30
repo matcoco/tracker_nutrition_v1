@@ -995,13 +995,11 @@ export function updateDailySummary(meals, foods, totals, date, waterData = 0, st
     
     // Vérifier s'il y a des aliments
     const hasFood = Object.values(meals).some(mealItems => mealItems.length > 0);
-    
     if (!hasFood) {
-        summaryContent.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Aucun aliment ajouté pour aujourd\'hui</p>';
+        summaryContent.innerHTML = '<p style="color: #666; text-align: center; padding: 40px;">Aucun aliment ajouté pour cette journée.</p>';
         return;
     }
     
-    // Générer le résumé
     let summary = `📅 ${date}\n\n`;
     let totalCost = 0;
     
@@ -1063,23 +1061,64 @@ export function updateDailySummary(meals, foods, totals, date, waterData = 0, st
                 }
                 
                 if (food) {
-                    const factor = item.weight / 100;
-                    mealCal += food.calories * factor;
-                    mealProt += food.proteins * factor;
-                    mealCarb += food.carbs * factor;
-                    mealFat += food.fats * factor;
+                    let itemCal = 0, itemProt = 0, itemCarb = 0, itemFat = 0, itemCost = 0;
                     
-                    let itemInfo = `  • ${itemLabel}${food.name} - ${item.weight}g`;
-                    
-                    // Calculer le coût de cet item
-                    if (hasPrice(food)) {
-                        const pricePer100g = getPricePer100g(food);
-                        const itemCost = (pricePer100g / 100) * item.weight;
-                        totalCost += itemCost;
-                        mealCost += itemCost;
-                        itemInfo += ` (${itemCost.toFixed(2)}€)`;
+                    // CAS 1 : Repas avec customPortions
+                    if (item.isMeal && item.customPortions && food.ingredients) {
+                        food.ingredients.forEach(ing => {
+                            const ingredientFood = foods[ing.foodId];
+                            const weight = item.customPortions[ing.foodId] || 0;
+                            
+                            if (ingredientFood && weight > 0) {
+                                const factor = weight / 100;
+                                itemCal += ingredientFood.calories * factor;
+                                itemProt += ingredientFood.proteins * factor;
+                                itemCarb += ingredientFood.carbs * factor;
+                                itemFat += ingredientFood.fats * factor;
+                                
+                                if (hasPrice(ingredientFood)) {
+                                    const pricePer100g = getPricePer100g(ingredientFood);
+                                    itemCost += (pricePer100g / 100) * weight;
+                                }
+                            }
+                        });
+                    }
+                    // CAS 2 : Repas ajustable sans customPortions -> valeurs déjà totales
+                    else if (item.isMeal && food.isPortionAdjustable) {
+                        itemCal = food.calories;
+                        itemProt = food.proteins;
+                        itemCarb = food.carbs;
+                        itemFat = food.fats;
+                        if (hasPrice(food)) {
+                            itemCost = food.price;
+                        }
+                    }
+                    // CAS 3 : Calcul normal
+                    else {
+                        const factor = item.weight / 100;
+                        itemCal = food.calories * factor;
+                        itemProt = food.proteins * factor;
+                        itemCarb = food.carbs * factor;
+                        itemFat = food.fats * factor;
+                        
+                        if (hasPrice(food)) {
+                            const pricePer100g = getPricePer100g(food);
+                            itemCost = (pricePer100g / 100) * item.weight;
+                        }
                     }
                     
+                    // Ajouter aux totaux du repas
+                    mealCal += itemCal;
+                    mealProt += itemProt;
+                    mealCarb += itemCarb;
+                    mealFat += itemFat;
+                    mealCost += itemCost;
+                    totalCost += itemCost;
+                    
+                    let itemInfo = `  • ${itemLabel}${food.name} - ${item.weight}g`;
+                    if (itemCost > 0) {
+                        itemInfo += ` (${itemCost.toFixed(2)}€)`;
+                    }
                     summary += itemInfo + '\n';
                 }
             });
@@ -1191,23 +1230,64 @@ export function generateSummaryText(meals, foods, totals, date, waterData = 0, s
                 }
                 
                 if (food) {
-                    const factor = item.weight / 100;
-                    mealCal += food.calories * factor;
-                    mealProt += food.proteins * factor;
-                    mealCarb += food.carbs * factor;
-                    mealFat += food.fats * factor;
+                    let itemCal = 0, itemProt = 0, itemCarb = 0, itemFat = 0, itemCost = 0;
                     
-                    let itemInfo = `  • ${itemLabel}${food.name} - ${item.weight}g`;
-                    
-                    // Calculer le coût de cet item
-                    if (hasPrice(food)) {
-                        const pricePer100g = getPricePer100g(food);
-                        const itemCost = (pricePer100g / 100) * item.weight;
-                        totalCost += itemCost;
-                        mealCost += itemCost;
-                        itemInfo += ` (${itemCost.toFixed(2)}€)`;
+                    // CAS 1 : Repas avec customPortions
+                    if (item.isMeal && item.customPortions && food.ingredients) {
+                        food.ingredients.forEach(ing => {
+                            const ingredientFood = foods[ing.foodId];
+                            const weight = item.customPortions[ing.foodId] || 0;
+                            
+                            if (ingredientFood && weight > 0) {
+                                const factor = weight / 100;
+                                itemCal += ingredientFood.calories * factor;
+                                itemProt += ingredientFood.proteins * factor;
+                                itemCarb += ingredientFood.carbs * factor;
+                                itemFat += ingredientFood.fats * factor;
+                                
+                                if (hasPrice(ingredientFood)) {
+                                    const pricePer100g = getPricePer100g(ingredientFood);
+                                    itemCost += (pricePer100g / 100) * weight;
+                                }
+                            }
+                        });
+                    }
+                    // CAS 2 : Repas ajustable sans customPortions -> valeurs déjà totales
+                    else if (item.isMeal && food.isPortionAdjustable) {
+                        itemCal = food.calories;
+                        itemProt = food.proteins;
+                        itemCarb = food.carbs;
+                        itemFat = food.fats;
+                        if (hasPrice(food)) {
+                            itemCost = food.price;
+                        }
+                    }
+                    // CAS 3 : Calcul normal
+                    else {
+                        const factor = item.weight / 100;
+                        itemCal = food.calories * factor;
+                        itemProt = food.proteins * factor;
+                        itemCarb = food.carbs * factor;
+                        itemFat = food.fats * factor;
+                        
+                        if (hasPrice(food)) {
+                            const pricePer100g = getPricePer100g(food);
+                            itemCost = (pricePer100g / 100) * item.weight;
+                        }
                     }
                     
+                    // Ajouter aux totaux du repas
+                    mealCal += itemCal;
+                    mealProt += itemProt;
+                    mealCarb += itemCarb;
+                    mealFat += itemFat;
+                    mealCost += itemCost;
+                    totalCost += itemCost;
+                    
+                    let itemInfo = `  • ${itemLabel}${food.name} - ${item.weight}g`;
+                    if (itemCost > 0) {
+                        itemInfo += ` (${itemCost.toFixed(2)}€)`;
+                    }
                     summary += itemInfo + '\n';
                 }
             });
