@@ -1146,8 +1146,10 @@ function handleAdjustPortions(mealType, uniqueId, mealId, customPortions) {
         const food = state.foods[ing.foodId];
         if (!food) return;
         
-        // Utiliser customPortions si existe, sinon valeur par défaut
-        const currentWeight = (customPortions && customPortions[ing.foodId]) || ing.weight;
+        // Utiliser customPortions si existe (même si 0), sinon valeur par défaut
+        const currentWeight = (customPortions && customPortions.hasOwnProperty(ing.foodId)) 
+            ? customPortions[ing.foodId] 
+            : ing.weight;
         
         const row = document.createElement('div');
         row.style.cssText = 'display: flex; align-items: center; gap: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px;';
@@ -1203,12 +1205,27 @@ function updateAdjustmentPreview() {
             totals.sugars += ((food.sugars || 0) * weight / 100);
             
             // Calculer le coût si disponible
-            if (food.price) {
-                const pricePer100g = food.priceUnit === 'portions' && food.portionWeight
-                    ? (food.price / food.priceGrams) * 100
-                    : (food.price / food.priceGrams) * 100;
-                totals.cost += (pricePer100g / 100) * weight;
-                hasCost = true;
+            if (food.price && (food.priceQuantity || food.priceGrams)) {
+                // Utiliser la fonction getPricePer100g pour gérer tous les formats
+                let pricePer100g;
+                if (food.priceQuantity && food.priceUnit) {
+                    // Nouveau format
+                    if (food.priceUnit === 'grams') {
+                        pricePer100g = (food.price / food.priceQuantity) * 100;
+                    } else if (food.priceUnit === 'portions') {
+                        const portionWeight = food.portionWeight || 100;
+                        const totalGrams = food.priceQuantity * portionWeight;
+                        pricePer100g = (food.price / totalGrams) * 100;
+                    }
+                } else if (food.priceGrams) {
+                    // Ancien format (rétrocompatibilité)
+                    pricePer100g = (food.price / food.priceGrams) * 100;
+                }
+                
+                if (pricePer100g) {
+                    totals.cost += (pricePer100g / 100) * weight;
+                    hasCost = true;
+                }
             }
         }
     });
@@ -1254,9 +1271,8 @@ async function saveAdjustedPortions() {
     rows.forEach(row => {
         const foodId = row.dataset.foodId;
         const weight = parseFloat(row.querySelector('.portion-input').value) || 0;
-        if (weight > 0) {
-            customPortions[foodId] = weight;
-        }
+        // Sauvegarder toutes les valeurs, y compris 0 (pour indiquer "pas de cet ingrédient")
+        customPortions[foodId] = weight;
     });
     
     // Mettre à jour dans la BDD
