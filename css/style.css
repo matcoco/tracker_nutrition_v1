@@ -423,81 +423,173 @@ h3 {
     color: #999;
 }
 
-/* --- Filtre de catégorie --- */
-.category-filter-container {
-    position: relative;
-}
-
-.category-filter {
-    padding: 12px 40px 12px 15px;
-    border: 2px solid var(--color-border);
+/* --- Filtres de catégorie --- */
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 15px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border-radius: var(--border-radius-md);
-    font-size: 0.95em;
-    font-weight: 500;
-    color: var(--color-text-dark);
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 220px;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.category-filter:hover {
-    border-color: var(--color-primary-start);
-}
-
-.category-filter:focus {
-    outline: none;
-    border-color: var(--color-primary-start);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-/* --- Sélecteur de catégorie dans formulaires --- */
-.category-select {
-    width: 100%;
-    padding: 12px 40px 12px 15px;
-    border: 2px solid var(--color-border);
-    border-radius: var(--border-radius-md);
-    font-size: 0.95em;
-    font-weight: 500;
-    color: var(--color-text-dark);
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-}
-
-.category-select:hover {
-    border-color: var(--color-primary-start);
-}
-
-.category-select:focus {
-    outline: none;
-    border-color: var(--color-primary-start);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-/* --- Badge de catégorie sur les vignettes --- */
-.category-badge {
-/*     position: absolute; */
-    bottom: 5px;
-    right: 8px;
-    padding: 4px 8px;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: 600;
-    border: 1.5px solid;
-    z-index: 1;
+.category-filter-btn {
     display: flex;
     align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: 2px solid var(--color-border);
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.category-filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    border-color: var(--color-primary-start);
+}
+
+.category-filter-btn:active {
+    transform: translateY(0);
+}
+
+.category-filter-btn.active {
+    background: var(--gradient-primary);
+    color: white;
+    border-color: var(--color-primary-start);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transform: scale(1.05);
+}
+
+.category-filter-btn.active::before {
+    opacity: 1;
+}
+
+.filter-icon {
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.category-filter-btn:hover .filter-icon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.category-filter-btn.active .filter-icon {
+    transform: scale(1.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1.1); }
+    50% { transform: scale(1.2); }
+}
+
+.filter-text {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.filter-badge {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    background: rgba(102, 126, 234, 0.15);
+    color: var(--color-primary-start);
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.category-filter-btn.active .filter-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+.category-filter-btn:hover .filter-badge {
+    transform: scale(1.1);
+}
+
+/* --- Navigation Statistiques --- */
+.stats-nav-bar {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: var(--border-radius-md);
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: wrap;
+}
+
+.stats-nav-btn {
+    flex: 1;
+    min-width: fit-content;
+    padding: 12px 20px;
+    border: 2px solid var(--color-border);
+    background: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
+.stats-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    border-color: var(--color-primary-start);
+    color: var(--color-primary-start);
+}
+
+.stats-nav-btn.active {
+    background: var(--gradient-primary);
+    color: white;
+    border-color: var(--color-primary-start);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transform: scale(1.02);
+}
+
+.stats-section {
+    margin-bottom: 50px;
+    scroll-margin-top: 80px;
 }
 
 /* --- Listes d'aliments --- */
@@ -507,15 +599,14 @@ h3 {
 .food-item {
     background: var(--color-bg-light);
     padding: 15px;
+    padding-right: 20px;
     border-radius: var(--border-radius-sm);
     cursor: move;
     border: 2px solid var(--color-border);
-    transition: var(--transition-smooth);
+    transition: var(--transition-fast);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    z-index: 1;
+    overflow: visible;
 }
 
 .food-item.menu-open {
@@ -822,7 +913,43 @@ h3 {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
     outline: none;
 }
+.form-group select {
+    padding: 12px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 1em;
+    background-color: white;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.form-group select:focus {
+    border-color: var(--color-border-active);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    outline: none;
+}
 .weight-input input { flex: 1; padding: 8px; border: 2px solid var(--color-border); border-radius: 5px; font-size: 1em; }
+
+/* Grille pour les valeurs nutritionnelles */
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.nutrition-grid .form-group {
+    margin: 0;
+}
+
+.nutrition-grid .form-group label {
+    font-size: 0.85em;
+    margin-bottom: 4px;
+}
+
+.nutrition-grid .form-group input {
+    padding: 10px;
+    font-size: 0.95em;
+}
 
 /* Éviter le bug du bouton au survol */
 .add-food-form .add-btn {
@@ -838,77 +965,6 @@ h3 {
 /* =============================================
    8. PAGE STATISTIQUES
    ============================================= */
-
-/* Menu de navigation des sections */
-.stats-navigation {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 30px 0 20px 0;
-    padding: 20px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-    border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    
-    /* Sticky positioning - reste visible pendant le scroll */
-    position: sticky;
-    top: 10px;
-    z-index: 100;
-    
-    /* Effet de profondeur quand sticky */
-    transition: box-shadow 0.3s ease;
-}
-
-.stats-navigation.scrolled {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.stats-nav-btn {
-    padding: 12px 24px;
-    border: 2px solid transparent;
-    background: white;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.95em;
-    color: var(--color-text-dark);
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-    min-width: 120px;
-    text-align: center;
-}
-
-.stats-nav-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    border-color: var(--color-primary-start);
-}
-
-.stats-nav-btn.active {
-    background: var(--gradient-primary);
-    color: white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    border-color: transparent;
-}
-
-/* Sections de statistiques */
-.stats-section {
-    scroll-margin-top: 120px; /* Pour le scroll smooth + menu sticky */
-    margin-bottom: 50px;
-    padding-top: 20px;
-}
-
-.stats-section-title {
-    font-size: 1.8em;
-    font-weight: 700;
-    color: var(--color-text-dark);
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid var(--color-primary-start);
-    display: inline-block;
-}
-
 .stats-period { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
 
 .period-btn {
@@ -1024,8 +1080,29 @@ h3 {
     box-shadow: var(--shadow-lg);
     width: 90%;
     max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
     position: relative;
     animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.3);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.5);
 }
 
 @keyframes slideUp {
@@ -1077,6 +1154,36 @@ h3 {
 @keyframes scaleIn {
     from { transform: scale(0); }
     to { transform: scale(1); }
+}
+
+.food-name {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--color-text-dark);
+    word-wrap: break-word;
+}
+
+.food-category-icon {
+    position: absolute;
+    top: -20px;
+    right: -8px;
+    font-size: 1em;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 2px solid var(--color-border);
+    z-index: 2;
+    pointer-events: none;
+    transition: transform 0.2s ease;
+}
+
+.food-item:hover .food-category-icon {
+    transform: scale(1.1);
 }
 
 .modal-confirm h3 {
@@ -1986,28 +2093,6 @@ h3 {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-
-    /* Menu navigation sections stats pour tablette */
-    .stats-navigation {
-        padding: 18px 15px;
-        gap: 10px;
-        top: 8px; /* Légèrement ajusté pour tablette */
-    }
-
-    .stats-nav-btn {
-        padding: 11px 20px;
-        font-size: 0.9em;
-        min-width: 110px;
-        flex: 1 1 calc(33.33% - 10px); /* 3 colonnes sur tablette */
-    }
-
-    .stats-section {
-        scroll-margin-top: 110px; /* Ajusté pour tablette */
-    }
-
-    .stats-section-title {
-        font-size: 1.6em;
-    }
 }
 
 /* MOBILE (< 768px) */
@@ -2102,17 +2187,30 @@ h3 {
         padding: 10px 12px;
     }
 
-    .category-filter {
-        min-width: 100%;
-        font-size: 0.9em;
-        padding: 10px 35px 10px 12px;
+    /* === FILTRES DE CATÉGORIE === */
+    .category-filters {
+        gap: 8px;
+        padding: 12px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        flex-wrap: nowrap;
     }
     
-    .category-badge {
-        font-size: 0.95em;
-        padding: 3px 6px;
-        bottom: 6px;
-        right: 6px;
+    .category-filter-btn {
+        padding: 8px 14px;
+        font-size: 0.85em;
+        min-width: fit-content;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .filter-icon {
+        font-size: 1.1em;
+    }
+    
+    .filter-text {
+        font-size: 0.9em;
     }
 
     /* === LISTE DES ALIMENTS === */
@@ -2311,29 +2409,6 @@ h3 {
         white-space: nowrap;
     }
 
-    /* Menu navigation sections stats */
-    .stats-navigation {
-        padding: 15px 10px;
-        gap: 8px;
-        top: 5px; /* Réduire le top sur mobile */
-        margin: 20px 0 15px 0;
-    }
-
-    .stats-nav-btn {
-        padding: 10px 16px;
-        font-size: 0.85em;
-        min-width: 100px;
-        flex: 1 1 calc(50% - 8px); /* 2 colonnes sur mobile */
-    }
-
-    .stats-section {
-        scroll-margin-top: 100px; /* Ajusté pour mobile */
-    }
-
-    .stats-section-title {
-        font-size: 1.4em;
-    }
-
     .chart-container {
         margin-bottom: 20px;
         padding: 15px;
@@ -2398,6 +2473,26 @@ h3 {
     .add-food-form button {
         width: 100%;
     }
+    
+    .nutrition-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    /* === NAVIGATION STATS === */
+    .stats-nav-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 6px;
+        padding: 10px;
+    }
+    
+    .stats-nav-btn {
+        flex: 0 0 auto;
+        min-width: fit-content;
+        padding: 10px 16px;
+        font-size: 0.85em;
+    }
 
     /* Liste de gestion des aliments */
     #foodsListManage .food-item {
@@ -2449,12 +2544,14 @@ h3 {
     .modal-content {
         width: 95%;
         max-width: 100%;
-        margin: 20px auto;
-        padding: 20px;
+        max-height: 95vh;
+        margin: 10px auto;
+        padding: 20px 15px;
     }
-
+    
     .modal-content h3 {
         font-size: 1.3em;
+        margin-bottom: 15px;
     }
 
     .modal-close-btn {
@@ -3746,7 +3843,7 @@ h3 {
 }
 
 .meals-list-section h3 {
-    color: var(--color-primary-start);
+    color: #333;
     margin-bottom: 20px;
     font-size: 1.3em;
 }
@@ -3877,7 +3974,7 @@ h3 {
 /* Description de section */
 .section-description {
     text-align: center;
-    color: #6c757d;
+    color: #333;
     margin-bottom: 25px;
     font-size: 1.05em;
     line-height: 1.6;

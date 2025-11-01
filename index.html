@@ -8,7 +8,7 @@
     <!-- Librairie externe pour les graphiques -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Liaison vers le fichier de styles CSS -->
-    <link rel="stylesheet" href="css/style.css?v=20251101-2025">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -207,28 +207,67 @@
 
             <!-- Liste des aliments disponibles (pour le glisser-déposer) -->
             <div class="foods-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 class="section-title" style="margin-bottom: 0;">🥗 Aliments Disponibles</h2>
-                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                        <div class="search-container">
-                            <input type="text" id="foodSearch" placeholder="🔍 Rechercher un aliment..." class="search-input">
-                        </div>
-                        <div class="category-filter-container">
-                            <select id="categoryFilter" class="category-filter">
-                                <option value="all">🏷️ Toutes les catégories</option>
-                                <option value="proteins">🥩 Protéines</option>
-                                <option value="starches">🍚 Féculents</option>
-                                <option value="vegetables">🥦 Légumes</option>
-                                <option value="fruits">🍎 Fruits</option>
-                                <option value="dairy">🥛 Produits laitiers</option>
-                                <option value="fats">🥑 Matières grasses</option>
-                                <option value="beverages">🥤 Boissons</option>
-                                <option value="snacks">🍫 Snacks & Sucreries</option>
-                                <option value="other">📦 Autre</option>
-                            </select>
-                        </div>
+                    <div class="search-container">
+                        <input type="text" id="foodSearch" placeholder="🔍 Rechercher un aliment..." class="search-input">
                     </div>
                 </div>
+                
+                <!-- Filtres par catégorie -->
+                <div class="category-filters">
+                    <button class="category-filter-btn active" data-category="all">
+                        <span class="filter-icon">🍽️</span>
+                        <span class="filter-text">Tous</span>
+                        <span class="filter-badge" data-count="all">0</span>
+                    </button>
+                    <button class="category-filter-btn" data-category="proteins">
+                        <span class="filter-icon">🥩</span>
+                        <span class="filter-text">Protéines</span>
+                        <span class="filter-badge" data-count="proteins">0</span>
+                    </button>
+                    <button class="category-filter-btn" data-category="vegetables">
+                        <span class="filter-icon">🥗</span>
+                        <span class="filter-text">Légumes</span>
+                        <span class="filter-badge" data-count="vegetables">0</span>
+                    </button>
+                    <button class="category-filter-btn" data-category="starches">
+                        <span class="filter-icon">🍚</span>
+                        <span class="filter-text">Féculents</span>
+                        <span class="filter-badge" data-count="starches">0</span>
+                    </button>
+                    <button class="category-filter-btn" data-category="fruits">
+                        <span class="filter-icon">🍎</span>
+                        <span class="filter-text">Fruits</span>
+                        <span class="filter-badge" data-count="fruits">0</span>
+                    </button>
+                    <button class="category-filter-btn" data-category="dairy">
+                        <span class="filter-icon">🧀</span>
+                        <span class="filter-text">Laitiers</span>
+                        <span class="filter-badge" data-count="dairy">0</span>
+                    </button>
+                    <button class="category-filter-btn" data-category="fats">
+                        <span class="filter-icon">🥑</span>
+                        <span class="filter-text">Lipides</span>
+                        <span class="filter-badge" data-count="fats">0</span>
+                    </button>
+                    <button class="category-filter-btn" data-category="beverages">
+                        <span class="filter-icon">🥤</span>
+                        <span class="filter-text">Boissons</span>
+                        <span class="filter-badge" data-count="beverages">0</span>
+                    </button>
+                    <button class="category-filter-btn" data-category="snacks">
+                        <span class="filter-icon">🍪</span>
+                        <span class="filter-text">Encas</span>
+                        <span class="filter-badge" data-count="snacks">0</span>
+                    </button>
+                    <button class="category-filter-btn" data-category="other">
+                        <span class="filter-icon">📦</span>
+                        <span class="filter-text">Autres</span>
+                        <span class="filter-badge" data-count="other">0</span>
+                    </button>
+                </div>
+                
                 <div class="foods-list" id="foodsList"></div>
                 <p id="noResultsMessage" style="display: none; text-align: center; color: #999; padding: 20px;">🔍 Aucun aliment trouvé</p>
                 <div style="text-align: center; margin-top: 20px;">
@@ -266,31 +305,19 @@
 
         <!-- =================== CONTENU DE L'ONGLET "STATISTIQUES" =================== -->
         <div id="stats-tab" class="tab-content">
-            <h2 class="section-title">📊 Statistiques</h2>
+            <!-- Barre de navigation des sections -->
+            <div class="stats-nav-bar">
+                <button class="stats-nav-btn active" data-section="evolution">📊 Évolution</button>
+                <button class="stats-nav-btn" data-section="averages">📈 Moyennes</button>
+                <button class="stats-nav-btn" data-section="costs">💰 Coûts</button>
+                <button class="stats-nav-btn" data-section="activities">🏃 Activités</button>
+                <button class="stats-nav-btn" data-section="foods">📋 Aliments</button>
+            </div>
             
-            <!-- Menu de navigation des sections -->
-            <nav class="stats-navigation">
-                <button class="stats-nav-btn active" data-section="nutrition-section">
-                    📊 Nutrition
-                </button>
-                <button class="stats-nav-btn" data-section="averages-section">
-                    📈 Moyennes
-                </button>
-                <button class="stats-nav-btn" data-section="costs-section">
-                    💰 Coûts
-                </button>
-                <button class="stats-nav-btn" data-section="activities-section">
-                    🏃 Activités
-                </button>
-                <button class="stats-nav-btn" data-section="food-analysis-section">
-                    📊 Aliments
-                </button>
-            </nav>
-
-            <!-- Section Statistiques Nutritionnelles -->
-            <div id="nutrition-section" class="stats-section">
-            <h3 class="stats-section-title">📊 Statistiques Nutritionnelles</h3>
-            <!-- Boutons pour choisir la période d'affichage -->
+            <!-- Section Évolution -->
+            <div id="stats-evolution" class="stats-section">
+                <h2 class="section-title">📊 Statistiques Nutritionnelles</h2>
+                <!-- Boutons pour choisir la période d'affichage -->
             <div class="stats-period">
                 <button class="period-btn active" data-period="7">7 jours</button>
                 <button class="period-btn" data-period="14">14 jours</button>
@@ -334,11 +361,10 @@
                 </div>
             </div>
             </div>
-            <!-- Fin Section Nutrition -->
 
             <!-- Section Moyennes -->
-            <div id="averages-section" class="stats-section">
-            <h3 class="stats-section-title">📈 Moyennes Hebdomadaires & Mensuelles</h3>
+            <div id="stats-averages" class="stats-section">
+                <h2 class="section-title">📈 Moyennes Hebdomadaires & Mensuelles</h2>
             <div class="stats-period">
                 <button class="average-period-btn active" data-avg-period="week">Par Semaine</button>
                 <button class="average-period-btn" data-avg-period="month">Par Mois</button>
@@ -370,11 +396,10 @@
                 </div>
             </div>
             </div>
-            <!-- Fin Section Moyennes -->
 
             <!-- Section Analyse des Coûts -->
-            <div id="costs-section" class="stats-section">
-            <h3 class="stats-section-title">💰 Analyse des Coûts</h3>
+            <div id="stats-costs" class="stats-section">
+                <h2 class="section-title">💰 Analyse des Coûts</h2>
             <div class="stats-period">
                 <button class="cost-period-btn active" data-cost-period="7">7 jours</button>
                 <button class="cost-period-btn" data-cost-period="14">14 jours</button>
@@ -416,11 +441,10 @@
                 </div>
             </div>
             </div>
-            <!-- Fin Section Coûts -->
 
             <!-- Section Activités Physiques -->
-            <div id="activities-section" class="stats-section">
-            <h3 class="stats-section-title">🏃 Activités Physiques</h3>
+            <div id="stats-activities" class="stats-section">
+                <h2 class="section-title">🏃 Activités Physiques</h2>
             <div class="stats-period">
                 <button class="activity-period-btn active" data-activity-period="7">7 jours</button>
                 <button class="activity-period-btn" data-activity-period="14">14 jours</button>
@@ -449,11 +473,10 @@
                 </div>
             </div>
             </div>
-            <!-- Fin Section Activités -->
 
             <!-- Section Analyse par Aliment -->
-            <div id="food-analysis-section" class="stats-section">
-            <h3 class="stats-section-title">📊 Analyse par Aliment</h3>
+            <div id="stats-foods" class="stats-section">
+                <h2 class="section-title">📊 Analyse par Aliment</h2>
             <div class="stats-period">
                 <button class="food-analysis-period-btn active" data-food-period="7">7 jours</button>
                 <button class="food-analysis-period-btn" data-food-period="30">30 jours</button>
@@ -568,9 +591,8 @@
                     <canvas id="foodAnalysisCostChart"></canvas>
                 </div>
             </div>
-            </div>
-            <!-- Fin Section Analyse par Aliment -->
             <!-- ===================================== -->
+            </div>
         </div>
     </div>
 
@@ -782,17 +804,17 @@
                 <!-- Catégorie -->
                 <div class="form-group">
                     <label>🏷️ Catégorie</label>
-                    <select id="foodCategory" class="category-select" required>
-                        <option value="">-- Choisir une catégorie --</option>
+                    <select id="foodCategory" required>
+                        <option value="">-- Sélectionner une catégorie --</option>
                         <option value="proteins">🥩 Protéines</option>
+                        <option value="vegetables">🥗 Légumes</option>
                         <option value="starches">🍚 Féculents</option>
-                        <option value="vegetables">🥦 Légumes</option>
                         <option value="fruits">🍎 Fruits</option>
-                        <option value="dairy">🥛 Produits laitiers</option>
-                        <option value="fats">🥑 Matières grasses</option>
+                        <option value="dairy">🧀 Produits laitiers</option>
+                        <option value="fats">🥑 Lipides</option>
                         <option value="beverages">🥤 Boissons</option>
-                        <option value="snacks">🍫 Snacks & Sucreries</option>
-                        <option value="other">📦 Autre</option>
+                        <option value="snacks">🍪 Encas</option>
+                        <option value="other">📦 Autres</option>
                     </select>
                 </div>
                 
@@ -818,29 +840,31 @@
                 </div>
                 
                 <!-- Valeurs nutritionnelles -->
-                <div class="form-group">
-                    <label><span id="foodCaloriesLabel">Cal (kcal)</span></label>
-                    <input type="number" step="0.1" id="foodCalories" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="foodProteinsLabel">Prot (g)</span></label>
-                    <input type="number" step="0.1" id="foodProteins" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="foodCarbsLabel">Gluc (g)</span></label>
-                    <input type="number" step="0.1" id="foodCarbs" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="foodSugarsLabel">Sucres (g)</span></label>
-                    <input type="number" step="0.1" id="foodSugars" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="foodFibersLabel">Fibres (g)</span></label>
-                    <input type="number" step="0.1" id="foodFibers" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="foodFatsLabel">Lipides (g)</span></label>
-                    <input type="number" step="0.1" id="foodFats" required>
+                <div class="nutrition-grid">
+                    <div class="form-group">
+                        <label><span id="foodCaloriesLabel">Cal (kcal)</span></label>
+                        <input type="number" step="0.1" id="foodCalories" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="foodProteinsLabel">Prot (g)</span></label>
+                        <input type="number" step="0.1" id="foodProteins" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="foodCarbsLabel">Gluc (g)</span></label>
+                        <input type="number" step="0.1" id="foodCarbs" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="foodSugarsLabel">Sucres (g)</span></label>
+                        <input type="number" step="0.1" id="foodSugars" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="foodFibersLabel">Fibres (g)</span></label>
+                        <input type="number" step="0.1" id="foodFibers" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="foodFatsLabel">Lipides (g)</span></label>
+                        <input type="number" step="0.1" id="foodFats" required>
+                    </div>
                 </div>
                 
                 <!-- Prix -->
@@ -1249,17 +1273,17 @@
                 <!-- Catégorie -->
                 <div class="form-group">
                     <label>🏷️ Catégorie</label>
-                    <select id="editFoodCategory" class="category-select" required>
-                        <option value="">-- Choisir une catégorie --</option>
+                    <select id="editFoodCategory" required>
+                        <option value="">-- Sélectionner une catégorie --</option>
                         <option value="proteins">🥩 Protéines</option>
+                        <option value="vegetables">🥗 Légumes</option>
                         <option value="starches">🍚 Féculents</option>
-                        <option value="vegetables">🥦 Légumes</option>
                         <option value="fruits">🍎 Fruits</option>
-                        <option value="dairy">🥛 Produits laitiers</option>
-                        <option value="fats">🥑 Matières grasses</option>
+                        <option value="dairy">🧀 Produits laitiers</option>
+                        <option value="fats">🥑 Lipides</option>
                         <option value="beverages">🥤 Boissons</option>
-                        <option value="snacks">🍫 Snacks & Sucreries</option>
-                        <option value="other">📦 Autre</option>
+                        <option value="snacks">🍪 Encas</option>
+                        <option value="other">📦 Autres</option>
                     </select>
                 </div>
                 
@@ -1285,29 +1309,31 @@
                 </div>
                 
                 <!-- Valeurs nutritionnelles -->
-                <div class="form-group">
-                    <label><span id="editFoodCaloriesLabel">Cal (kcal)</span></label>
-                    <input type="number" step="0.1" id="editFoodCalories" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="editFoodProteinsLabel">Prot (g)</span></label>
-                    <input type="number" step="0.1" id="editFoodProteins" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="editFoodCarbsLabel">Gluc (g)</span></label>
-                    <input type="number" step="0.1" id="editFoodCarbs" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="editFoodSugarsLabel">Sucres (g)</span></label>
-                    <input type="number" step="0.1" id="editFoodSugars" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="editFoodFibersLabel">Fibres (g)</span></label>
-                    <input type="number" step="0.1" id="editFoodFibers" required>
-                </div>
-                <div class="form-group">
-                    <label><span id="editFoodFatsLabel">Lipides (g)</span></label>
-                    <input type="number" step="0.1" id="editFoodFats" required>
+                <div class="nutrition-grid">
+                    <div class="form-group">
+                        <label><span id="editFoodCaloriesLabel">Cal (kcal)</span></label>
+                        <input type="number" step="0.1" id="editFoodCalories" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="editFoodProteinsLabel">Prot (g)</span></label>
+                        <input type="number" step="0.1" id="editFoodProteins" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="editFoodCarbsLabel">Gluc (g)</span></label>
+                        <input type="number" step="0.1" id="editFoodCarbs" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="editFoodSugarsLabel">Sucres (g)</span></label>
+                        <input type="number" step="0.1" id="editFoodSugars" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="editFoodFibersLabel">Fibres (g)</span></label>
+                        <input type="number" step="0.1" id="editFoodFibers" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span id="editFoodFatsLabel">Lipides (g)</span></label>
+                        <input type="number" step="0.1" id="editFoodFats" required>
+                    </div>
                 </div>
                 
                 <!-- Prix -->
@@ -1683,7 +1709,7 @@
     </script>
 
     <!-- Le script principal de l'application, chargé à la fin -->
-    <script src="js/app.js?v=20251101-2025" type="module"></script>
+    <script src="js/app.js?v=20251101-1653" type="module"></script>
 </body>
 
 </html>
