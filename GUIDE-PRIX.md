@@ -60,10 +60,8 @@ Vous avez 3 options :
 #### **Option A : Mise à jour Manuelle (Interface)**
 
 1. Allez dans l'onglet **"Aliments"**
-2. Cliquez sur le bouton **" Modifier"** de chaque aliment
+2. Cliquez sur le bouton **"✏️ Modifier"** de chaque aliment
 3. Remplissez les champs :
-   - **Nom du fichier** : `nutrition-tracker-backup-YYYY-MM-DD.json`
-   - **Version** : 1.5.0
    - **Prix (€)** : Le prix en euros
    - **Poids (g)** : Le poids correspondant en grammes
 4. Cliquez sur **"Sauvegarder"**
