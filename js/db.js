@@ -12,9 +12,6 @@ export function initDB() {
         request.onsuccess = (event) => { db = event.target.result; resolve(db); };
         request.onupgradeneeded = (event) => {
             const dbInstance = event.target.result;
-            const transaction = event.target.transaction;
-            
-            // Créer les stores s'ils n'existent pas
             if (!dbInstance.objectStoreNames.contains('foods')) dbInstance.createObjectStore('foods', { keyPath: 'id' });
             if (!dbInstance.objectStoreNames.contains('meals')) dbInstance.createObjectStore('meals', { keyPath: 'id' });
             if (!dbInstance.objectStoreNames.contains('dailyMeals')) dbInstance.createObjectStore('dailyMeals', { keyPath: 'date' });
@@ -23,24 +20,6 @@ export function initDB() {
             if (!dbInstance.objectStoreNames.contains('dailySteps')) dbInstance.createObjectStore('dailySteps', { keyPath: 'date' });
             if (!dbInstance.objectStoreNames.contains('dailyActivities')) dbInstance.createObjectStore('dailyActivities', { keyPath: 'date' });
             if (!dbInstance.objectStoreNames.contains('customActivities')) dbInstance.createObjectStore('customActivities', { keyPath: 'id', autoIncrement: true });
-            
-            // Migration v7: Ajouter le champ 'category' aux aliments existants
-            if (event.oldVersion < 7 && dbInstance.objectStoreNames.contains('foods')) {
-                const foodsStore = transaction.objectStore('foods');
-                const getAllRequest = foodsStore.getAll();
-                
-                getAllRequest.onsuccess = () => {
-                    const foods = getAllRequest.result;
-                    foods.forEach(food => {
-                        // Ajouter la catégorie 'other' par défaut si elle n'existe pas
-                        if (!food.category) {
-                            food.category = 'other';
-                            foodsStore.put(food);
-                        }
-                    });
-                    console.log(`✅ Migration v7: ${foods.length} aliments mis à jour avec catégorie par défaut`);
-                };
-            }
         };
     });
 }

@@ -234,14 +234,23 @@ export function updateWeightDisplay(weight) {
  * @param {Function} quickAddHandler - La fonction à appeler pour l'ajout rapide.
  * @param {number} maxItems - Nombre maximum d'aliments à afficher (0 = tous).
  * @param {object} meals - Dictionnaire des repas composés (optionnel).
+ * @param {string} category - Catégorie de filtre ('all' ou catégorie spécifique).
  */
-export function displayFoods(foods, dragStartHandler, quickAddHandler, maxItems = 20, meals = {}) {
+export function displayFoods(foods, dragStartHandler, quickAddHandler, maxItems = 20, meals = {}, category = 'all') {
     elements.foodsList.innerHTML = '';
     
     // Combiner repas et aliments
     const mealsArray = Object.entries(meals).map(([id, meal]) => [id, { ...meal, isMeal: true }]);
     const foodsArray = Object.entries(foods);
-    const allItems = [...mealsArray, ...foodsArray];
+    
+    // Filtrer par catégorie si nécessaire
+    let filteredFoods = foodsArray;
+    if (category !== 'all') {
+        filteredFoods = foodsArray.filter(([id, food]) => food.category === category);
+    }
+    
+    // Les repas composés sont affichés UNIQUEMENT si category === 'all'
+    const allItems = category === 'all' ? [...mealsArray, ...filteredFoods] : filteredFoods;
     
     const itemsToShow = maxItems > 0 ? Math.min(maxItems, allItems.length) : allItems.length;
     
@@ -258,6 +267,24 @@ export function displayFoods(foods, dragStartHandler, quickAddHandler, maxItems 
 }
 
 /**
+ * Obtenir l'icône de catégorie d'un aliment
+ */
+function getCategoryIcon(category) {
+    const icons = {
+        'proteins': '🥩',
+        'vegetables': '🥗',
+        'starches': '🍚',
+        'fruits': '🍎',
+        'dairy': '🧀',
+        'fats': '🥑',
+        'beverages': '🥤',
+        'snacks': '🍪',
+        'other': '📦'
+    };
+    return icons[category] || '📦';
+}
+
+/**
  * Crée un élément d'aliment
  */
 function createFoodElement(id, food, dragStartHandler, quickAddHandler) {
@@ -266,22 +293,9 @@ function createFoodElement(id, food, dragStartHandler, quickAddHandler) {
     el.draggable = true;
     el.dataset.foodId = id;
     el.dataset.foodName = food.name;
-    el.dataset.foodCategory = food.category || 'other';
     
-    // Récupérer les infos de catégorie (pour le badge)
-    const categoryConfig = {
-        proteins: { icon: '🥩', color: '#ef4444' },
-        starches: { icon: '🍚', color: '#f59e0b' },
-        vegetables: { icon: '🥦', color: '#10b981' },
-        fruits: { icon: '🍎', color: '#f97316' },
-        dairy: { icon: '🥛', color: '#3b82f6' },
-        fats: { icon: '🥑', color: '#059669' },
-        beverages: { icon: '🥤', color: '#0ea5e9' },
-        snacks: { icon: '🍫', color: '#a855f7' },
-        other: { icon: '📦', color: '#6b7280' }
-    };
-    
-    const category = categoryConfig[food.category] || categoryConfig.other;
+    // Icône de catégorie
+    const categoryIcon = getCategoryIcon(food.category);
     
     // Calculer prix au 100g si disponible
     let priceInfo = '';
@@ -291,7 +305,7 @@ function createFoodElement(id, food, dragStartHandler, quickAddHandler) {
     }
     
     el.innerHTML = `
-        <span class="category-badge" style="background-color: ${category.color}15; color: ${category.color}; border-color: ${category.color}50;">${category.icon}</span>
+        <span class="food-category-icon">${categoryIcon}</span>
         <div class="food-item-header">
             <div class="food-name">${food.name}</div>
             <button class="quick-action-btn" data-food-id="${id}" title="Ajouter rapidement">+</button>
