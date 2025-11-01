@@ -26,6 +26,20 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 - Filtrage en temps réel à chaque frappe
 - Message explicite si aucun résultat trouvé
 
+#### Système de profils multiples pour les objectifs
+- **5 profils disponibles** : Sèche, Perte de poids, Prise de masse, Maintien, Recomposition
+- Chaque profil avec ses propres ratios de macronutriments optimisés
+- Sélecteur d'intensité adapté à chaque profil (déficit/surplus/ajustement)
+- Calculs automatiques spécifiques selon le profil choisi
+- Documentation complète avec exemples de calcul (OBJECTIFS-GUIDE.md)
+
+#### Conseils personnalisés par profil
+- Conseils dynamiques qui s'adaptent au profil sélectionné
+- Informations spécifiques sur les objectifs de perte/gain hebdomadaire
+- Recommandations sur l'entraînement et l'alimentation
+- Conseils de suivi et d'ajustement personnalisés
+- Mise à jour automatique lors du changement de profil
+
 ### 🔧 Améliorations
 
 #### Résumé quotidien

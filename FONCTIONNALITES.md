@@ -250,20 +250,78 @@ Graphiques disponibles :
 
 ---
 
-### 4️⃣ **Objectifs**
+### 4️⃣ **Repas (Repas Composés)**
 
-#### Calculateur de Sèche
-Formulaire de calcul automatique :
+#### Gestion des Repas Composés
+- **Création de repas** : Combiner plusieurs aliments en un seul repas
+- **Portions ajustables** : Repas avec portions personnalisables
+- **Calculs automatiques** : Valeurs nutritionnelles et coût total
+- **Prix personnalisé** : Option de définir un prix custom pour le repas
+
+#### Recherche de Repas
+- **Champ de recherche** : Filtrage en temps réel par nom
+- **Recherche instantanée** : Résultats à chaque frappe
+- **Message d'absence** : Indication claire si aucun résultat
+- **Interface épurée** : Design cohérent avec focus visuel
+
+#### Liste des Repas Créés
+- **Affichage complet** : Tous les repas composés enregistrés
+- **Informations visibles** :
+  - Nom du repas
+  - Valeurs nutritionnelles totales
+  - Coût total (si prix renseignés)
+  - Nombre d'ingrédients
+- **Actions rapides** :
+  - Ajout au suivi quotidien
+  - Modification des portions
+  - Personnalisation du prix
+
+---
+
+### 5️⃣ **Objectifs**
+
+#### Calculateur d'Objectifs Nutritionnels
+**5 profils disponibles** adaptés à chaque objectif :
+
+1. **🔥 Sèche** : Perdre du gras en préservant le muscle
+   - Déficit : 10-25% (recommandé : 20%)
+   - Protéines : 2.2g/kg
+   - Lipides : 1.0g/kg
+
+2. **📉 Perte de poids** : Perte saine et durable
+   - Déficit : 10-20% (recommandé : 10%)
+   - Protéines : 1.8g/kg
+   - Lipides : 0.9g/kg
+
+3. **💪 Prise de masse** : Construire du muscle
+   - Surplus : 5-20% (recommandé : 5%)
+   - Protéines : 2.0g/kg
+   - Lipides : 1.1g/kg
+
+4. **⚖️ Maintien** : Stabiliser son poids
+   - Ajustement : -2% à +2%
+   - Protéines : 1.6g/kg
+   - Lipides : 1.0g/kg
+
+5. **🎯 Recomposition** : Perdre du gras ET gagner du muscle
+   - Déficit : 5-10% (recommandé : 5%)
+   - Protéines : 2.4g/kg (très élevé)
+   - Lipides : 0.9g/kg
+
+**Formulaire de calcul** :
+- 🎯 **Profil** (Sèche, Perte de poids, Prise de masse, Maintien, Recomposition)
 - ⚧️ **Sexe** (Homme/Femme)
 - 🎂 **Âge** (années)
 - ⚖️ **Poids actuel** (kg)
 - 📏 **Taille** (cm)
-- 🏃 **Niveau d'activité** (Sédentaire à Très Actif)
+- 🏃 **Niveau d'activité** (Sédentaire à Extrêmement Actif)
+- 📊 **Intensité** (Adaptée au profil choisi)
 
-**Calcul automatique** :
+**Calculs automatiques** (Formule de Mifflin-St Jeor) :
 - 🔥 Métabolisme de base (MB)
 - ⚡ Dépense énergétique totale (DET)
-- 📉 Calories pour la sèche (-20%)
+- 🎯 Calories pour votre objectif (selon profil et intensité)
+- 🥩 Macronutriments optimisés (selon profil)
 
 #### Objectifs Macronutriments
 **Modification facile** :
@@ -291,17 +349,20 @@ Formulaire de calcul automatique :
 - Hydratation : 2000 ml
 - Pas : 10000 pas
 
-#### Recommandations Sèche
-Conseils pratiques affichés :
-- 🎯 Déficit calorique de 15-20%
-- ⚖️ Perte de 0.5-1% du poids/semaine
-- 📊 Ajustements si stagnation
-- 🥩 Maintien des protéines élevé
-- 💧 Hydratation abondante (3-4L)
+#### Conseils Personnalisés par Profil
+**Affichage dynamique** selon le profil sélectionné :
+
+- **🔥 Sèche** : Perte 0.5-1%/semaine, musculation prioritaire, 3-4L d'eau
+- **📉 Perte de poids** : Approche progressive, aliments rassasiants, sommeil 7-9h
+- **💪 Prise de masse** : Gain 0.25-0.5kg/semaine, 4-5 repas/jour, poids lourds
+- **⚖️ Maintien** : Règle 80/20, routine cohérente, écoute des signaux
+- **🎯 Recomposition** : Patience (3-6 mois), protéines très élevées, mouvements composés
+
+**Documentation complète** : Voir `OBJECTIFS-GUIDE.md` pour tous les détails des calculs
 
 ---
 
-### 5️⃣ **Paramètres**
+### 6️⃣ **Paramètres**
 
 #### Exportation des Données
 - **Bouton "📥 Exporter les données"**
@@ -508,8 +569,8 @@ Pour toute question ou suggestion, consultez le fichier `README.md` du projet.
 
 ---
 
-**Version** : 1.3  
-**Date** : Octobre 2025  
+**Version** : 1.5.0  
+**Date** : Novembre 2025  
 **Auteur** : Nutrition Tracker Team
 
 ---
