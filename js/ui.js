@@ -915,6 +915,19 @@ export function displayGoals(goals) {
     if (goals.mb) document.getElementById('goalMB').textContent = `${goals.mb} kcal`;
     if (goals.det) document.getElementById('goalDET').textContent = `${goals.det} kcal`;
     document.getElementById('goalCalories').textContent = `${goals.calories} kcal`;
+    
+    // Mettre à jour le label selon le profil
+    const goalCaloriesLabel = document.getElementById('goalCaloriesLabel');
+    if (goalCaloriesLabel) {
+        const profileLabels = {
+            'cut': '🔥 Calories pour la Sèche',
+            'weightloss': '📉 Calories pour la Perte de Poids',
+            'bulk': '💪 Calories pour la Prise de Masse',
+            'maintenance': '⚖️ Calories de Maintenance',
+            'recomp': '🎯 Calories pour la Recomposition'
+        };
+        goalCaloriesLabel.textContent = profileLabels[goals.goalProfile] || '🎯 Calories pour votre objectif';
+    }
     document.getElementById('goalProteins').textContent = `${goals.proteins} g`;
     document.getElementById('goalCarbs').textContent = `${goals.carbs} g`;
     document.getElementById('goalFats').textContent = `${goals.fats} g`;
@@ -941,6 +954,14 @@ export function displayGoals(goals) {
     document.getElementById('editWellnessBtn').style.display = 'inline-block';
     
     // Pré-remplir tous les champs du formulaire
+    if (goals.goalProfile) {
+        document.getElementById('goalProfile').value = goals.goalProfile;
+        // Déclencher l'événement change pour mettre à jour l'interface et les conseils
+        setTimeout(() => {
+            const event = new Event('change');
+            document.getElementById('goalProfile').dispatchEvent(event);
+        }, 100);
+    }
     if (goals.sexe) {
         const radioToCheck = goals.sexe === 'homme' ? 'homme' : 'femme';
         document.getElementById(radioToCheck).checked = true;
@@ -949,7 +970,12 @@ export function displayGoals(goals) {
     if (goals.weight) document.getElementById('goalWeight').value = goals.weight;
     if (goals.taille) document.getElementById('taille').value = goals.taille;
     if (goals.activite) document.getElementById('activite').value = goals.activite;
-    if (goals.deficitPercent) document.getElementById('deficit').value = goals.deficitPercent;
+    // Gérer l'ancien format (deficitPercent) et le nouveau (adjustmentPercent)
+    const adjustmentValue = goals.adjustmentPercent !== undefined ? goals.adjustmentPercent : goals.deficitPercent;
+    if (adjustmentValue !== undefined) {
+        const calorieAdjustmentEl = document.getElementById('calorieAdjustment');
+        if (calorieAdjustmentEl) calorieAdjustmentEl.value = adjustmentValue;
+    }
     if (goals.waterGoal) document.getElementById('waterGoalInput').value = goals.waterGoal;
     if (goals.stepsGoal) document.getElementById('stepsGoalInput').value = goals.stepsGoal;
     if (goals.sugarsMax !== undefined) document.getElementById('sugarsMaxInput').value = goals.sugarsMax;

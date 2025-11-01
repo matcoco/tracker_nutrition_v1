@@ -12,7 +12,7 @@ import { showNotification } from './ui.js';
  */
 export function exportSelectedItems(selectedFoodIds, selectedMealIds, foods, meals) {
     const exportData = {
-        version: '1.0',
+        version: '1.5.0',
         exportDate: new Date().toISOString(),
         appName: 'Nutrition Tracker',
         data: {

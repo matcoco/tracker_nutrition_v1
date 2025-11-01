@@ -732,12 +732,13 @@ async function handleGoalsSubmit(e) {
     const form = e.target;
     
     // Récupération de tous les paramètres du formulaire
+    const goalProfile = form.querySelector('#goalProfile').value;
     const sexe = form.querySelector('input[name="sexe"]:checked').value;
     const age = parseInt(form.querySelector('#age').value, 10);
     const weight = parseFloat(form.querySelector('#goalWeight').value);
     const taille = parseInt(form.querySelector('#taille').value, 10);
     const activite = parseFloat(form.querySelector('#activite').value);
-    const deficitPercent = parseFloat(form.querySelector('#deficit').value);
+    const adjustmentPercent = parseFloat(form.querySelector('#calorieAdjustment').value);
     const waterGoal = parseInt(form.querySelector('#waterGoalInput').value, 10) || 2000;
     const stepsGoal = parseInt(form.querySelector('#stepsGoalInput').value, 10) || 10000;
     const sugarsMax = parseInt(form.querySelector('#sugarsMaxInput').value, 10) || 25;
@@ -754,12 +755,38 @@ async function handleGoalsSubmit(e) {
     // Calcul de la Dépense Énergétique Totale (DET)
     const det = mb * activite;
     
-    // Calcul des calories pour la sèche
-    const targetKcal = Math.round(det * (1 - deficitPercent));
+    // Calcul des calories selon le profil
+    // Note: valeurs négatives = surplus (pour prise de masse)
+    const targetKcal = Math.round(det * (1 - adjustmentPercent));
     
-    // Calcul des macros selon la méthode de sèche
-    const proteins = Math.round(weight * 2.2); // g/jour
-    const fats = Math.round(weight * 1.0); // g/jour
+    // Calcul des macros selon le profil choisi
+    let proteins, fats;
+    
+    switch (goalProfile) {
+        case 'cut': // Sèche: haute protéine pour préserver muscle
+            proteins = Math.round(weight * 2.2);
+            fats = Math.round(weight * 1.0);
+            break;
+        case 'weightloss': // Perte de poids: équilibré
+            proteins = Math.round(weight * 1.8);
+            fats = Math.round(weight * 0.9);
+            break;
+        case 'bulk': // Prise de masse: haute protéine et plus de glucides
+            proteins = Math.round(weight * 2.0);
+            fats = Math.round(weight * 1.1);
+            break;
+        case 'maintenance': // Maintien: équilibré
+            proteins = Math.round(weight * 1.6);
+            fats = Math.round(weight * 1.0);
+            break;
+        case 'recomp': // Recomposition: très haute protéine
+            proteins = Math.round(weight * 2.4);
+            fats = Math.round(weight * 0.9);
+            break;
+        default:
+            proteins = Math.round(weight * 2.0);
+            fats = Math.round(weight * 1.0);
+    }
     
     // Calcul des calories pour protéines/lipides
     const kcalProteins = proteins * 4;
@@ -778,12 +805,13 @@ async function handleGoalsSubmit(e) {
         mb: Math.round(mb),
         det: Math.round(det),
         // Paramètres du formulaire
+        goalProfile: goalProfile,
         sexe: sexe,
         age: age,
         weight: weight,
         taille: taille,
         activite: activite,
-        deficitPercent: deficitPercent,
+        adjustmentPercent: adjustmentPercent,
         // Objectifs hydratation et pas
         waterGoal: waterGoal,
         stepsGoal: stepsGoal,
@@ -1002,7 +1030,7 @@ async function handleExport() {
         const activitiesData = await db.getAllFromStore('dailyActivities');
         const customActivitiesData = await db.getAllFromStore('customActivities');
         const dataToExport = { 
-            version: '1.4', // Nouvelle version avec repas composés
+            version: '1.5.0', // v1.5.0: Prix personnalisé, recherche repas, améliorations comparaison
             exportDate: new Date().toISOString(), 
             foods: foodsData,
             meals: composedMealsData, // Repas composés
