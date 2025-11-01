@@ -87,16 +87,31 @@ export function calculateMealNutrition(ingredients, foods) {
 
 /**
  * Affiche la liste des repas
+ * @param {object} meals - Les repas à afficher
+ * @param {object} foods - Les aliments disponibles
+ * @param {string} searchTerm - Terme de recherche optionnel pour filtrer
  */
-function displayMealsList(meals, foods) {
+function displayMealsList(meals, foods, searchTerm = '') {
     const container = document.getElementById('mealsListContainer');
     if (!container) return;
     
     container.innerHTML = '';
     
-    const mealsArray = Object.entries(meals);
+    let mealsArray = Object.entries(meals);
+    
+    // Filtrer par terme de recherche si fourni
+    if (searchTerm) {
+        const lowerSearch = searchTerm.toLowerCase();
+        mealsArray = mealsArray.filter(([id, meal]) => {
+            return meal.name.toLowerCase().includes(lowerSearch);
+        });
+    }
+    
     if (mealsArray.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Aucun repas créé pour le moment</p>';
+        const message = searchTerm 
+            ? '<p style="text-align: center; color: #999; padding: 20px;">🔍 Aucun repas trouvé pour "' + searchTerm + '"</p>'
+            : '<p style="text-align: center; color: #999; padding: 20px;">Aucun repas créé pour le moment</p>';
+        container.innerHTML = message;
         return;
     }
     
@@ -202,6 +217,7 @@ function setupEventListeners(foods) {
     const form = document.getElementById('mealForm');
     const addIngredientBtn = document.getElementById('addIngredientBtn');
     const cancelBtn = document.getElementById('cancelMealBtn');
+    const searchInput = document.getElementById('mealSearchInput');
     
     if (createBtn) {
         createBtn.addEventListener('click', () => showMealForm(foods));
@@ -226,6 +242,13 @@ function setupEventListeners(foods) {
     const totalWeightInput = document.getElementById('mealTotalWeight');
     if (totalWeightInput) {
         totalWeightInput.addEventListener('input', () => updateMealPreview(foods));
+    }
+    
+    // Recherche de repas
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            displayMealsList(mealsData, foods, e.target.value);
+        });
     }
 }
 

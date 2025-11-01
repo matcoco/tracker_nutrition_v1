@@ -220,8 +220,12 @@ export function calculateDayCost(meals, foods, composedMeals = {}) {
                 }
                 
                 if (food) {
+                    // Utiliser customPrice si défini (priorité absolue)
+                    if (item.customPrice !== undefined && item.customPrice !== null) {
+                        cost += item.customPrice;
+                    }
                     // CAS 1 : Repas avec customPortions -> calculer à partir des ingrédients
-                    if (item.isMeal && item.customPortions && food.ingredients) {
+                    else if (item.isMeal && item.customPortions && food.ingredients) {
                         food.ingredients.forEach(ing => {
                             const ingredientFood = foods[ing.foodId];
                             const weight = item.customPortions[ing.foodId] || 0;
@@ -282,8 +286,12 @@ export function calculateCostsByMeal(meals, foods, composedMeals = {}) {
                 }
                 
                 if (food) {
+                    // Utiliser customPrice si défini (priorité absolue)
+                    if (item.customPrice !== undefined && item.customPrice !== null) {
+                        costs[mealType] += item.customPrice;
+                    }
                     // CAS 1 : Repas avec customPortions -> calculer à partir des ingrédients
-                    if (item.isMeal && item.customPortions && food.ingredients) {
+                    else if (item.isMeal && item.customPortions && food.ingredients) {
                         food.ingredients.forEach(ing => {
                             const ingredientFood = foods[ing.foodId];
                             const weight = item.customPortions[ing.foodId] || 0;

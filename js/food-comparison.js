@@ -283,6 +283,28 @@ function updateComparisonChart() {
     const mode = document.getElementById('comparisonMode').value;
     const data = getAdjustedData(mode);
     
+    // Mettre à jour le titre selon le mode
+    const chartTitle = document.getElementById('comparisonChartTitle');
+    const chartExplanation = document.getElementById('comparisonChartExplanation');
+    
+    if (chartTitle) {
+        const modeTitles = {
+            '100g': '📈 Vue d\'ensemble nutritionnelle (pour 100g)',
+            'calories': '📈 Vue d\'ensemble nutritionnelle (pour 200 kcal)',
+            'price': '📈 Vue d\'ensemble nutritionnelle (pour 2€)'
+        };
+        chartTitle.textContent = modeTitles[mode] || modeTitles['100g'];
+    }
+    
+    if (chartExplanation) {
+        const modeExplanations = {
+            '100g': 'Comparaison des valeurs nutritionnelles pour 100g de chaque aliment.',
+            'calories': 'Comparaison des quantités nécessaires de chaque aliment pour atteindre 200 kcal.',
+            'price': 'Comparaison des quantités que vous obtenez pour 2€ de chaque aliment.'
+        };
+        chartExplanation.textContent = modeExplanations[mode] || modeExplanations['100g'];
+    }
+    
     // Détruire le graphique existant
     if (comparisonChart) {
         comparisonChart.destroy();
@@ -355,7 +377,7 @@ function updateComparisonChart() {
                     },
                     title: {
                         display: true,
-                        text: 'Quantité (g)',
+                        text: 'Quantité de macronutriments (g)',
                         font: {
                             size: 12,
                             weight: 'bold'
@@ -573,13 +595,41 @@ function getAdjustedData(mode) {
         quantity3: '100g'
     };
     
+    // ÉTAPE 1 : Normaliser tous les repas composés sur 100g
+    [result.food1, result.food2, result.food3].forEach((food) => {
+        if (!food) return;
+        
+        // Si c'est un repas composé, les valeurs sont totales, il faut les ramener sur 100g
+        if (food.ingredients && Array.isArray(food.ingredients) && food.ingredients.length > 0) {
+            // Calculer le poids total du repas
+            let totalWeight = 0;
+            food.ingredients.forEach(ing => {
+                totalWeight += ing.weight || 0;
+            });
+            
+            if (totalWeight > 0 && totalWeight !== 100) {
+                // Ratio pour ramener à 100g
+                const ratio = 100 / totalWeight;
+                
+                // Ajuster toutes les valeurs nutritionnelles
+                food.calories *= ratio;
+                food.proteins *= ratio;
+                food.carbs *= ratio;
+                food.fats *= ratio;
+                food.sugars = (food.sugars || 0) * ratio;
+                food.fibers = (food.fibers || 0) * ratio;
+            }
+        }
+    });
+    
+    // ÉTAPE 2 : Appliquer les ajustements selon le mode
     if (mode === '100g') {
-        // Aucun ajustement nécessaire
+        // Déjà normalisé sur 100g, rien de plus à faire
         return result;
     }
     
     if (mode === 'calories') {
-        // Ajuster pour 200 kcal
+        // Ajuster pour 200 kcal (maintenant basé sur 100g)
         const targetCalories = 200;
         
         [result.food1, result.food2, result.food3].forEach((food, index) => {

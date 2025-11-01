@@ -1124,7 +1124,7 @@ let currentAdjustment = null;
 /**
  * Ouvre la modale d'ajustement des portions
  */
-function handleAdjustPortions(mealType, uniqueId, mealId, customPortions) {
+function handleAdjustPortions(mealType, uniqueId, mealId, customPortions, customPrice) {
     const meal = state.meals[mealId];
     if (!meal || !meal.isPortionAdjustable) return;
     
@@ -1167,6 +1167,20 @@ function handleAdjustPortions(mealType, uniqueId, mealId, customPortions) {
         
         container.appendChild(row);
     });
+    
+    // Charger le prix personnalisé s'il existe
+    const customPriceCheckbox = document.getElementById('customPriceCheckbox');
+    const customPriceInput = document.getElementById('customPriceInput');
+    
+    if (customPrice !== undefined && customPrice !== null) {
+        customPriceCheckbox.checked = true;
+        customPriceInput.disabled = false;
+        customPriceInput.value = customPrice.toFixed(2);
+    } else {
+        customPriceCheckbox.checked = false;
+        customPriceInput.disabled = true;
+        customPriceInput.value = '';
+    }
     
     // Calculer et afficher l'aperçu initial
     updateAdjustmentPreview();
@@ -1240,8 +1254,21 @@ function updateAdjustmentPreview() {
     
     // Afficher le coût si au moins un ingrédient a un prix
     const costSection = document.getElementById('adjustCostSection');
+    const customPriceCheckbox = document.getElementById('customPriceCheckbox');
+    const customPriceInput = document.getElementById('customPriceInput');
+    
     if (hasCost) {
-        document.getElementById('adjustCost').textContent = totals.cost.toFixed(2);
+        // Si prix personnalisé activé et valide, l'afficher dans le champ
+        if (customPriceCheckbox.checked) {
+            const customPrice = parseFloat(customPriceInput.value);
+            if (!isNaN(customPrice) && customPrice >= 0) {
+                document.getElementById('adjustCost').textContent = customPrice.toFixed(2);
+            } else {
+                document.getElementById('adjustCost').textContent = totals.cost.toFixed(2);
+            }
+        } else {
+            document.getElementById('adjustCost').textContent = totals.cost.toFixed(2);
+        }
         costSection.style.display = 'block';
     } else {
         costSection.style.display = 'none';
@@ -1275,6 +1302,18 @@ async function saveAdjustedPortions() {
         customPortions[foodId] = weight;
     });
     
+    // Récupérer le prix personnalisé si activé
+    const customPriceCheckbox = document.getElementById('customPriceCheckbox');
+    const customPriceInput = document.getElementById('customPriceInput');
+    let customPrice = null;
+    
+    if (customPriceCheckbox.checked) {
+        const priceValue = parseFloat(customPriceInput.value);
+        if (!isNaN(priceValue) && priceValue >= 0) {
+            customPrice = priceValue;
+        }
+    }
+    
     // Mettre à jour dans la BDD
     const meals = await db.loadDayMeals(state.currentDate);
     const mealItems = meals[mealType];
@@ -1282,6 +1321,14 @@ async function saveAdjustedPortions() {
     
     if (itemIndex !== -1) {
         mealItems[itemIndex].customPortions = customPortions;
+        
+        // Sauvegarder ou supprimer le prix personnalisé
+        if (customPrice !== null) {
+            mealItems[itemIndex].customPrice = customPrice;
+        } else {
+            delete mealItems[itemIndex].customPrice;
+        }
+        
         await db.saveDayMeals(state.currentDate, meals);
         
         // Recharger l'affichage
@@ -1478,6 +1525,21 @@ function setupEventListeners() {
     document.getElementById('adjustPortionsModal').addEventListener('click', e => {
         if (e.target === e.currentTarget) closeAdjustPortionsModal();
     });
+    
+    // Checkbox pour activer/désactiver le prix personnalisé
+    document.getElementById('customPriceCheckbox').addEventListener('change', e => {
+        const customPriceInput = document.getElementById('customPriceInput');
+        customPriceInput.disabled = !e.target.checked;
+        if (e.target.checked) {
+            customPriceInput.focus();
+        } else {
+            customPriceInput.value = '';
+        }
+        updateAdjustmentPreview(); // Mettre à jour l'affichage
+    });
+    
+    // Input du prix personnalisé - mise à jour en temps réel
+    document.getElementById('customPriceInput').addEventListener('input', updateAdjustmentPreview);
 }
 
 async function initializeDefaultFoods() {
