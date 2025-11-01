@@ -523,11 +523,26 @@
 
     <!-- =================== CONTENU DE L'ONGLET "OBJECTIFS" =================== -->
     <div id="goals-tab" class="tab-content">
-        <h2 class="section-title">🔥 Calculateur de Sèche</h2>
-        <p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em;">Déterminez votre apport calorique optimal pour perdre du gras</p>
+        <h2 class="section-title">🎯 Calculateur d'Objectifs Nutritionnels</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em;">Déterminez votre apport calorique optimal selon votre objectif</p>
         
         <div class="add-food-section">
             <form class="add-food-form" id="goalsForm">
+                <!-- Sélecteur de profil -->
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label style="margin-bottom: 15px; font-size: 1.1em; font-weight: 700; color: var(--color-text-dark);">🎯 Choisissez votre objectif</label>
+                    <select id="goalProfile" required style="font-size: 1em; font-weight: 600; padding: 14px; border: 2px solid #667eea; border-radius: 8px; background: white; cursor: pointer;">
+                        <option value="cut">🔥 Sèche - Perdre du gras en préservant le muscle</option>
+                        <option value="weightloss">📉 Perte de poids - Perte saine et durable</option>
+                        <option value="bulk">💪 Prise de masse - Construire du muscle</option>
+                        <option value="maintenance">⚖️ Maintien - Stabiliser son poids</option>
+                        <option value="recomp">🎯 Recomposition - Perdre du gras et gagner du muscle</option>
+                    </select>
+                    <small id="profileDescription" style="color: #666; font-size: 0.9em; margin-top: 10px; display: block; line-height: 1.5;">
+                        <strong>Sèche :</strong> Idéal pour les personnes ayant déjà une bonne masse musculaire et souhaitant réduire leur taux de masse grasse pour une définition musculaire optimale.
+                    </small>
+                </div>
+
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label style="margin-bottom: 15px; font-size: 1em; font-weight: 600; color: var(--color-text-dark);">Sexe</label>
                     <div class="gender-selector">
@@ -574,9 +589,10 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="deficit">🔥 Déficit calorique souhaité</label>
-                    <select id="deficit" required>
+                <div class="form-group" id="calorieAdjustmentGroup">
+                    <label for="calorieAdjustment" id="calorieAdjustmentLabel">📊 Intensité</label>
+                    <select id="calorieAdjustment" required>
+                        <!-- Options dynamiques selon le profil -->
                         <option value="0.10">Léger - 10% (perte lente, préserve muscle)</option>
                         <option value="0.15">Modéré - 15% (équilibré)</option>
                         <option value="0.20">Standard - 20% (perte efficace)</option>
@@ -629,7 +645,7 @@
 
             <div class="result-card-highlight">
                 <div style="display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1;">
-                    <span style="font-weight: 600; color: white; font-size: 1.2em;">🎯 Calories pour la Sèche</span>
+                    <span style="font-weight: 600; color: white; font-size: 1.2em;" id="goalCaloriesLabel">🎯 Calories pour votre objectif</span>
                     <span style="font-size: 1.8em; font-weight: 700; color: white;" id="goalCalories">0 kcal</span>
                 </div>
             </div>
@@ -686,8 +702,8 @@
             </div>
 
             <div class="goals-info-box">
-                <h4>💡 Conseils pour votre sèche</h4>
-                <p>
+                <h4 id="adviceTitle">💡 Conseils pour votre objectif</h4>
+                <p id="adviceContent">
                     • Pesez-vous 1 fois par semaine dans les mêmes conditions<br>
                     • Visez une perte de 0.5-1% de votre poids par semaine<br>
                     • Ajustez vos calories si la perte stagne pendant 2 semaines<br>
@@ -1122,7 +1138,7 @@
                     <div class="info-grid">
                         <div class="info-item">
                             <span class="info-label">Version</span>
-                            <span class="info-value">1.0.0</span>
+                            <span class="info-value">1.5.0</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Stockage</span>
@@ -1435,8 +1451,152 @@
         }
     </script>
 
+    <!-- Script pour gérer le changement de profil d'objectifs -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const goalProfileSelect = document.getElementById('goalProfile');
+            const profileDescriptionEl = document.getElementById('profileDescription');
+            const calorieAdjustmentSelect = document.getElementById('calorieAdjustment');
+            const calorieAdjustmentLabel = document.getElementById('calorieAdjustmentLabel');
+            
+            // Descriptions des profils
+            const profileDescriptions = {
+                'cut': '<strong>Sèche :</strong> Idéal pour les personnes ayant déjà une bonne masse musculaire et souhaitant réduire leur taux de masse grasse pour une définition musculaire optimale. Déficit calorique important avec haute teneur en protéines.',
+                'weightloss': '<strong>Perte de poids :</strong> Approche équilibrée pour perdre du poids de façon saine et durable. Déficit calorique modéré avec une répartition équilibrée des macronutriments.',
+                'bulk': '<strong>Prise de masse :</strong> Idéal pour construire du muscle. Surplus calorique avec haute teneur en protéines et glucides pour favoriser la croissance musculaire.',
+                'maintenance': '<strong>Maintien :</strong> Maintenir son poids actuel et stabiliser sa composition corporelle. Apport calorique équivalent à la dépense énergétique.',
+                'recomp': '<strong>Recomposition :</strong> Objectif avancé pour perdre du gras tout en gagnant du muscle simultanément. Léger déficit avec très haute teneur en protéines.'
+            };
+            
+            // Options pour chaque profil
+            const profileOptions = {
+                'cut': {
+                    label: '📊 Intensité',
+                    options: [
+                        { value: '0.10', text: 'Léger - 10% (perte lente, préserve muscle)' },
+                        { value: '0.15', text: 'Modéré - 15% (équilibré)' },
+                        { value: '0.20', text: 'Standard - 20% (perte efficace)', selected: true },
+                        { value: '0.25', text: 'Agressif - 25% (perte rapide)' }
+                    ]
+                },
+                'weightloss': {
+                    label: '📊 Intensité',
+                    options: [
+                        { value: '0.10', text: 'Léger - 10% (perte douce)', selected: true },
+                        { value: '0.15', text: 'Modéré - 15% (équilibré)' },
+                        { value: '0.20', text: 'Important - 20% (perte rapide)' }
+                    ]
+                },
+                'bulk': {
+                    label: '📊 Intensité',
+                    options: [
+                        { value: '-0.05', text: 'Minimal +5% (prise sèche)', selected: true },
+                        { value: '-0.10', text: 'Modéré +10% (prise propre)' },
+                        { value: '-0.15', text: 'Important +15% (prise rapide)' },
+                        { value: '-0.20', text: 'Agressif +20% (prise maximale)' }
+                    ]
+                },
+                'maintenance': {
+                    label: '📊 Ajustement',
+                    options: [
+                        { value: '0', text: 'Maintenance exacte (0%)', selected: true },
+                        { value: '-0.02', text: 'Léger surplus (+2%)' },
+                        { value: '0.02', text: 'Léger déficit (-2%)' }
+                    ]
+                },
+                'recomp': {
+                    label: '📊 Intensité',
+                    options: [
+                        { value: '0.05', text: 'Très léger -5% (optimal recomp)', selected: true },
+                        { value: '0.10', text: 'Léger -10% (recomp rapide)' }
+                    ]
+                }
+            };
+            
+            // Conseils personnalisés par profil
+            const profileAdvice = {
+                'cut': {
+                    title: '💡 Conseils pour votre sèche',
+                    content: `• Pesez-vous 1x/semaine dans les mêmes conditions (matin à jeun)<br>
+                    • Visez une perte de 0.5-1% de votre poids par semaine<br>
+                    • Maintenez un apport élevé en protéines (2.2g/kg) pour préserver la masse musculaire<br>
+                    • Privilégiez la musculation pour conserver le muscle pendant le déficit<br>
+                    • Hydratez-vous abondamment (3-4L d'eau par jour)<br>
+                    • Si la perte stagne 2 semaines : réduisez les glucides de 50g ou augmentez le cardio`
+                },
+                'weightloss': {
+                    title: '💡 Conseils pour une perte de poids durable',
+                    content: `• Adoptez une approche progressive : 0.5-0.8kg par semaine max<br>
+                    • Privilégiez les aliments rassasiants : protéines, légumes, fibres<br>
+                    • Mangez lentement et à heures régulières pour réguler la faim<br>
+                    • Intégrez une activité physique régulière (3-4x/semaine minimum)<br>
+                    • Autorisez-vous un repas plaisir par semaine pour la durabilité<br>
+                    • Dormez suffisamment (7-9h) : le sommeil régule les hormones de la faim`
+                },
+                'bulk': {
+                    title: '💡 Conseils pour une prise de masse efficace',
+                    content: `• Visez une prise de 0.25-0.5kg par semaine (évitez le gras excessif)<br>
+                    • Répartissez vos calories sur 4-5 repas pour mieux absorber les nutriments<br>
+                    • Priorisez la musculation intensive (poids lourds, progression constante)<br>
+                    • Consommez des protéines toutes les 3-4h (2g/kg minimum)<br>
+                    • Favorisez les glucides autour de l'entraînement pour l'énergie<br>
+                    • Patience : la vraie masse musculaire se construit sur plusieurs mois`
+                },
+                'maintenance': {
+                    title: '💡 Conseils pour maintenir votre poids',
+                    content: `• Pesez-vous régulièrement pour détecter les variations (+/- 1kg acceptable)<br>
+                    • Maintenez une routine d'exercice cohérente (force + cardio)<br>
+                    • Appliquez la règle 80/20 : 80% aliments sains, 20% flexibilité<br>
+                    • Écoutez vos signaux de faim et de satiété naturels<br>
+                    • Continuez à suivre vos macros de temps en temps pour rester conscient<br>
+                    • Ajustez légèrement si votre poids dérive (+200kcal ou -200kcal)`
+                },
+                'recomp': {
+                    title: '💡 Conseils pour la recomposition corporelle',
+                    content: `• Objectif avancé : nécessite patience et rigueur (résultats sur 3-6 mois)<br>
+                    • Protéines TRÈS élevées (2.4g/kg) pour soutenir muscle ET récupération<br>
+                    • Musculation intensive 4-5x/semaine avec progression sur les charges<br>
+                    • Privilégiez les mouvements composés : squat, deadlift, bench press<br>
+                    • Mesurez vos progrès par photos et mensurations (pas seulement la balance)<br>
+                    • Soyez patient : perte de gras + gain de muscle = balance stable mais corps transformé`
+                }
+            };
+            
+            // Fonction pour mettre à jour l'interface selon le profil
+            function updateProfileInterface() {
+                const profile = goalProfileSelect.value;
+                
+                // Mettre à jour la description
+                profileDescriptionEl.innerHTML = profileDescriptions[profile];
+                
+                // Mettre à jour les options du select d'ajustement calorique
+                const options = profileOptions[profile];
+                calorieAdjustmentLabel.textContent = options.label;
+                calorieAdjustmentSelect.innerHTML = options.options.map(opt => 
+                    `<option value="${opt.value}" ${opt.selected ? 'selected' : ''}>${opt.text}</option>`
+                ).join('');
+                
+                // Mettre à jour les conseils
+                const advice = profileAdvice[profile];
+                const adviceTitleEl = document.getElementById('adviceTitle');
+                const adviceContentEl = document.getElementById('adviceContent');
+                if (adviceTitleEl && adviceContentEl && advice) {
+                    adviceTitleEl.textContent = advice.title;
+                    adviceContentEl.innerHTML = advice.content;
+                }
+            }
+            
+            // Écouter le changement de profil
+            if (goalProfileSelect) {
+                goalProfileSelect.addEventListener('change', updateProfileInterface);
+                // Initialiser à la première ouverture
+                updateProfileInterface();
+            }
+        });
+    </script>
+
     <!-- Le script principal de l'application, chargé à la fin -->
-    <script src="js/app.js?v=20251101-1541" type="module"></script>
+    <script src="js/app.js?v=20251101-1653" type="module"></script>
 </body>
 
 </html>
