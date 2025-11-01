@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.5.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![JavaScript](https://img.shields.io/badge/javascript-100%25-yellow.svg)
 ![Responsive](https://img.shields.io/badge/responsive-mobile%20%7C%20tablet%20%7C%20desktop-purple.svg)
@@ -34,19 +34,23 @@
 
 ---
 
-## 🆕 Nouveautés Version 1.3
+## 🆕 Nouveautés Version 1.5.0
 
-Cette version majeure apporte des fonctionnalités très attendues :
+Cette version majeure apporte des fonctionnalités essentielles pour personnaliser vos objectifs :
 
-- 💰 **Gestion complète des coûts** : Ajoutez les prix de vos aliments et suivez votre budget alimentaire
-- 🥗 **Analyse par aliment** : Identifiez les aliments les plus consommés et les plus chers
-- 💧 **Suivi hydratation** : Enregistrez votre consommation d'eau quotidienne avec objectifs
-- 👟 **Nombre de pas** : Suivez votre activité quotidienne avec graphiques
-- 🏃 **Activités physiques** : Enregistrez vos sports (durée, calories brûlées)
-- 📊 **Graphiques de sucres** : 3 seuils de recommandation (idéal/recommandé/max)
-- 🌾 **Graphiques de fibres** : Suivi vs objectif minimum
-- 📈 **Moyennes périodiques** : Analyses hebdomadaires et mensuelles
-- 💾 **Export amélioré** : Format JSON v1.2 avec toutes les nouvelles données
+### 🎯 **5 Profils d'Objectifs Nutritionnels**
+- **🔥 Sèche** : Déficit 10-25%, protéines 2.2g/kg
+- **📉 Perte de poids** : Déficit 10-20%, protéines 1.8g/kg
+- **💪 Prise de masse** : Surplus 5-20%, protéines 2.0g/kg
+- **⚖️ Maintien** : Ajustement -2% à +2%, protéines 1.6g/kg
+- **🎯 Recomposition** : Déficit 5-10%, protéines 2.4g/kg
+
+### 📝 **Améliorations Clés**
+- 💡 **Conseils personnalisés** : Recommandations dynamiques selon votre profil
+- 💰 **Prix personnalisé** : Définissez un prix custom pour vos repas ajustables
+- 🔍 **Recherche de repas** : Filtrez vos repas composés en temps réel
+- 📊 **Comparaison améliorée** : Labels dynamiques et textes explicatifs
+- 📚 **Documentation complète** : Guide détaillé des calculs (OBJECTIFS-GUIDE.md)
 
 **🔗 Documentation complète** : Consultez [FONCTIONNALITES.md](FONCTIONNALITES.md) pour tous les détails
 
@@ -76,18 +80,27 @@ Cette version majeure apporte des fonctionnalités très attendues :
 - ✅ **Graphiques de sucres** : 3 seuils de recommandation (25g/50g/100g)
 - ✅ **Graphiques de fibres** : Suivi vs objectif minimum
 
-### 🎯 Calcul d'Objectifs Automatique
+### 🎯 Calcul d'Objectifs Multi-Profils
+- ✅ **5 profils disponibles** : Sèche, Perte de poids, Prise de masse, Maintien, Recomposition
 - ✅ **Formule Mifflin-St Jeor** : Calcul du métabolisme de base (MB)
 - ✅ **TDEE adaptatif** : Selon votre niveau d'activité
-- ✅ **Objectifs personnalisés** : Perte, maintien ou prise de poids
-- ✅ **Répartition macros** : Protéines, glucides, lipides optimisés
+- ✅ **Macros optimisés** : Ratios spécifiques pour chaque profil
+- ✅ **Conseils personnalisés** : Recommandations adaptées à votre objectif
+- ✅ **Documentation complète** : Guide OBJECTIFS-GUIDE.md avec exemples de calcul
+
+### 🍽️ Repas Composés
+- ✅ **Création de repas** : Combinez plusieurs aliments
+- ✅ **Portions ajustables** : Personnalisez les quantités
+- ✅ **Prix personnalisé** : Définissez un prix custom pour vos repas
+- ✅ **Recherche instantanée** : Filtrez vos repas en temps réel
+- ✅ **Calculs automatiques** : Nutrition et coûts mis à jour
 
 ### 🥗 Base de Données Aliments
 - ✅ **100+ aliments pré-enregistrés** : Base complète incluse
 - ✅ **Ajout d'aliments personnalisés** : Créez votre propre bibliothèque
 - ✅ **Modification facile** : Cliquez pour éditer
 - ✅ **Gestion des prix** : Prix au 100g et par portion
-- ✅ **Import/Export** : Sauvegardez vos données en JSON (version 1.2)
+- ✅ **Import/Export** : Sauvegardez vos données en JSON (version 1.5)
 
 ### 📱 Design Moderne
 - ✅ **100% Responsive** : Mobile, tablette, desktop
@@ -311,13 +324,14 @@ export const defaultFoods = {
 
 ## 🗺️ Roadmap
 
-### Version 1.4 (À venir)
+### Version 1.6 (À venir)
 - [ ] 🌙 Mode sombre
 - [ ] 📸 Scan de codes-barres (Open Food Facts API)
 - [ ] 🗑️ Suppression d'aliments
 - [ ] 📸 Photos des repas
 - [ ] 🏷️ Catégories d'aliments
 - [ ] ⭐ Aliments favoris
+- [ ] 📊 Graphiques de tendance par profil
 
 ### Version 2.0 (Futur)
 - [ ] 🍴 Recettes avec calcul automatique
@@ -399,6 +413,13 @@ in the Software without restriction...
 
 ## 📚 Ressources Supplémentaires
 
+### Documentation du Projet
+- [FONCTIONNALITES.md](FONCTIONNALITES.md) - Liste complète des fonctionnalités
+- [OBJECTIFS-GUIDE.md](OBJECTIFS-GUIDE.md) - Guide détaillé des calculs d'objectifs (5 profils)
+- [CHANGELOG.md](CHANGELOG.md) - Historique des versions
+- [GUIDE-PRIX.md](GUIDE-PRIX.md) - Guide de réparation base de données prix
+
+### Références Externes
 - [Documentation IndexedDB](https://developer.mozilla.org/fr/docs/Web/API/IndexedDB_API)
 - [Guide Chart.js](https://www.chartjs.org/docs/latest/)
 - [Formule Mifflin-St Jeor](https://en.wikipedia.org/wiki/Basal_metabolic_rate#Mifflin_St_Jeor_equation)
