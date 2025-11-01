@@ -870,6 +870,15 @@
         <!-- Liste des repas -->
         <div class="meals-list-section">
             <h3>📋 Mes repas créés</h3>
+            
+            <!-- Champ de recherche -->
+            <div class="search-bar" style="margin-bottom: 20px;">
+                <input type="text" id="mealSearchInput" placeholder="🔍 Rechercher un repas..." 
+                       style="width: 100%; padding: 12px 15px; font-size: 1em; border: 2px solid #dee2e6; border-radius: 8px; transition: border-color 0.2s;"
+                       onfocus="this.style.borderColor='#667eea'" 
+                       onblur="this.style.borderColor='#dee2e6'">
+            </div>
+            
             <div id="mealsListContainer" class="meals-list">
                 <!-- Les repas seront affichés ici -->
             </div>
@@ -949,7 +958,10 @@
 
             <!-- Graphique Radar -->
             <div class="chart-container radar-container">
-                <h3>📈 Vue d'ensemble nutritionnelle</h3>
+                <h3 id="comparisonChartTitle">📈 Vue d'ensemble nutritionnelle (pour 100g)</h3>
+                <p id="comparisonChartExplanation" style="text-align: center; color: #666; font-size: 0.95em; margin: -10px 0 15px 0; font-style: italic;">
+                    Comparaison des valeurs nutritionnelles pour 100g de chaque aliment.
+                </p>
                 <canvas id="comparisonRadarChart"></canvas>
             </div>
 
@@ -1353,8 +1365,19 @@
                     <div><strong>Fibres:</strong> <span id="adjustFib">0</span>g</div>
                     <div><strong>Sucres:</strong> <span id="adjustSug">0</span>g</div>
                 </div>
-                <div id="adjustCostSection" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.3); font-size: 1.1em; font-weight: 600; display: none;">
-                    💰 Coût total : <span id="adjustCost">0.00</span>€
+                <div id="adjustCostSection" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.3); display: none;">
+                    <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
+                        💰 Coût calculé : <span id="adjustCost">0.00</span>€
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <label style="font-size: 0.95em; opacity: 0.9;">
+                            <input type="checkbox" id="customPriceCheckbox" style="margin-right: 5px;">
+                            Utiliser un prix personnalisé :
+                        </label>
+                        <input type="number" id="customPriceInput" step="0.01" min="0" placeholder="0.00" 
+                               style="width: 100px; padding: 8px; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; background: rgba(255,255,255,0.1); color: white; font-weight: 600;" disabled>
+                        <span style="font-size: 0.95em;">€</span>
+                    </div>
                 </div>
             </div>
             
@@ -1413,7 +1436,7 @@
     </script>
 
     <!-- Le script principal de l'application, chargé à la fin -->
-    <script src="js/app.js?v=20251030-1818" type="module"></script>
+    <script src="js/app.js?v=20251101-1541" type="module"></script>
 </body>
 
 </html>
