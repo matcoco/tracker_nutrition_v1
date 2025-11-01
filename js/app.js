@@ -23,6 +23,7 @@ let state = {
     currentCostPeriod: 7, // Période pour l'analyse des coûts
     currentActivityPeriod: 7, // Période pour les graphiques d'activités
     currentFoodAnalysisPeriod: 7, // Période pour l'analyse par aliment
+    currentCategory: 'all', // Catégorie filtrée dans le suivi quotidien
     draggedFoodId: null,
     draggedMealItem: null, // Pour stocker les infos du meal-item déplacé
     draggedElement: null,  // Stocke la référence DOM
@@ -289,8 +290,8 @@ function handleFoodSearch(event) {
     const searchTerm = event.target.value.toLowerCase();
     const loadMoreBtn = document.getElementById('loadMoreFoodsBtn');
     
-    if (searchTerm) {
-        // En mode recherche, afficher tous les résultats correspondants
+    if (searchTerm || state.currentCategory !== 'all') {
+        // En mode recherche ou filtrage, afficher tous les résultats correspondants
         ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, 0, state.meals);
         
         const foodItems = document.querySelectorAll('.food-item');
@@ -299,7 +300,13 @@ function handleFoodSearch(event) {
 
         foodItems.forEach(item => {
             const foodName = item.dataset.foodName?.toLowerCase() || '';
-            if (foodName.includes(searchTerm)) {
+            const foodCategory = item.dataset.foodCategory || 'other';
+            
+            // Vérifier à la fois le nom ET la catégorie
+            const matchesSearch = !searchTerm || foodName.includes(searchTerm);
+            const matchesCategory = state.currentCategory === 'all' || foodCategory === state.currentCategory;
+            
+            if (matchesSearch && matchesCategory) {
                 item.classList.remove('hidden');
                 visibleCount++;
             } else {
@@ -312,10 +319,10 @@ function handleFoodSearch(event) {
             noResultsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
         }
         
-        // Masquer le bouton "Voir plus" en mode recherche
+        // Masquer le bouton "Voir plus" en mode recherche/filtrage
         if (loadMoreBtn) loadMoreBtn.style.display = 'none';
     } else {
-        // Sans recherche, revenir à l'affichage limité
+        // Sans recherche ni filtrage, revenir à l'affichage limité
         ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals);
         const noResultsMsg = document.getElementById('noResultsMessage');
         if (noResultsMsg) noResultsMsg.style.display = 'none';
@@ -326,6 +333,13 @@ function handleFoodSearch(event) {
 function handleLoadMoreFoods() {
     state.displayedFoodsCount += state.maxFoodsPerLoad;
     ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals);
+}
+
+// --- HANDLER POUR LE FILTRE DE CATÉGORIE ---
+function handleCategoryFilter(event) {
+    state.currentCategory = event.target.value;
+    // Déclencher handleFoodSearch pour appliquer le filtre
+    handleFoodSearch({ target: document.getElementById('foodSearch') });
 }
 
 // --- FONCTION POUR RAFRAÎCHIR LA LISTE DES ALIMENTS DISPONIBLES ---
@@ -840,6 +854,10 @@ async function handleAddFood(e) {
         ui.showNotification(`L'aliment "${name}" existe déjà.`, 'error');
         return;
     }
+    
+    // Récupérer la catégorie
+    const category = form.querySelector('#foodCategory').value || 'other';
+    
     const price = parseFloat(form.querySelector('#foodPrice').value);
     const priceQuantity = parseFloat(form.querySelector('#foodPriceQuantity').value);
     const priceUnit = form.querySelector('input[name="foodPriceType"]:checked')?.value || 'grams';
@@ -869,6 +887,7 @@ async function handleAddFood(e) {
     
     const newFood = {
         name,
+        category,
         calories,
         proteins,
         carbs,
@@ -944,6 +963,9 @@ async function handleUpdateFood(event) {
     const newName = form.querySelector('#editFoodName').value;
     const newId = utils.generateFoodId(newName);
 
+    // Récupérer la catégorie
+    const category = form.querySelector('#editFoodCategory').value || 'other';
+
     const price = parseFloat(form.querySelector('#editFoodPrice').value);
     const priceQuantity = parseFloat(form.querySelector('#editFoodPriceQuantity').value);
     const priceUnit = form.querySelector('input[name="editFoodPriceType"]:checked')?.value || 'grams';
@@ -973,6 +995,7 @@ async function handleUpdateFood(event) {
     
     const updatedFoodData = {
         name: newName,
+        category,
         calories,
         proteins,
         carbs,
@@ -1436,6 +1459,57 @@ function setupEventListeners() {
         });
     });
     
+    // Event listener pour la navigation entre les sections de statistiques
+    document.querySelector('.stats-navigation')?.addEventListener('click', e => {
+        if (e.target.matches('.stats-nav-btn')) {
+            // Retirer la classe active de tous les boutons
+            document.querySelectorAll('.stats-nav-btn').forEach(btn => btn.classList.remove('active'));
+            // Ajouter la classe active au bouton cliqué
+            e.target.classList.add('active');
+            
+            // Récupérer l'ID de la section cible
+            const targetSectionId = e.target.dataset.section;
+            const targetSection = document.getElementById(targetSectionId);
+            
+            if (targetSection) {
+                // Scroll smooth vers la section
+                targetSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }
+    });
+    
+    // Intersection Observer pour mettre à jour le bouton actif selon la section visible
+    const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -70% 0px', // Zone de détection au milieu de l'écran
+        threshold: 0
+    };
+    
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Trouver le bouton correspondant à cette section
+                const sectionId = entry.target.id;
+                const correspondingBtn = document.querySelector(`.stats-nav-btn[data-section="${sectionId}"]`);
+                
+                if (correspondingBtn) {
+                    // Retirer active de tous les boutons
+                    document.querySelectorAll('.stats-nav-btn').forEach(btn => btn.classList.remove('active'));
+                    // Ajouter active au bouton correspondant
+                    correspondingBtn.classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+    
+    // Observer toutes les sections de statistiques
+    document.querySelectorAll('.stats-section').forEach(section => {
+        sectionObserver.observe(section);
+    });
+    
     document.getElementById('prev-day-btn').addEventListener('click', () => changeDate(-1));
     document.getElementById('next-day-btn').addEventListener('click', () => changeDate(1));
     document.getElementById('today-btn').addEventListener('click', goToToday);
@@ -1443,6 +1517,7 @@ function setupEventListeners() {
     document.getElementById('saveWeightBtn').addEventListener('click', handleSaveWeight);
     document.getElementById('goalsForm').addEventListener('submit', handleGoalsSubmit);
     document.getElementById('foodSearch').addEventListener('input', handleFoodSearch);
+    document.getElementById('categoryFilter').addEventListener('change', handleCategoryFilter);
     document.getElementById('loadMoreFoodsBtn').addEventListener('click', handleLoadMoreFoods);
     document.getElementById('foodSearchManage').addEventListener('input', handleFoodSearchManage);
     

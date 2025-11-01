@@ -423,6 +423,83 @@ h3 {
     color: #999;
 }
 
+/* --- Filtre de catégorie --- */
+.category-filter-container {
+    position: relative;
+}
+
+.category-filter {
+    padding: 12px 40px 12px 15px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    font-size: 0.95em;
+    font-weight: 500;
+    color: var(--color-text-dark);
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 220px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.category-filter:hover {
+    border-color: var(--color-primary-start);
+}
+
+.category-filter:focus {
+    outline: none;
+    border-color: var(--color-primary-start);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* --- Sélecteur de catégorie dans formulaires --- */
+.category-select {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    font-size: 0.95em;
+    font-weight: 500;
+    color: var(--color-text-dark);
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.category-select:hover {
+    border-color: var(--color-primary-start);
+}
+
+.category-select:focus {
+    outline: none;
+    border-color: var(--color-primary-start);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* --- Badge de catégorie sur les vignettes --- */
+.category-badge {
+/*     position: absolute; */
+    bottom: 5px;
+    right: 8px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    border: 1.5px solid;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* --- Listes d'aliments --- */
 .foods-section { margin-bottom: 30px; }
 .foods-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
@@ -761,6 +838,77 @@ h3 {
 /* =============================================
    8. PAGE STATISTIQUES
    ============================================= */
+
+/* Menu de navigation des sections */
+.stats-navigation {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 30px 0 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    
+    /* Sticky positioning - reste visible pendant le scroll */
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+    
+    /* Effet de profondeur quand sticky */
+    transition: box-shadow 0.3s ease;
+}
+
+.stats-navigation.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.stats-nav-btn {
+    padding: 12px 24px;
+    border: 2px solid transparent;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95em;
+    color: var(--color-text-dark);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    min-width: 120px;
+    text-align: center;
+}
+
+.stats-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    border-color: var(--color-primary-start);
+}
+
+.stats-nav-btn.active {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    border-color: transparent;
+}
+
+/* Sections de statistiques */
+.stats-section {
+    scroll-margin-top: 120px; /* Pour le scroll smooth + menu sticky */
+    margin-bottom: 50px;
+    padding-top: 20px;
+}
+
+.stats-section-title {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--color-primary-start);
+    display: inline-block;
+}
+
 .stats-period { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
 
 .period-btn {
@@ -1838,6 +1986,28 @@ h3 {
         grid-template-columns: 1fr;
         gap: 20px;
     }
+
+    /* Menu navigation sections stats pour tablette */
+    .stats-navigation {
+        padding: 18px 15px;
+        gap: 10px;
+        top: 8px; /* Légèrement ajusté pour tablette */
+    }
+
+    .stats-nav-btn {
+        padding: 11px 20px;
+        font-size: 0.9em;
+        min-width: 110px;
+        flex: 1 1 calc(33.33% - 10px); /* 3 colonnes sur tablette */
+    }
+
+    .stats-section {
+        scroll-margin-top: 110px; /* Ajusté pour tablette */
+    }
+
+    .stats-section-title {
+        font-size: 1.6em;
+    }
 }
 
 /* MOBILE (< 768px) */
@@ -1930,6 +2100,19 @@ h3 {
     .search-input {
         font-size: 0.9em;
         padding: 10px 12px;
+    }
+
+    .category-filter {
+        min-width: 100%;
+        font-size: 0.9em;
+        padding: 10px 35px 10px 12px;
+    }
+    
+    .category-badge {
+        font-size: 0.95em;
+        padding: 3px 6px;
+        bottom: 6px;
+        right: 6px;
     }
 
     /* === LISTE DES ALIMENTS === */
@@ -2126,6 +2309,29 @@ h3 {
         font-size: 0.8em;
         padding: 8px 12px;
         white-space: nowrap;
+    }
+
+    /* Menu navigation sections stats */
+    .stats-navigation {
+        padding: 15px 10px;
+        gap: 8px;
+        top: 5px; /* Réduire le top sur mobile */
+        margin: 20px 0 15px 0;
+    }
+
+    .stats-nav-btn {
+        padding: 10px 16px;
+        font-size: 0.85em;
+        min-width: 100px;
+        flex: 1 1 calc(50% - 8px); /* 2 colonnes sur mobile */
+    }
+
+    .stats-section {
+        scroll-margin-top: 100px; /* Ajusté pour mobile */
+    }
+
+    .stats-section-title {
+        font-size: 1.4em;
     }
 
     .chart-container {
