@@ -8,7 +8,7 @@
     <!-- Librairie externe pour les graphiques -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Liaison vers le fichier de styles CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=20251101-2025">
 </head>
 
 <body>
@@ -207,10 +207,26 @@
 
             <!-- Liste des aliments disponibles (pour le glisser-déposer) -->
             <div class="foods-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
                     <h2 class="section-title" style="margin-bottom: 0;">🥗 Aliments Disponibles</h2>
-                    <div class="search-container">
-                        <input type="text" id="foodSearch" placeholder="🔍 Rechercher un aliment..." class="search-input">
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <div class="search-container">
+                            <input type="text" id="foodSearch" placeholder="🔍 Rechercher un aliment..." class="search-input">
+                        </div>
+                        <div class="category-filter-container">
+                            <select id="categoryFilter" class="category-filter">
+                                <option value="all">🏷️ Toutes les catégories</option>
+                                <option value="proteins">🥩 Protéines</option>
+                                <option value="starches">🍚 Féculents</option>
+                                <option value="vegetables">🥦 Légumes</option>
+                                <option value="fruits">🍎 Fruits</option>
+                                <option value="dairy">🥛 Produits laitiers</option>
+                                <option value="fats">🥑 Matières grasses</option>
+                                <option value="beverages">🥤 Boissons</option>
+                                <option value="snacks">🍫 Snacks & Sucreries</option>
+                                <option value="other">📦 Autre</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="foods-list" id="foodsList"></div>
@@ -250,7 +266,30 @@
 
         <!-- =================== CONTENU DE L'ONGLET "STATISTIQUES" =================== -->
         <div id="stats-tab" class="tab-content">
-            <h2 class="section-title">📊 Statistiques Nutritionnelles</h2>
+            <h2 class="section-title">📊 Statistiques</h2>
+            
+            <!-- Menu de navigation des sections -->
+            <nav class="stats-navigation">
+                <button class="stats-nav-btn active" data-section="nutrition-section">
+                    📊 Nutrition
+                </button>
+                <button class="stats-nav-btn" data-section="averages-section">
+                    📈 Moyennes
+                </button>
+                <button class="stats-nav-btn" data-section="costs-section">
+                    💰 Coûts
+                </button>
+                <button class="stats-nav-btn" data-section="activities-section">
+                    🏃 Activités
+                </button>
+                <button class="stats-nav-btn" data-section="food-analysis-section">
+                    📊 Aliments
+                </button>
+            </nav>
+
+            <!-- Section Statistiques Nutritionnelles -->
+            <div id="nutrition-section" class="stats-section">
+            <h3 class="stats-section-title">📊 Statistiques Nutritionnelles</h3>
             <!-- Boutons pour choisir la période d'affichage -->
             <div class="stats-period">
                 <button class="period-btn active" data-period="7">7 jours</button>
@@ -294,9 +333,12 @@
                     <h3>👟 Nombre de Pas</h3><canvas id="stepsChart"></canvas>
                 </div>
             </div>
+            </div>
+            <!-- Fin Section Nutrition -->
 
             <!-- Section Moyennes -->
-            <h2 class="section-title" style="margin-top: 50px;">📈 Moyennes Hebdomadaires & Mensuelles</h2>
+            <div id="averages-section" class="stats-section">
+            <h3 class="stats-section-title">📈 Moyennes Hebdomadaires & Mensuelles</h3>
             <div class="stats-period">
                 <button class="average-period-btn active" data-avg-period="week">Par Semaine</button>
                 <button class="average-period-btn" data-avg-period="month">Par Mois</button>
@@ -327,9 +369,12 @@
                     <h3>👟 Moyenne des Pas</h3><canvas id="avgStepsChart"></canvas>
                 </div>
             </div>
+            </div>
+            <!-- Fin Section Moyennes -->
 
             <!-- Section Analyse des Coûts -->
-            <h2 class="section-title" style="margin-top: 50px;">💰 Analyse des Coûts</h2>
+            <div id="costs-section" class="stats-section">
+            <h3 class="stats-section-title">💰 Analyse des Coûts</h3>
             <div class="stats-period">
                 <button class="cost-period-btn active" data-cost-period="7">7 jours</button>
                 <button class="cost-period-btn" data-cost-period="14">14 jours</button>
@@ -370,9 +415,12 @@
                     <h3>📈 Comparaison Hebdo/Mensuelle</h3><canvas id="costComparisonChart"></canvas>
                 </div>
             </div>
+            </div>
+            <!-- Fin Section Coûts -->
 
             <!-- Section Activités Physiques -->
-            <h2 class="section-title" style="margin-top: 50px;">🏃 Activités Physiques</h2>
+            <div id="activities-section" class="stats-section">
+            <h3 class="stats-section-title">🏃 Activités Physiques</h3>
             <div class="stats-period">
                 <button class="activity-period-btn active" data-activity-period="7">7 jours</button>
                 <button class="activity-period-btn" data-activity-period="14">14 jours</button>
@@ -400,9 +448,12 @@
                     <h3>📈 Comparaison Hebdo/Mensuelle</h3><canvas id="activityComparisonChart"></canvas>
                 </div>
             </div>
+            </div>
+            <!-- Fin Section Activités -->
 
             <!-- Section Analyse par Aliment -->
-            <h2 class="section-title" style="margin-top: 50px;">📊 Analyse par Aliment</h2>
+            <div id="food-analysis-section" class="stats-section">
+            <h3 class="stats-section-title">📊 Analyse par Aliment</h3>
             <div class="stats-period">
                 <button class="food-analysis-period-btn active" data-food-period="7">7 jours</button>
                 <button class="food-analysis-period-btn" data-food-period="30">30 jours</button>
@@ -517,6 +568,8 @@
                     <canvas id="foodAnalysisCostChart"></canvas>
                 </div>
             </div>
+            </div>
+            <!-- Fin Section Analyse par Aliment -->
             <!-- ===================================== -->
         </div>
     </div>
@@ -724,6 +777,23 @@
                 <div class="form-group">
                     <label>Nom</label>
                     <input type="text" id="foodName" required>
+                </div>
+                
+                <!-- Catégorie -->
+                <div class="form-group">
+                    <label>🏷️ Catégorie</label>
+                    <select id="foodCategory" class="category-select" required>
+                        <option value="">-- Choisir une catégorie --</option>
+                        <option value="proteins">🥩 Protéines</option>
+                        <option value="starches">🍚 Féculents</option>
+                        <option value="vegetables">🥦 Légumes</option>
+                        <option value="fruits">🍎 Fruits</option>
+                        <option value="dairy">🥛 Produits laitiers</option>
+                        <option value="fats">🥑 Matières grasses</option>
+                        <option value="beverages">🥤 Boissons</option>
+                        <option value="snacks">🍫 Snacks & Sucreries</option>
+                        <option value="other">📦 Autre</option>
+                    </select>
                 </div>
                 
                 <!-- Type de valeurs -->
@@ -1176,6 +1246,23 @@
                     <input type="text" id="editFoodName" required>
                 </div>
                 
+                <!-- Catégorie -->
+                <div class="form-group">
+                    <label>🏷️ Catégorie</label>
+                    <select id="editFoodCategory" class="category-select" required>
+                        <option value="">-- Choisir une catégorie --</option>
+                        <option value="proteins">🥩 Protéines</option>
+                        <option value="starches">🍚 Féculents</option>
+                        <option value="vegetables">🥦 Légumes</option>
+                        <option value="fruits">🍎 Fruits</option>
+                        <option value="dairy">🥛 Produits laitiers</option>
+                        <option value="fats">🥑 Matières grasses</option>
+                        <option value="beverages">🥤 Boissons</option>
+                        <option value="snacks">🍫 Snacks & Sucreries</option>
+                        <option value="other">📦 Autre</option>
+                    </select>
+                </div>
+                
                 <!-- Type de valeurs -->
                 <div class="form-group">
                     <label>📊 Type de valeurs</label>
@@ -1596,7 +1683,7 @@
     </script>
 
     <!-- Le script principal de l'application, chargé à la fin -->
-    <script src="js/app.js?v=20251101-1653" type="module"></script>
+    <script src="js/app.js?v=20251101-2025" type="module"></script>
 </body>
 
 </html>

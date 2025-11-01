@@ -266,6 +266,22 @@ function createFoodElement(id, food, dragStartHandler, quickAddHandler) {
     el.draggable = true;
     el.dataset.foodId = id;
     el.dataset.foodName = food.name;
+    el.dataset.foodCategory = food.category || 'other';
+    
+    // Récupérer les infos de catégorie (pour le badge)
+    const categoryConfig = {
+        proteins: { icon: '🥩', color: '#ef4444' },
+        starches: { icon: '🍚', color: '#f59e0b' },
+        vegetables: { icon: '🥦', color: '#10b981' },
+        fruits: { icon: '🍎', color: '#f97316' },
+        dairy: { icon: '🥛', color: '#3b82f6' },
+        fats: { icon: '🥑', color: '#059669' },
+        beverages: { icon: '🥤', color: '#0ea5e9' },
+        snacks: { icon: '🍫', color: '#a855f7' },
+        other: { icon: '📦', color: '#6b7280' }
+    };
+    
+    const category = categoryConfig[food.category] || categoryConfig.other;
     
     // Calculer prix au 100g si disponible
     let priceInfo = '';
@@ -275,6 +291,7 @@ function createFoodElement(id, food, dragStartHandler, quickAddHandler) {
     }
     
     el.innerHTML = `
+        <span class="category-badge" style="background-color: ${category.color}15; color: ${category.color}; border-color: ${category.color}50;">${category.icon}</span>
         <div class="food-item-header">
             <div class="food-name">${food.name}</div>
             <button class="quick-action-btn" data-food-id="${id}" title="Ajouter rapidement">+</button>
@@ -767,6 +784,12 @@ export function switchTab(tabName) {
 export function openEditModal(foodId, foodData) {
     elements.editFoodId.value = foodId;
     elements.editFoodName.value = foodData.name;
+    
+    // Pré-remplir la catégorie
+    const categorySelect = document.getElementById('editFoodCategory');
+    if (categorySelect) {
+        categorySelect.value = foodData.category || 'other';
+    }
     
     // Gérer le type de nutrition (per100g ou perPortion)
     const isPortionBased = foodData.isPortionBased || false;
