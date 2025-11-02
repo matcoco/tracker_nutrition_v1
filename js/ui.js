@@ -243,14 +243,19 @@ export function displayFoods(foods, dragStartHandler, quickAddHandler, maxItems 
     const mealsArray = Object.entries(meals).map(([id, meal]) => [id, { ...meal, isMeal: true }]);
     const foodsArray = Object.entries(foods);
     
-    // Filtrer par catégorie si nécessaire
-    let filteredFoods = foodsArray;
-    if (category !== 'all') {
-        filteredFoods = foodsArray.filter(([id, food]) => food.category === category);
+    // Filtrer par catégorie
+    let allItems;
+    if (category === 'all') {
+        // Afficher tous les repas et tous les aliments
+        allItems = [...mealsArray, ...foodsArray];
+    } else if (category === 'meals') {
+        // Afficher UNIQUEMENT les repas composés
+        allItems = mealsArray;
+    } else {
+        // Afficher uniquement les aliments de cette catégorie (pas de repas)
+        const filteredFoods = foodsArray.filter(([id, food]) => food.category === category);
+        allItems = filteredFoods;
     }
-    
-    // Les repas composés sont affichés UNIQUEMENT si category === 'all'
-    const allItems = category === 'all' ? [...mealsArray, ...filteredFoods] : filteredFoods;
     
     const itemsToShow = maxItems > 0 ? Math.min(maxItems, allItems.length) : allItems.length;
     
@@ -445,20 +450,31 @@ function showMealSelector(button, foodId, quickAddHandler, foodItemElement) {
 }
 
 /**
- * Affiche les aliments dans l'onglet de gestion, les rendant cliquables pour modification.
- * @param {object} foods - Le dictionnaire de tous les aliments.
+ * Affiche les aliments dans la section de gestion.
+ * @param {object} foods - Dictionnaire des aliments.
  * @param {Function} editClickHandler - La fonction à appeler lors d'un clic sur un aliment.
  * @param {Function} deleteClickHandler - La fonction à appeler lors d'un clic sur le bouton supprimer.
+ * @param {string} category - Catégorie de filtre ('all' ou catégorie spécifique).
  */
-export function displayFoodsManage(foods, editClickHandler, deleteClickHandler) {
+export function displayFoodsManage(foods, editClickHandler, deleteClickHandler, category = 'all') {
     elements.foodsListManage.innerHTML = '';
-    for (const [id, food] of Object.entries(foods)) {
+    
+    // Filtrer les aliments par catégorie
+    let filteredFoods = Object.entries(foods);
+    if (category !== 'all') {
+        filteredFoods = filteredFoods.filter(([id, food]) => food.category === category);
+    }
+    
+    for (const [id, food] of filteredFoods) {
         const el = document.createElement('div');
         el.className = 'food-item';
         el.style.cursor = 'pointer';
         el.style.position = 'relative';
         el.dataset.foodId = id;
         el.dataset.foodName = food.name;
+        
+        // Icône de catégorie
+        const categoryIcon = getCategoryIcon(food.category);
         
         let priceInfo = '';
         if (hasPrice(food)) {
@@ -477,7 +493,11 @@ export function displayFoodsManage(foods, editClickHandler, deleteClickHandler) 
             deleteClickHandler(e);
         });
         
-        el.innerHTML = `<div class="food-name">${food.name}</div><div class="food-calories">${parseFloat(food.calories).toFixed(1)} kcal | P: ${parseFloat(food.proteins).toFixed(1)}g | G: ${parseFloat(food.carbs).toFixed(1)}g | F: ${parseFloat(food.fibers || 0).toFixed(1)}g | L: ${parseFloat(food.fats).toFixed(1)}g${priceInfo}</div>`;
+        el.innerHTML = `
+            <span class="food-category-icon">${categoryIcon}</span>
+            <div class="food-name">${food.name}</div>
+            <div class="food-calories">${parseFloat(food.calories).toFixed(1)} kcal | P: ${parseFloat(food.proteins).toFixed(1)}g | G: ${parseFloat(food.carbs).toFixed(1)}g | F: ${parseFloat(food.fibers || 0).toFixed(1)}g | L: ${parseFloat(food.fats).toFixed(1)}g${priceInfo}</div>
+        `;
         el.addEventListener('click', editClickHandler);
         el.appendChild(deleteBtn);
         elements.foodsListManage.appendChild(el);

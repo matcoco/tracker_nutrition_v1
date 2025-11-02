@@ -32,7 +32,8 @@ let state = {
     activities: [], // Activités du jour
     customActivities: [], // Activités personnalisées
     allActivities: [], // Toutes les activités (défaut + custom)
-    selectedCategory: 'all', // Catégorie sélectionnée pour le filtre
+    selectedCategory: 'all', // Catégorie sélectionnée pour le filtre (Suivi Quotidien)
+    selectedCategoryManage: 'all', // Catégorie sélectionnée pour le filtre (Onglet Aliments)
 };
 
 // --- LOGIQUE PRINCIPALE ---
@@ -348,6 +349,29 @@ function handleCategoryFilter(event) {
     }
 }
 
+// --- HANDLER POUR LE FILTRE DE CATÉGORIE (ONGLET ALIMENTS) ---
+function handleCategoryFilterManage(event) {
+    const button = event.currentTarget;
+    if (!button) return;
+    
+    const category = button.dataset.categoryManage;
+    state.selectedCategoryManage = category;
+    
+    // Mettre à jour l'état actif des boutons
+    document.querySelectorAll('.category-filter-btn-manage').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    button.classList.add('active');
+    
+    // Rafraîchir l'affichage
+    const searchTerm = document.getElementById('foodSearchManage').value.trim().toLowerCase();
+    if (searchTerm) {
+        handleFoodSearchManage();
+    } else {
+        ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick, state.selectedCategoryManage);
+    }
+}
+
 // --- HANDLER POUR CHARGER PLUS D'ALIMENTS ---
 function handleLoadMoreFoods() {
     state.displayedFoodsCount += state.maxFoodsPerLoad;
@@ -414,9 +438,10 @@ function initStatsNavObserver() {
 
 // --- FONCTION POUR METTRE À JOUR LES COMPTEURS DE CATÉGORIES ---
 function updateCategoryCounts() {
-    const categories = ['all', 'proteins', 'vegetables', 'starches', 'fruits', 'dairy', 'fats', 'beverages', 'snacks', 'other'];
+    const categories = ['all', 'meals', 'proteins', 'vegetables', 'starches', 'fruits', 'dairy', 'fats', 'beverages', 'snacks', 'other'];
     const counts = {
         all: Object.keys(state.foods).length,
+        meals: Object.keys(state.meals).length,
         proteins: 0,
         vegetables: 0,
         starches: 0,
@@ -438,9 +463,18 @@ function updateCategoryCounts() {
         }
     });
     
-    // Mettre à jour les badges
+    // Mettre à jour les badges (Suivi Quotidien)
     categories.forEach(category => {
         const badge = document.querySelector(`[data-count="${category}"]`);
+        if (badge) {
+            badge.textContent = counts[category];
+        }
+    });
+    
+    // Mettre à jour les badges (Onglet Aliments) - exclure "meals"
+    const categoriesManage = ['all', 'proteins', 'vegetables', 'starches', 'fruits', 'dairy', 'fats', 'beverages', 'snacks', 'other'];
+    categoriesManage.forEach(category => {
+        const badge = document.querySelector(`[data-count-manage="${category}"]`);
         if (badge) {
             badge.textContent = counts[category];
         }
@@ -1005,7 +1039,7 @@ async function handleAddFood(e) {
     await db.saveFood(id, newFood);
     state.foods[id] = newFood;
     ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals, state.selectedCategory);
-    ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
+    ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick, state.selectedCategoryManage);
     updateCategoryCounts();
     form.reset();
     ui.showNotification(`${name} ajouté avec succès !`);
@@ -1039,7 +1073,7 @@ async function handleDeleteFoodClick(event) {
         
         // Rafraîchir les listes d'aliments
         ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals, state.selectedCategory);
-        ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
+        ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick, state.selectedCategoryManage);
         updateCategoryCounts();
         
         // Recharger la journée pour mettre à jour l'affichage
@@ -1131,7 +1165,7 @@ async function handleUpdateFood(event) {
 
     // Rafraîchir toute l'interface
     ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals, state.selectedCategory);
-    ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
+    ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick, state.selectedCategoryManage);
     updateCategoryCounts();
     await loadCurrentDay(); 
 
@@ -1567,9 +1601,14 @@ function setupEventListeners() {
     document.getElementById('loadMoreFoodsBtn').addEventListener('click', handleLoadMoreFoods);
     document.getElementById('foodSearchManage').addEventListener('input', handleFoodSearchManage);
     
-    // Filtres de catégorie
+    // Filtres de catégorie (Suivi Quotidien)
     document.querySelectorAll('.category-filter-btn').forEach(btn => {
         btn.addEventListener('click', handleCategoryFilter);
+    });
+    
+    // Filtres de catégorie (Onglet Aliments)
+    document.querySelectorAll('.category-filter-btn-manage').forEach(btn => {
+        btn.addEventListener('click', handleCategoryFilterManage);
     });
     
     // Navigation Statistiques
@@ -1740,7 +1779,7 @@ async function init(isReload = false) {
         }
         await loadCurrentDay();
         ui.displayFoods(state.foods, handleDragStart, handleQuickAdd, state.displayedFoodsCount, state.meals, state.selectedCategory);
-        ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick);
+        ui.displayFoodsManage(state.foods, handleEditFoodClick, handleDeleteFoodClick, state.selectedCategoryManage);
         updateCategoryCounts();
         
         // Initialiser l'observation des sections statistiques

@@ -221,6 +221,11 @@
                         <span class="filter-text">Tous</span>
                         <span class="filter-badge" data-count="all">0</span>
                     </button>
+                    <button class="category-filter-btn" data-category="meals">
+                        <span class="filter-icon">🍱</span>
+                        <span class="filter-text">Repas</span>
+                        <span class="filter-badge" data-count="meals">0</span>
+                    </button>
                     <button class="category-filter-btn" data-category="proteins">
                         <span class="filter-icon">🥩</span>
                         <span class="filter-text">Protéines</span>
@@ -900,6 +905,61 @@
                     <input type="text" id="foodSearchManage" placeholder="🔍 Rechercher un aliment..." class="search-input">
                 </div>
             </div>
+            
+            <!-- Filtres par catégorie -->
+            <div class="category-filters" style="margin-bottom: 20px;">
+                <button class="category-filter-btn-manage active" data-category-manage="all">
+                    <span class="filter-icon">🍽️</span>
+                    <span class="filter-text">Tous</span>
+                    <span class="filter-badge" data-count-manage="all">0</span>
+                </button>
+                <button class="category-filter-btn-manage" data-category-manage="proteins">
+                    <span class="filter-icon">🥩</span>
+                    <span class="filter-text">Protéines</span>
+                    <span class="filter-badge" data-count-manage="proteins">0</span>
+                </button>
+                <button class="category-filter-btn-manage" data-category-manage="vegetables">
+                    <span class="filter-icon">🥗</span>
+                    <span class="filter-text">Légumes</span>
+                    <span class="filter-badge" data-count-manage="vegetables">0</span>
+                </button>
+                <button class="category-filter-btn-manage" data-category-manage="starches">
+                    <span class="filter-icon">🍚</span>
+                    <span class="filter-text">Féculents</span>
+                    <span class="filter-badge" data-count-manage="starches">0</span>
+                </button>
+                <button class="category-filter-btn-manage" data-category-manage="fruits">
+                    <span class="filter-icon">🍎</span>
+                    <span class="filter-text">Fruits</span>
+                    <span class="filter-badge" data-count-manage="fruits">0</span>
+                </button>
+                <button class="category-filter-btn-manage" data-category-manage="dairy">
+                    <span class="filter-icon">🧀</span>
+                    <span class="filter-text">Laitiers</span>
+                    <span class="filter-badge" data-count-manage="dairy">0</span>
+                </button>
+                <button class="category-filter-btn-manage" data-category-manage="fats">
+                    <span class="filter-icon">🥑</span>
+                    <span class="filter-text">Lipides</span>
+                    <span class="filter-badge" data-count-manage="fats">0</span>
+                </button>
+                <button class="category-filter-btn-manage" data-category-manage="beverages">
+                    <span class="filter-icon">🥤</span>
+                    <span class="filter-text">Boissons</span>
+                    <span class="filter-badge" data-count-manage="beverages">0</span>
+                </button>
+                <button class="category-filter-btn-manage" data-category-manage="snacks">
+                    <span class="filter-icon">🍪</span>
+                    <span class="filter-text">Encas</span>
+                    <span class="filter-badge" data-count-manage="snacks">0</span>
+                </button>
+                <button class="category-filter-btn-manage" data-category-manage="other">
+                    <span class="filter-icon">📦</span>
+                    <span class="filter-text">Autres</span>
+                    <span class="filter-badge" data-count-manage="other">0</span>
+                </button>
+            </div>
+            
             <p style="color: #999; margin-bottom: 15px; font-size: 0.9em;">💡 Cliquez sur un aliment pour le modifier</p>
             <div class="foods-list" id="foodsListManage"></div>
             <p id="noResultsMessageManage" style="display: none; text-align: center; color: #999; padding: 20px;">🔍 Aucun aliment trouvé</p>
@@ -1350,9 +1410,9 @@
                         </label>
                     </div>
                     <div style="display: flex; gap: 8px; align-items: center; flex-wrap: nowrap;">
-                        <input type="number" step="0.01" id="editFoodPrice" placeholder="4.50" min="0" style="width: 70px; min-width: 70px; flex-shrink: 0;">
+                        <input type="number" step="0.01" id="editFoodPrice" placeholder="4.50" min="0" style="width: 80px; min-width: 70px; flex-shrink: 0;">
                         <span style="flex-shrink: 0;">€</span>
-                        <input type="number" step="1" id="editFoodPriceQuantity" placeholder="500" min="1" style="width: 70px; min-width: 70px; flex-shrink: 0;">
+                        <input type="number" step="1" id="editFoodPriceQuantity" placeholder="500" min="1" style="width: 90px; min-width: 70px; flex-shrink: 0;">
                         <span id="editFoodPriceLabel" style="flex-shrink: 0;">g</span>
                     </div>
                 </div>
