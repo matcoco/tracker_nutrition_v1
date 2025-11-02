@@ -284,6 +284,8 @@ function getCategoryIcon(category) {
         'fats': '🥑',
         'beverages': '🥤',
         'snacks': '🍪',
+        'condiments': '🧂',
+        'sauces': '🍯',
         'other': '📦'
     };
     return icons[category] || '📦';
