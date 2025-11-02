@@ -27,8 +27,8 @@ let state = {
     draggedMealItem: null, // Pour stocker les infos du meal-item déplacé
     draggedElement: null,  // Stocke la référence DOM
     goals: null,
-    displayedFoodsCount: 20,
-    maxFoodsPerLoad: 20,
+    displayedFoodsCount: 10,
+    maxFoodsPerLoad: 10,
     activities: [], // Activités du jour
     customActivities: [], // Activités personnalisées
     allActivities: [], // Toutes les activités (défaut + custom)
@@ -438,7 +438,7 @@ function initStatsNavObserver() {
 
 // --- FONCTION POUR METTRE À JOUR LES COMPTEURS DE CATÉGORIES ---
 function updateCategoryCounts() {
-    const categories = ['all', 'meals', 'proteins', 'vegetables', 'starches', 'fruits', 'dairy', 'fats', 'beverages', 'snacks', 'other'];
+    const categories = ['all', 'meals', 'proteins', 'vegetables', 'starches', 'fruits', 'dairy', 'fats', 'beverages', 'snacks', 'condiments', 'sauces', 'other'];
     const counts = {
         all: Object.keys(state.foods).length,
         meals: Object.keys(state.meals).length,
@@ -450,6 +450,8 @@ function updateCategoryCounts() {
         fats: 0,
         beverages: 0,
         snacks: 0,
+        condiments: 0,
+        sauces: 0,
         other: 0
     };
     
@@ -472,7 +474,7 @@ function updateCategoryCounts() {
     });
     
     // Mettre à jour les badges (Onglet Aliments) - exclure "meals"
-    const categoriesManage = ['all', 'proteins', 'vegetables', 'starches', 'fruits', 'dairy', 'fats', 'beverages', 'snacks', 'other'];
+    const categoriesManage = ['all', 'proteins', 'vegetables', 'starches', 'fruits', 'dairy', 'fats', 'beverages', 'snacks', 'condiments', 'sauces', 'other'];
     categoriesManage.forEach(category => {
         const badge = document.querySelector(`[data-count-manage="${category}"]`);
         if (badge) {
