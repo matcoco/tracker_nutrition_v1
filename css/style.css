@@ -179,6 +179,12 @@ h3 {
 .add-btn { background: var(--gradient-primary); grid-column: 1 / -1; }
 .today-btn { background: var(--color-success) !important; color: var(--color-text-light) !important; }
 
+.meal-item-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
 .remove-btn {
     background: var(--color-danger-solid);
     color: var(--color-text-light);
@@ -190,6 +196,21 @@ h3 {
     transition: background-color 0.2s;
 }
 .remove-btn:hover { background: #c23616; }
+
+.duplicate-btn {
+    background: var(--color-primary);
+    color: var(--color-text-light);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: all 0.2s;
+}
+.duplicate-btn:hover { 
+    background: #2563eb; 
+    transform: scale(1.05);
+}
 
 .adjust-portions-btn {
     background: var(--color-success);

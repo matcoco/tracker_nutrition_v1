@@ -242,6 +242,40 @@ async function handleUpdateWeight(mealType, uniqueId, newWeight) {
     }
 }
 
+/**
+ * Duplique un aliment ou repas dans le même type de repas
+ * @param {string} mealType - Type de repas (petit_dejeuner, dejeuner, etc.)
+ * @param {object} item - L'item à dupliquer (contient id, weight, isMeal, customPortions, customPrice, etc.)
+ */
+async function handleDuplicateMealItem(mealType, item) {
+    const meals = await db.loadDayMeals(state.currentDate);
+    
+    // Créer une copie de l'item avec un nouveau uniqueId
+    const duplicatedItem = {
+        id: item.id,
+        weight: item.weight,
+        uniqueId: Date.now() + Math.random() // Garantir l'unicité
+    };
+    
+    // Copier les propriétés optionnelles si elles existent
+    if (item.isMeal) duplicatedItem.isMeal = true;
+    if (item.customPortions) duplicatedItem.customPortions = { ...item.customPortions };
+    if (item.customPrice !== undefined && item.customPrice !== null) {
+        duplicatedItem.customPrice = item.customPrice;
+    }
+    
+    // Ajouter l'item dupliqué au même type de repas
+    meals[mealType].push(duplicatedItem);
+    
+    await db.saveDayMeals(state.currentDate, meals);
+    loadCurrentDay();
+    
+    // Afficher une notification
+    const foodName = item.isMeal && state.meals[item.id] ? state.meals[item.id].name : 
+                     state.foods[item.id] ? state.foods[item.id].name : 'Item';
+    ui.showNotification(`${foodName} dupliqué !`);
+}
+
 async function handleSaveWeight() {
     const weightInput = document.getElementById('weightInput');
     const weight = parseFloat(weightInput.value);
@@ -1525,8 +1559,9 @@ async function saveAdjustedPortions() {
     closeAdjustPortionsModal();
 }
 
-// Exposer la fonction globalement pour ui.js
+// Exposer les fonctions globalement pour ui.js
 window.handleAdjustPortions = handleAdjustPortions;
+window.handleDuplicateMealItem = handleDuplicateMealItem;
 
 // =================== FIN AJUSTEMENT DES PORTIONS ===================
 

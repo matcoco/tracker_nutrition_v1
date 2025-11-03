@@ -725,13 +725,24 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
             el.innerHTML = `
                 <div class="meal-item-header">
                     <span class="meal-item-name">${mealBadge}${food.name}</span>
-                    <button class="remove-btn">✕</button>
+                    <div class="meal-item-actions">
+                        <button class="duplicate-btn" title="Dupliquer">📋</button>
+                        <button class="remove-btn">✕</button>
+                    </div>
                 </div>
                 ${weightSection}
                 <div class="meal-item-macros">${cal} kcal | P: ${prot}g | G: ${carb}g | F: ${fib}g | L: ${fat}g | S: ${sug}g${costInfo}</div>
             `;
 
             el.querySelector('.remove-btn').onclick = () => removeHandler(type, item.uniqueId);
+            
+            // Attacher le handler de duplication
+            el.querySelector('.duplicate-btn').onclick = (e) => {
+                e.stopPropagation(); // Empêcher le drag
+                if (window.handleDuplicateMealItem) {
+                    window.handleDuplicateMealItem(type, item);
+                }
+            };
             
             // Si bouton ajuster présent, attacher le listener
             const adjustBtn = el.querySelector('.adjust-portions-btn');
