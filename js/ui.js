@@ -55,6 +55,8 @@ const elements = {
     totalSugars: document.getElementById('totalSugars'),
     weightInput: document.getElementById('weightInput'),
     saveWeightBtn: document.getElementById('saveWeightBtn'),
+    bellyInput: document.getElementById('bellyInput'),
+    saveBellyBtn: document.getElementById('saveBellyBtn'),
     foodsList: document.getElementById('foodsList'),
     foodsListManage: document.getElementById('foodsListManage'),
     addFoodForm: document.getElementById('addFoodForm'),
@@ -224,6 +226,18 @@ export function updateWeightDisplay(weight) {
         elements.weightInput.value = weight;
     } else {
         elements.weightInput.value = '';
+    }
+}
+
+/**
+ * Met à jour l'affichage du tour de ventre pour la journée.
+ * @param {number|null} belly - Le tour de ventre en cm, ou null si non renseigné.
+ */
+export function updateBellyDisplay(belly) {
+    if (belly !== null && belly !== undefined) {
+        elements.bellyInput.value = belly;
+    } else {
+        elements.bellyInput.value = '';
     }
 }
 

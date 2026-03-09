@@ -49,6 +49,7 @@ function groupByWeek(data) {
                 sugars: 0,
                 fibers: 0,
                 weights: [],
+                bellies: [],
                 water: 0,
                 steps: 0
             };
@@ -62,6 +63,7 @@ function groupByWeek(data) {
         weeks[weekKey].sugars += day.sugars;
         weeks[weekKey].fibers += day.fibers;
         if (day.weight) weeks[weekKey].weights.push(day.weight);
+        if (day.belly) weeks[weekKey].bellies.push(day.belly);
         weeks[weekKey].water += day.water || 0;
         weeks[weekKey].steps += day.steps || 0;
     });
@@ -78,6 +80,7 @@ function groupByWeek(data) {
             sugars: week.sugars / count,
             fibers: week.fibers / count,
             weight: week.weights.length > 0 ? week.weights.reduce((a, b) => a + b, 0) / week.weights.length : null,
+            belly: week.bellies.length > 0 ? week.bellies.reduce((a, b) => a + b, 0) / week.bellies.length : null,
             water: week.water / count,
             steps: week.steps / count
         };
@@ -107,6 +110,7 @@ function groupByMonth(data) {
                 sugars: 0,
                 fibers: 0,
                 weights: [],
+                bellies: [],
                 water: 0,
                 steps: 0
             };
@@ -120,6 +124,7 @@ function groupByMonth(data) {
         months[monthKey].sugars += day.sugars;
         months[monthKey].fibers += day.fibers;
         if (day.weight) months[monthKey].weights.push(day.weight);
+        if (day.belly) months[monthKey].bellies.push(day.belly);
         months[monthKey].water += day.water || 0;
         months[monthKey].steps += day.steps || 0;
     });
@@ -136,6 +141,7 @@ function groupByMonth(data) {
             sugars: month.sugars / count,
             fibers: month.fibers / count,
             weight: month.weights.length > 0 ? month.weights.reduce((a, b) => a + b, 0) / month.weights.length : null,
+            belly: month.bellies.length > 0 ? month.bellies.reduce((a, b) => a + b, 0) / month.bellies.length : null,
             water: month.water / count,
             steps: month.steps / count
         };
@@ -275,7 +281,7 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
         
         allMeals.forEach(meal => {
             if (!dataByDate[meal.date]) {
-                dataByDate[meal.date] = { date: meal.date, meals: meal.meals };
+                dataByDate[meal.date] = { date: meal.date, meals: meal.meals, belly: meal.belly };
             }
         });
         
@@ -298,6 +304,7 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
                 return {
                     date: day.date,
                     weight: day.weight || null,
+                    belly: day.belly || null,
                     water: day.water || 0,
                     steps: day.steps || 0,
                     ...dayTotals
@@ -571,6 +578,39 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
         options: weightOptions
     });
 
+    // --- NOUVEAU : Graphique du Tour de ventre (Ligne) ---
+    const bellyData = data.map(d => d.belly || null);
+    const bellyLabels = labels;
+    
+    if (charts.belly) charts.belly.destroy();
+    const bellyOptions = getResponsiveOptions(false);
+    bellyOptions.plugins.tooltip.callbacks = {
+        label: function(context) {
+            if (context.parsed.y !== null) {
+                return 'Tour de ventre: ' + context.parsed.y.toFixed(1) + ' cm';
+            }
+            return 'Non renseigné';
+        }
+    };
+    bellyOptions.scales.y.beginAtZero = false;
+    
+    charts.belly = new Chart(document.getElementById('bellyChart'), {
+        type: 'line',
+        data: {
+            labels: bellyLabels,
+            datasets: [{
+                label: 'Tour de ventre (cm)',
+                data: bellyData,
+                borderColor: '#8b5cf6',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                tension: 0.4,
+                fill: true,
+                spanGaps: true
+            }]
+        },
+        options: bellyOptions
+    });
+
     // --- NOUVEAU : Graphique de l'Hydratation (Barres) ---
     const waterData = await import('./db.js').then(module => module.loadPeriodWater(period));
     const waterLabels = waterData.map(d => new Date(d.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
@@ -829,6 +869,36 @@ export async function updateAverageCharts(periodType, foods, goals = null, compo
                 data: weightData,
                 borderColor: '#06b6d4',
                 backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                tension: 0.4,
+                fill: true,
+                spanGaps: true
+            }]
+        },
+        options: {
+            ...getResponsiveOptions(false),
+            scales: {
+                ...getResponsiveOptions(false).scales,
+                y: {
+                    ...getResponsiveOptions(false).scales.y,
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+
+    // --- Graphique Moyenne Tour de Ventre ---
+    if (charts.avgBelly) charts.avgBelly.destroy();
+    const bellyData = data.map(d => d.avgBelly);
+    
+    charts.avgBelly = new Chart(document.getElementById('avgBellyChart'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Tour de ventre Moyen (cm)',
+                data: bellyData,
+                borderColor: '#8b5cf6',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
                 tension: 0.4,
                 fill: true,
                 spanGaps: true
