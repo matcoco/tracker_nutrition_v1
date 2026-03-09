@@ -43,6 +43,7 @@ async function loadCurrentDay() {
     ui.updateDateDisplay(state.currentDate);
     const meals = await db.loadDayMeals(state.currentDate);
     const weight = await db.loadDayWeight(state.currentDate);
+    const belly = await db.loadDayBelly(state.currentDate);
     const waterData = await db.loadDayWater(state.currentDate);
     const steps = await db.loadDaySteps(state.currentDate);
     
@@ -58,6 +59,7 @@ async function loadCurrentDay() {
     const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
     ui.updateSummary(totals, state.goals);
     ui.updateWeightDisplay(weight);
+    ui.updateBellyDisplay(belly);
     ui.updateWaterDisplay(waterData, state.goals);
     ui.updateStepsDisplay(steps, state.goals);
     
@@ -288,6 +290,20 @@ async function handleSaveWeight() {
         ui.showNotification('Poids effacé.');
     } else {
         ui.showNotification('Veuillez entrer un poids valide.', 'error');
+    }
+}
+
+async function handleSaveBelly() {
+    const bellyInput = document.getElementById('bellyInput');
+    const belly = parseFloat(bellyInput.value);
+    if (belly && belly > 0) {
+        await db.saveDayBelly(state.currentDate, belly);
+        ui.showNotification('Tour de ventre enregistré !');
+    } else if (bellyInput.value === '') {
+        await db.saveDayBelly(state.currentDate, null);
+        ui.showNotification('Tour de ventre effacé.');
+    } else {
+        ui.showNotification('Veuillez entrer une valeur valide.', 'error');
     }
 }
 
@@ -1633,6 +1649,7 @@ function setupEventListeners() {
     document.getElementById('today-btn').addEventListener('click', goToToday);
     document.getElementById('datePicker').addEventListener('change', handleDatePickerChange);
     document.getElementById('saveWeightBtn').addEventListener('click', handleSaveWeight);
+    document.getElementById('saveBellyBtn').addEventListener('click', handleSaveBelly);
     document.getElementById('goalsForm').addEventListener('submit', handleGoalsSubmit);
     document.getElementById('foodSearch').addEventListener('input', handleFoodSearch);
     document.getElementById('loadMoreFoodsBtn').addEventListener('click', handleLoadMoreFoods);

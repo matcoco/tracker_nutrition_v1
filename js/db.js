@@ -63,7 +63,9 @@ export function saveDayMeals(date, meals, weight = null) {
                 date: dateKey,
                 meals: meals,
                 // Préserver le poids existant si on n'en fournit pas un nouveau
-                weight: weight !== null ? weight : (existingData.weight || null)
+                weight: weight !== null ? weight : (existingData.weight || null),
+                // Préserver le tour de ventre existant
+                belly: existingData.belly || null
             };
             const putRequest = store.put(data);
             putRequest.onsuccess = () => resolve();
@@ -118,6 +120,39 @@ export function loadDayWeight(date) {
     });
 }
 
+export function saveDayBelly(date, belly) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const transaction = db.transaction(['dailyMeals'], 'readwrite');
+            const store = transaction.objectStore('dailyMeals');
+            const dateKey = formatDateKey(date);
+            const getRequest = store.get(dateKey);
+            
+            getRequest.onsuccess = () => {
+                const data = getRequest.result || { date: dateKey, meals: { 'petit-dej': [], 'dejeuner': [], 'diner': [], 'snack': [] } };
+                data.belly = belly;
+                const putRequest = store.put(data);
+                putRequest.onsuccess = () => resolve();
+                putRequest.onerror = () => reject(putRequest.error);
+            };
+            getRequest.onerror = () => reject(getRequest.error);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+export function loadDayBelly(date) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['dailyMeals'], 'readonly');
+        const request = transaction.objectStore('dailyMeals').get(formatDateKey(date));
+        request.onsuccess = () => {
+            resolve(request.result && request.result.belly ? request.result.belly : null);
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
 export async function loadPeriodMeals(days, foods, composedMeals = {}) {
     const data = [];
     const endDate = new Date();
@@ -126,8 +161,9 @@ export async function loadPeriodMeals(days, foods, composedMeals = {}) {
         targetDate.setDate(targetDate.getDate() - i);
         const meals = await loadDayMeals(targetDate);
         const weight = await loadDayWeight(targetDate);
+        const belly = await loadDayBelly(targetDate);
         const dayTotals = calculateDayTotals(meals, foods, composedMeals);
-        data.push({ date: formatDateKey(targetDate), weight, ...dayTotals });
+        data.push({ date: formatDateKey(targetDate), weight, belly, ...dayTotals });
     }
     return data;
 }
@@ -456,6 +492,7 @@ export async function loadAverages(periodType, numPeriods, foods, composedMeals 
             fats: [],
             fibers: [],
             weights: [],
+            bellies: [],
             water: [],
             steps: []
         };
@@ -465,6 +502,7 @@ export async function loadAverages(periodType, numPeriods, foods, composedMeals 
             const meals = await loadDayMeals(currentDate);
             const totals = calculateDayTotals(meals, foods, composedMeals);
             const weight = await loadDayWeight(currentDate);
+            const belly = await loadDayBelly(currentDate);
             const waterData = await loadDayWater(currentDate);
             const stepsData = await loadDaySteps(currentDate);
             
@@ -474,6 +512,7 @@ export async function loadAverages(periodType, numPeriods, foods, composedMeals 
             periodData.fats.push(totals.fats);
             periodData.fibers.push(totals.fibers);
             if (weight) periodData.weights.push(weight);
+            if (belly) periodData.bellies.push(belly);
             periodData.water.push(waterData.totalMl || 0);
             periodData.steps.push(stepsData || 0);
             
@@ -491,6 +530,7 @@ export async function loadAverages(periodType, numPeriods, foods, composedMeals 
             avgFats: avg(periodData.fats),
             avgFibers: avg(periodData.fibers),
             avgWeight: periodData.weights.length > 0 ? avg(periodData.weights) : null,
+            avgBelly: periodData.bellies.length > 0 ? avg(periodData.bellies) : null,
             avgWater: avg(periodData.water),
             avgSteps: avg(periodData.steps)
         });

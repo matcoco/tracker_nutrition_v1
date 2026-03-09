@@ -106,6 +106,15 @@
                         <button id="saveWeightBtn" class="quick-action-btn">💾</button>
                     </div>
                 </div>
+                <div class="progress-card weight-card">
+                    <div class="progress-header">
+                        <span class="progress-label">📏 Tour de ventre</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                        <input type="number" id="bellyInput" step="0.1" placeholder="cm" style="flex: 1; padding: 8px; border: 2px solid var(--color-border); border-radius: 8px; font-size: 1em;">
+                        <button id="saveBellyBtn" class="quick-action-btn">💾</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Section Hydratation et Activité -->
@@ -369,6 +378,9 @@
                     <h3>Évolution du Poids</h3><canvas id="weightChart"></canvas>
                 </div>
                 <div class="chart-container">
+                    <h3>📏 Évolution du Tour de Ventre</h3><canvas id="bellyChart"></canvas>
+                </div>
+                <div class="chart-container">
                     <h3>💧 Hydratation Quotidienne</h3><canvas id="waterChart"></canvas>
                 </div>
                 <div class="chart-container">
@@ -402,6 +414,9 @@
                 </div>
                 <div class="chart-container">
                     <h3>⚖️ Moyenne du Poids</h3><canvas id="avgWeightChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>📏 Moyenne Tour de Ventre</h3><canvas id="avgBellyChart"></canvas>
                 </div>
                 <div class="chart-container">
                     <h3>💧 Moyenne Hydratation</h3><canvas id="avgWaterChart"></canvas>
