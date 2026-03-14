@@ -1,6 +1,6 @@
 // js/charts.js
 
-import { loadPeriodMeals, loadAverages, getAllFromStore } from './db.js';
+import { loadPeriodMeals, loadMealsByDateRange, loadAverages, getAllFromStore } from './db.js';
 import { calculateDayTotals, formatDateKey } from './utils.js';
 
 // Un objet pour conserver les instances des graphiques afin de pouvoir les détruire avant de les redessiner.
@@ -17,6 +17,19 @@ function getGroupingMode(period) {
     if (numPeriod <= 30) return 'daily';
     if (numPeriod <= 180) return 'weekly';
     return 'monthly';
+}
+
+function isCustomDateRange(period) {
+    return typeof period === 'object' && period !== null && period.startDate && period.endDate;
+}
+
+function getDateRangeDayCount(startDate, endDate) {
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(endDate);
+    end.setHours(0, 0, 0, 0);
+    const diffMs = end.getTime() - start.getTime();
+    return Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
 }
 
 /**
@@ -49,6 +62,7 @@ function groupByWeek(data) {
                 sugars: 0,
                 fibers: 0,
                 weights: [],
+                bellies: [],
                 water: 0,
                 steps: 0
             };
@@ -62,6 +76,7 @@ function groupByWeek(data) {
         weeks[weekKey].sugars += day.sugars;
         weeks[weekKey].fibers += day.fibers;
         if (day.weight) weeks[weekKey].weights.push(day.weight);
+        if (day.belly) weeks[weekKey].bellies.push(day.belly);
         weeks[weekKey].water += day.water || 0;
         weeks[weekKey].steps += day.steps || 0;
     });
@@ -78,6 +93,7 @@ function groupByWeek(data) {
             sugars: week.sugars / count,
             fibers: week.fibers / count,
             weight: week.weights.length > 0 ? week.weights.reduce((a, b) => a + b, 0) / week.weights.length : null,
+            belly: week.bellies.length > 0 ? week.bellies.reduce((a, b) => a + b, 0) / week.bellies.length : null,
             water: week.water / count,
             steps: week.steps / count
         };
@@ -107,6 +123,7 @@ function groupByMonth(data) {
                 sugars: 0,
                 fibers: 0,
                 weights: [],
+                bellies: [],
                 water: 0,
                 steps: 0
             };
@@ -120,6 +137,7 @@ function groupByMonth(data) {
         months[monthKey].sugars += day.sugars;
         months[monthKey].fibers += day.fibers;
         if (day.weight) months[monthKey].weights.push(day.weight);
+        if (day.belly) months[monthKey].bellies.push(day.belly);
         months[monthKey].water += day.water || 0;
         months[monthKey].steps += day.steps || 0;
     });
@@ -136,6 +154,7 @@ function groupByMonth(data) {
             sugars: month.sugars / count,
             fibers: month.fibers / count,
             weight: month.weights.length > 0 ? month.weights.reduce((a, b) => a + b, 0) / month.weights.length : null,
+            belly: month.bellies.length > 0 ? month.bellies.reduce((a, b) => a + b, 0) / month.bellies.length : null,
             water: month.water / count,
             steps: month.steps / count
         };
@@ -263,43 +282,56 @@ const getResponsiveOptions = (hasGoals = false, isDonut = false) => {
 export async function updateCharts(period, foods, goals = null, composedMeals = {}) {
     // Charger les données
     let rawData;
-    if (period === 'all') {
+    if (isCustomDateRange(period)) {
+        rawData = await loadMealsByDateRange(period.startDate, period.endDate, foods, composedMeals);
+    } else if (period === 'all') {
         // Charger toutes les données disponibles
         const allMeals = await getAllFromStore('dailyMeals');
-        const allWeights = await getAllFromStore('dailyWeights');
-        const allWater = await getAllFromStore('dailyWater');
-        const allSteps = await getAllFromStore('dailySteps');
-        
+        const allWater  = await getAllFromStore('dailyWater');
+        const allSteps  = await getAllFromStore('dailySteps');
+
+        // Indexer par date
+        const waterByDate = {};
+        const stepsByDate = {};
+        allWater.forEach(w  => { waterByDate[w.date] = w.totalMl || 0; });
+        allSteps.forEach(s  => { stepsByDate[s.date] = s.steps  || 0; });
+
+        // Rassembler toutes les dates connues (repas + eau + pas)
+        const allDates = new Set([
+            ...allMeals.map(m => m.date),
+            ...allWater.map(w => w.date),
+            ...allSteps.map(s => s.date),
+        ]);
+
         // Créer un objet pour regrouper par date
         const dataByDate = {};
-        
         allMeals.forEach(meal => {
-            if (!dataByDate[meal.date]) {
-                dataByDate[meal.date] = { date: meal.date, meals: meal.meals };
+            dataByDate[meal.date] = {
+                date:  meal.date,
+                meals: meal.meals,
+                weight: meal.weight || null,
+                belly:  meal.belly  || null,
+            };
+        });
+        // S'assurer que les jours avec seulement eau/pas sont aussi présents
+        allDates.forEach(date => {
+            if (!dataByDate[date]) {
+                dataByDate[date] = { date, meals: { 'petit-dej': [], 'dejeuner': [], 'diner': [], 'snack': [] }, weight: null, belly: null };
             }
+            dataByDate[date].water = waterByDate[date] || 0;
+            dataByDate[date].steps = stepsByDate[date] || 0;
         });
-        
-        allWeights.forEach(w => {
-            if (dataByDate[w.date]) dataByDate[w.date].weight = w.weight;
-        });
-        
-        allWater.forEach(w => {
-            if (dataByDate[w.date]) dataByDate[w.date].water = w.totalMl;
-        });
-        
-        allSteps.forEach(s => {
-            if (dataByDate[s.date]) dataByDate[s.date].steps = s.steps;
-        });
-        
+
         // Convertir en tableau et calculer les totaux
         rawData = Object.values(dataByDate)
             .map(day => {
                 const dayTotals = calculateDayTotals(day.meals || { 'petit-dej': [], 'dejeuner': [], 'diner': [], 'snack': [] }, foods, composedMeals);
                 return {
-                    date: day.date,
+                    date:   day.date,
                     weight: day.weight || null,
-                    water: day.water || 0,
-                    steps: day.steps || 0,
+                    belly:  day.belly  || null,
+                    water:  day.water  || 0,
+                    steps:  day.steps  || 0,
                     ...dayTotals
                 };
             })
@@ -309,7 +341,9 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
     }
     
     // Déterminer le mode de regroupement
-    const groupingMode = getGroupingMode(period);
+    const groupingMode = isCustomDateRange(period)
+        ? getGroupingMode(getDateRangeDayCount(period.startDate, period.endDate))
+        : getGroupingMode(period);
     
     // Appliquer le regroupement si nécessaire
     let data;
@@ -571,13 +605,43 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
         options: weightOptions
     });
 
-    // --- NOUVEAU : Graphique de l'Hydratation (Barres) ---
-    const waterData = await import('./db.js').then(module => module.loadPeriodWater(period));
-    const waterLabels = waterData.map(d => new Date(d.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
+    // --- NOUVEAU : Graphique du Tour de ventre (Ligne) ---
+    const bellyData = data.map(d => d.belly || null);
+    const bellyLabels = labels;
     
+    if (charts.belly) charts.belly.destroy();
+    const bellyOptions = getResponsiveOptions(false);
+    bellyOptions.plugins.tooltip.callbacks = {
+        label: function(context) {
+            if (context.parsed.y !== null) {
+                return 'Tour de ventre: ' + context.parsed.y.toFixed(1) + ' cm';
+            }
+            return 'Non renseigné';
+        }
+    };
+    bellyOptions.scales.y.beginAtZero = false;
+    
+    charts.belly = new Chart(document.getElementById('bellyChart'), {
+        type: 'line',
+        data: {
+            labels: bellyLabels,
+            datasets: [{
+                label: 'Tour de ventre (cm)',
+                data: bellyData,
+                borderColor: '#8b5cf6',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                tension: 0.4,
+                fill: true,
+                spanGaps: true
+            }]
+        },
+        options: bellyOptions
+    });
+
+    // --- NOUVEAU : Graphique de l'Hydratation (Barres) ---
     const waterDatasets = [{
         label: 'Hydratation (ml)',
-        data: waterData.map(d => d.totalMl),
+        data: data.map(d => d.water || 0),
         backgroundColor: '#06b6d4',
         order: 2
     }];
@@ -586,7 +650,7 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
         waterDatasets.push({
             label: 'Objectif',
             type: 'line',
-            data: Array(waterLabels.length).fill(goals.waterGoal),
+            data: Array(labels.length).fill(goals.waterGoal),
             borderColor: '#ef4444',
             borderDash: [5, 5],
             borderWidth: 2,
@@ -600,19 +664,16 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
     charts.water = new Chart(document.getElementById('waterChart'), {
         type: 'bar',
         data: {
-            labels: waterLabels,
+            labels: labels,
             datasets: waterDatasets
         },
         options: getResponsiveOptions(goals && goals.waterGoal)
     });
 
     // --- NOUVEAU : Graphique des Pas (Barres) ---
-    const stepsData = await import('./db.js').then(module => module.loadPeriodSteps(period));
-    const stepsLabels = stepsData.map(d => new Date(d.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
-    
     const stepsDatasets = [{
         label: 'Nombre de pas',
-        data: stepsData.map(d => d.steps),
+        data: data.map(d => d.steps || 0),
         backgroundColor: '#f97316',
         order: 2
     }];
@@ -621,7 +682,7 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
         stepsDatasets.push({
             label: 'Objectif',
             type: 'line',
-            data: Array(stepsLabels.length).fill(goals.stepsGoal),
+            data: Array(labels.length).fill(goals.stepsGoal),
             borderColor: '#ef4444',
             borderDash: [5, 5],
             borderWidth: 2,
@@ -635,7 +696,7 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
     charts.steps = new Chart(document.getElementById('stepsChart'), {
         type: 'bar',
         data: {
-            labels: stepsLabels,
+            labels: labels,
             datasets: stepsDatasets
         },
         options: getResponsiveOptions(goals && goals.stepsGoal)
@@ -829,6 +890,36 @@ export async function updateAverageCharts(periodType, foods, goals = null, compo
                 data: weightData,
                 borderColor: '#06b6d4',
                 backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                tension: 0.4,
+                fill: true,
+                spanGaps: true
+            }]
+        },
+        options: {
+            ...getResponsiveOptions(false),
+            scales: {
+                ...getResponsiveOptions(false).scales,
+                y: {
+                    ...getResponsiveOptions(false).scales.y,
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+
+    // --- Graphique Moyenne Tour de Ventre ---
+    if (charts.avgBelly) charts.avgBelly.destroy();
+    const bellyData = data.map(d => d.avgBelly);
+    
+    charts.avgBelly = new Chart(document.getElementById('avgBellyChart'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Tour de ventre Moyen (cm)',
+                data: bellyData,
+                borderColor: '#8b5cf6',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
                 tension: 0.4,
                 fill: true,
                 spanGaps: true

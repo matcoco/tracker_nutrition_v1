@@ -12,6 +12,7 @@ import * as foodAnalysis from './food-analysis.js';
 import * as foodComparison from './food-comparison.js';
 import * as meals from './meals.js';
 import * as importExport from './import-export.js';
+import * as mealHistory from './meal-history.js';
 
 // --- ÉTAT GLOBAL DE L'APPLICATION ---
 let state = {
@@ -19,6 +20,7 @@ let state = {
     meals: {}, // Repas composés
     currentDate: new Date(),
     currentPeriod: 7,
+    currentCustomStatsRange: null,
     currentAveragePeriod: 'week', // 'week' ou 'month'
     currentCostPeriod: 7, // Période pour l'analyse des coûts
     currentActivityPeriod: 7, // Période pour les graphiques d'activités
@@ -38,11 +40,118 @@ let state = {
 
 // --- LOGIQUE PRINCIPALE ---
 // (Les fonctions loadCurrentDay, changeDate, goToToday restent inchangées)
+function getCurrentStatsPeriodFilter() {
+    return state.currentCustomStatsRange || state.currentPeriod;
+}
+
+const STATS_STATE_KEY = 'nt_stats_state';
+
+function saveStatsState() {
+    const toSave = {
+        currentPeriod:           state.currentPeriod,
+        currentCustomStatsRange: state.currentCustomStatsRange,
+        currentAveragePeriod:    state.currentAveragePeriod,
+        currentCostPeriod:       state.currentCostPeriod,
+        currentActivityPeriod:   state.currentActivityPeriod,
+        currentFoodAnalysisPeriod: state.currentFoodAnalysisPeriod,
+        activeStatsSection:      document.querySelector('.stats-nav-btn.active')?.dataset.section || 'evolution',
+    };
+    try { localStorage.setItem(STATS_STATE_KEY, JSON.stringify(toSave)); } catch(e) {}
+}
+
+function restoreStatsState() {
+    try {
+        const raw = localStorage.getItem(STATS_STATE_KEY);
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+
+        if (saved.currentPeriod !== undefined)         state.currentPeriod           = saved.currentPeriod;
+        if (saved.currentCustomStatsRange)             state.currentCustomStatsRange = saved.currentCustomStatsRange;
+        if (saved.currentAveragePeriod)                state.currentAveragePeriod    = saved.currentAveragePeriod;
+        if (saved.currentCostPeriod !== undefined)     state.currentCostPeriod       = saved.currentCostPeriod;
+        if (saved.currentActivityPeriod !== undefined) state.currentActivityPeriod   = saved.currentActivityPeriod;
+        if (saved.currentFoodAnalysisPeriod !== undefined) state.currentFoodAnalysisPeriod = saved.currentFoodAnalysisPeriod;
+
+        // Restaurer le bouton période principal actif
+        document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+        if (state.currentCustomStatsRange) {
+            // Plage custom : remplir les champs date
+            const s = document.getElementById('statsStartDate');
+            const e = document.getElementById('statsEndDate');
+            if (s) s.value = state.currentCustomStatsRange.startDate;
+            if (e) e.value = state.currentCustomStatsRange.endDate;
+        } else {
+            const periodVal = String(state.currentPeriod);
+            const btn = document.querySelector(`.period-btn[data-period="${periodVal}"]`);
+            if (btn) btn.classList.add('active');
+        }
+
+        // Restaurer le bouton de période des moyennes
+        document.querySelectorAll('.average-period-btn').forEach(btn => btn.classList.remove('active'));
+        const avgBtn = document.querySelector(`.average-period-btn[data-avg-period="${state.currentAveragePeriod}"]`);
+        if (avgBtn) avgBtn.classList.add('active');
+
+        // Restaurer le bouton de période des coûts
+        document.querySelectorAll('.cost-period-btn').forEach(btn => btn.classList.remove('active'));
+        const costBtn = document.querySelector(`.cost-period-btn[data-cost-period="${state.currentCostPeriod}"]`);
+        if (costBtn) costBtn.classList.add('active');
+
+        // Restaurer le bouton de période des activités
+        document.querySelectorAll('.activity-period-btn').forEach(btn => btn.classList.remove('active'));
+        const actBtn = document.querySelector(`.activity-period-btn[data-activity-period="${state.currentActivityPeriod}"]`);
+        if (actBtn) actBtn.classList.add('active');
+
+        // Restaurer le bouton de période analyse aliments
+        document.querySelectorAll('.food-analysis-period-btn').forEach(btn => btn.classList.remove('active'));
+        const foodBtn = document.querySelector(`.food-analysis-period-btn[data-food-period="${state.currentFoodAnalysisPeriod}"]`);
+        if (foodBtn) foodBtn.classList.add('active');
+
+        // Restaurer la section active de la nav stats
+        if (saved.activeStatsSection) {
+            document.querySelectorAll('.stats-nav-btn').forEach(btn => btn.classList.remove('active'));
+            const navBtn = document.querySelector(`.stats-nav-btn[data-section="${saved.activeStatsSection}"]`);
+            if (navBtn) navBtn.classList.add('active');
+            const targetSection = document.getElementById(`stats-${saved.activeStatsSection}`);
+            if (targetSection) {
+                // Léger délai pour laisser le DOM se stabiliser avant le scroll
+                setTimeout(() => targetSection.scrollIntoView({ behavior: 'instant', block: 'start' }), 100);
+            }
+        }
+    } catch(e) {}
+}
+
+function clearCustomStatsRangeSelection() {
+    state.currentCustomStatsRange = null;
+}
+
+function applyCustomStatsDateRange() {
+    const startInput = document.getElementById('statsStartDate');
+    const endInput = document.getElementById('statsEndDate');
+    const startDate = startInput.value;
+    const endDate = endInput.value;
+
+    if (!startDate || !endDate) {
+        return;
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+        return;
+    }
+
+    clearCustomStatsRangeSelection();
+    state.currentCustomStatsRange = { startDate, endDate };
+    document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
+    charts.updateCharts(getCurrentStatsPeriodFilter(), state.foods, state.goals, state.meals);
+    mealHistory.updateMealHistory(getCurrentStatsPeriodFilter(), state.foods, state.meals);
+    saveStatsState();
+}
+
 async function loadCurrentDay() {
     const dateFormatted = utils.formatDateDisplay(state.currentDate);
     ui.updateDateDisplay(state.currentDate);
     const meals = await db.loadDayMeals(state.currentDate);
     const weight = await db.loadDayWeight(state.currentDate);
+    const belly = await db.loadDayBelly(state.currentDate);
     const waterData = await db.loadDayWater(state.currentDate);
     const steps = await db.loadDaySteps(state.currentDate);
     
@@ -58,6 +167,7 @@ async function loadCurrentDay() {
     const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
     ui.updateSummary(totals, state.goals);
     ui.updateWeightDisplay(weight);
+    ui.updateBellyDisplay(belly);
     ui.updateWaterDisplay(waterData, state.goals);
     ui.updateStepsDisplay(steps, state.goals);
     
@@ -154,12 +264,19 @@ async function handleDrop(event) {
         
         // Déplacement logique: mettre à jour la BDD
         meals[sourceMeal] = meals[sourceMeal].filter(item => item.uniqueId !== window.draggedMealData.uniqueId);
-        meals[targetMealType].push({
+        const movedItem = {
             id: window.draggedMealData.foodId,
             weight: window.draggedMealData.weight,
             isMeal: window.draggedMealData.isMeal || false,
-            uniqueId: window.draggedMealData.uniqueId // Garder le même uniqueId
-        });
+            uniqueId: window.draggedMealData.uniqueId
+        };
+        if (window.draggedMealData.customPortions) {
+            movedItem.customPortions = { ...window.draggedMealData.customPortions };
+        }
+        if (window.draggedMealData.customPrice !== undefined && window.draggedMealData.customPrice !== null) {
+            movedItem.customPrice = window.draggedMealData.customPrice;
+        }
+        meals[targetMealType].push(movedItem);
         
         await db.saveDayMeals(state.currentDate, meals);
         console.log('💾 BDD mise à jour');
@@ -181,10 +298,11 @@ async function handleDrop(event) {
         if (state.meals[state.draggedFoodId]) {
             // C'est un repas → l'ajouter comme bloc (pas de décomposition)
             const meal = state.meals[state.draggedFoodId];
+            const defaultMealWeight = meal.totalWeight || 100;
             meals[targetMealType].push({ 
                 id: state.draggedFoodId,
                 isMeal: true, // Flag pour identifier que c'est un repas composé
-                weight: 100, // Poids par défaut (pourra être ajusté)
+                weight: defaultMealWeight,
                 uniqueId: Date.now()
             });
             await db.saveDayMeals(state.currentDate, meals);
@@ -233,12 +351,16 @@ async function handleRemoveMealItem(mealType, uniqueId) {
     loadCurrentDay();
 }
 async function handleUpdateWeight(mealType, uniqueId, newWeight) {
+    console.log('📦 handleUpdateWeight appelé:', mealType, uniqueId, newWeight);
     const meals = await db.loadDayMeals(state.currentDate);
     const item = meals[mealType].find(i => i.uniqueId === uniqueId);
     if (item) {
-        item.weight = parseFloat(newWeight) || 100;
+        item.weight = parseFloat(newWeight) || item.weight || 100;
+        console.log('💾 Sauvegarde poids:', item.weight, 'pour', item.id);
         await db.saveDayMeals(state.currentDate, meals);
         loadCurrentDay();
+    } else {
+        console.warn('⚠️ Item non trouvé:', mealType, uniqueId);
     }
 }
 
@@ -291,6 +413,20 @@ async function handleSaveWeight() {
     }
 }
 
+async function handleSaveBelly() {
+    const bellyInput = document.getElementById('bellyInput');
+    const belly = parseFloat(bellyInput.value);
+    if (belly && belly > 0) {
+        await db.saveDayBelly(state.currentDate, belly);
+        ui.showNotification('Tour de ventre enregistré !');
+    } else if (bellyInput.value === '') {
+        await db.saveDayBelly(state.currentDate, null);
+        ui.showNotification('Tour de ventre effacé.');
+    } else {
+        ui.showNotification('Veuillez entrer une valeur valide.', 'error');
+    }
+}
+
 // --- HANDLER POUR L'AJOUT RAPIDE ---
 async function handleQuickAdd(foodId, mealType) {
     const meals = await db.loadDayMeals(state.currentDate);
@@ -298,10 +434,11 @@ async function handleQuickAdd(foodId, mealType) {
     // Vérifier si c'est un repas composé
     if (state.meals[foodId]) {
         const meal = state.meals[foodId];
+        const defaultMealWeight = meal.totalWeight || 100;
         meals[mealType].push({ 
             id: foodId,
             isMeal: true, // Flag pour identifier que c'est un repas composé
-            weight: 100, // Poids par défaut
+            weight: defaultMealWeight,
             uniqueId: Date.now()
         });
         await db.saveDayMeals(state.currentDate, meals);
@@ -1571,7 +1708,7 @@ function setupEventListeners() {
             const tabName = e.target.dataset.tab;
             ui.switchTab(tabName);
             if (tabName === 'stats') {
-                charts.updateCharts(state.currentPeriod, state.foods, state.goals, state.meals);
+                charts.updateCharts(getCurrentStatsPeriodFilter(), state.foods, state.goals, state.meals);
                 charts.updateAverageCharts(state.currentAveragePeriod, state.foods, state.goals, state.meals);
                 costs.updateCostCharts(state.currentCostPeriod, state.foods, state.meals);
                 try {
@@ -1580,6 +1717,7 @@ function setupEventListeners() {
                     console.log('Erreur chargement graphiques activités:', error);
                 }
                 foodAnalysis.updateFoodAnalysis(state.currentFoodAnalysisPeriod, state.foods);
+                mealHistory.updateMealHistory(getCurrentStatsPeriodFilter(), state.foods, state.meals);
             }
             if (tabName === 'meals') {
                 meals.initMeals(state.foods);
@@ -1596,11 +1734,15 @@ function setupEventListeners() {
         if (e.target.matches('.period-btn')) {
             const periodValue = e.target.dataset.period;
             state.currentPeriod = periodValue === 'all' ? 'all' : parseInt(periodValue, 10);
+            clearCustomStatsRangeSelection();
             document.querySelectorAll('.period-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
-            charts.updateCharts(state.currentPeriod, state.foods, state.goals, state.meals);
+            charts.updateCharts(getCurrentStatsPeriodFilter(), state.foods, state.goals, state.meals);
+            mealHistory.updateMealHistory(getCurrentStatsPeriodFilter(), state.foods, state.meals);
+            saveStatsState();
         }
     });
+    document.getElementById('applyStatsDateRangeBtn').addEventListener('click', applyCustomStatsDateRange);
     
     // Event listener pour les boutons de période des moyennes
     document.querySelectorAll('.stats-period').forEach(periodContainer => {
@@ -1610,6 +1752,7 @@ function setupEventListeners() {
                 document.querySelectorAll('.average-period-btn').forEach(btn => btn.classList.remove('active'));
                 e.target.classList.add('active');
                 charts.updateAverageCharts(state.currentAveragePeriod, state.foods, state.goals, state.meals);
+                saveStatsState();
             }
             // Event listener pour les boutons de période des coûts
             if (e.target.matches('.cost-period-btn')) {
@@ -1617,6 +1760,7 @@ function setupEventListeners() {
                 document.querySelectorAll('.cost-period-btn').forEach(btn => btn.classList.remove('active'));
                 e.target.classList.add('active');
                 costs.updateCostCharts(state.currentCostPeriod, state.foods, state.meals);
+                saveStatsState();
             }
             // Event listener pour les boutons de période des activités
             if (e.target.matches('.activity-period-btn')) {
@@ -1624,6 +1768,7 @@ function setupEventListeners() {
                 document.querySelectorAll('.activity-period-btn').forEach(btn => btn.classList.remove('active'));
                 e.target.classList.add('active');
                 activityCharts.updateActivityCharts(state.currentActivityPeriod);
+                saveStatsState();
             }
         });
     });
@@ -1633,6 +1778,7 @@ function setupEventListeners() {
     document.getElementById('today-btn').addEventListener('click', goToToday);
     document.getElementById('datePicker').addEventListener('change', handleDatePickerChange);
     document.getElementById('saveWeightBtn').addEventListener('click', handleSaveWeight);
+    document.getElementById('saveBellyBtn').addEventListener('click', handleSaveBelly);
     document.getElementById('goalsForm').addEventListener('submit', handleGoalsSubmit);
     document.getElementById('foodSearch').addEventListener('input', handleFoodSearch);
     document.getElementById('loadMoreFoodsBtn').addEventListener('click', handleLoadMoreFoods);
@@ -1650,7 +1796,10 @@ function setupEventListeners() {
     
     // Navigation Statistiques
     document.querySelectorAll('.stats-nav-btn').forEach(btn => {
-        btn.addEventListener('click', handleStatsNavigation);
+        btn.addEventListener('click', (e) => {
+            handleStatsNavigation(e);
+            saveStatsState();
+        });
     });
     
     // Hydratation
@@ -1719,6 +1868,7 @@ function setupEventListeners() {
             document.querySelectorAll('.food-analysis-period-btn').forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
             foodAnalysis.updateFoodAnalysis(state.currentFoodAnalysisPeriod, state.foods);
+            saveStatsState();
         });
     });
     
@@ -1797,6 +1947,9 @@ async function init(isReload = false) {
         state.foods = await db.loadFoods();
         state.meals = await db.loadMeals();
         state.goals = await db.loadGoals();
+        if (!isReload) {
+            restoreStatsState();
+        }
         
         // Exposer le state globalement pour les modules qui en ont besoin
         window.appState = state;

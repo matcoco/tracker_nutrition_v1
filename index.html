@@ -106,6 +106,15 @@
                         <button id="saveWeightBtn" class="quick-action-btn">💾</button>
                     </div>
                 </div>
+                <div class="progress-card weight-card">
+                    <div class="progress-header">
+                        <span class="progress-label">📏 Tour de ventre</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                        <input type="number" id="bellyInput" step="0.1" placeholder="cm" style="flex: 1; padding: 8px; border: 2px solid var(--color-border); border-radius: 8px; font-size: 1em;">
+                        <button id="saveBellyBtn" class="quick-action-btn">💾</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Section Hydratation et Activité -->
@@ -327,6 +336,7 @@
                 <button class="stats-nav-btn" data-section="costs">💰 Coûts</button>
                 <button class="stats-nav-btn" data-section="activities">🏃 Activités</button>
                 <button class="stats-nav-btn" data-section="foods">📋 Aliments</button>
+                <button class="stats-nav-btn" data-section="journal">🗓️ Journal</button>
             </div>
             
             <!-- Section Évolution -->
@@ -341,6 +351,17 @@
                 <button class="period-btn" data-period="180">6 mois</button>
                 <button class="period-btn" data-period="365">1 an</button>
                 <button class="period-btn" data-period="all">Tout</button>
+            </div>
+            <div class="stats-custom-range">
+                <div class="stats-custom-range-field">
+                    <label for="statsStartDate">Date de début</label>
+                    <input type="date" id="statsStartDate">
+                </div>
+                <div class="stats-custom-range-field">
+                    <label for="statsEndDate">Date de fin</label>
+                    <input type="date" id="statsEndDate">
+                </div>
+                <button id="applyStatsDateRangeBtn" class="period-btn">Appliquer</button>
             </div>
             <!-- Grille pour les graphiques -->
             <div class="stats-grid">
@@ -367,6 +388,9 @@
                 </div>
                 <div class="chart-container">
                     <h3>Évolution du Poids</h3><canvas id="weightChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>📏 Évolution du Tour de Ventre</h3><canvas id="bellyChart"></canvas>
                 </div>
                 <div class="chart-container">
                     <h3>💧 Hydratation Quotidienne</h3><canvas id="waterChart"></canvas>
@@ -402,6 +426,9 @@
                 </div>
                 <div class="chart-container">
                     <h3>⚖️ Moyenne du Poids</h3><canvas id="avgWeightChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>📏 Moyenne Tour de Ventre</h3><canvas id="avgBellyChart"></canvas>
                 </div>
                 <div class="chart-container">
                     <h3>💧 Moyenne Hydratation</h3><canvas id="avgWaterChart"></canvas>
@@ -608,6 +635,16 @@
             </div>
             <!-- ===================================== -->
             </div>
+
+            <!-- Section Journal des repas -->
+            <div id="stats-journal" class="stats-section">
+                <h2 class="section-title">🗓️ Journal des Repas</h2>
+                <p class="journal-period-info" id="journalPeriodInfo"></p>
+                <div id="journalTimeline" class="journal-timeline">
+                    <p class="journal-empty">Chargement...</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
