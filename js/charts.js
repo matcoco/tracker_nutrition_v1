@@ -1,6 +1,6 @@
 // js/charts.js
 
-import { loadPeriodMeals, loadAverages, getAllFromStore } from './db.js';
+import { loadPeriodMeals, loadMealsByDateRange, loadAverages, getAllFromStore } from './db.js';
 import { calculateDayTotals, formatDateKey } from './utils.js';
 
 // Un objet pour conserver les instances des graphiques afin de pouvoir les détruire avant de les redessiner.
@@ -17,6 +17,19 @@ function getGroupingMode(period) {
     if (numPeriod <= 30) return 'daily';
     if (numPeriod <= 180) return 'weekly';
     return 'monthly';
+}
+
+function isCustomDateRange(period) {
+    return typeof period === 'object' && period !== null && period.startDate && period.endDate;
+}
+
+function getDateRangeDayCount(startDate, endDate) {
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(endDate);
+    end.setHours(0, 0, 0, 0);
+    const diffMs = end.getTime() - start.getTime();
+    return Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
 }
 
 /**
@@ -269,44 +282,56 @@ const getResponsiveOptions = (hasGoals = false, isDonut = false) => {
 export async function updateCharts(period, foods, goals = null, composedMeals = {}) {
     // Charger les données
     let rawData;
-    if (period === 'all') {
+    if (isCustomDateRange(period)) {
+        rawData = await loadMealsByDateRange(period.startDate, period.endDate, foods, composedMeals);
+    } else if (period === 'all') {
         // Charger toutes les données disponibles
         const allMeals = await getAllFromStore('dailyMeals');
-        const allWeights = await getAllFromStore('dailyWeights');
-        const allWater = await getAllFromStore('dailyWater');
-        const allSteps = await getAllFromStore('dailySteps');
-        
+        const allWater  = await getAllFromStore('dailyWater');
+        const allSteps  = await getAllFromStore('dailySteps');
+
+        // Indexer par date
+        const waterByDate = {};
+        const stepsByDate = {};
+        allWater.forEach(w  => { waterByDate[w.date] = w.totalMl || 0; });
+        allSteps.forEach(s  => { stepsByDate[s.date] = s.steps  || 0; });
+
+        // Rassembler toutes les dates connues (repas + eau + pas)
+        const allDates = new Set([
+            ...allMeals.map(m => m.date),
+            ...allWater.map(w => w.date),
+            ...allSteps.map(s => s.date),
+        ]);
+
         // Créer un objet pour regrouper par date
         const dataByDate = {};
-        
         allMeals.forEach(meal => {
-            if (!dataByDate[meal.date]) {
-                dataByDate[meal.date] = { date: meal.date, meals: meal.meals, belly: meal.belly };
+            dataByDate[meal.date] = {
+                date:  meal.date,
+                meals: meal.meals,
+                weight: meal.weight || null,
+                belly:  meal.belly  || null,
+            };
+        });
+        // S'assurer que les jours avec seulement eau/pas sont aussi présents
+        allDates.forEach(date => {
+            if (!dataByDate[date]) {
+                dataByDate[date] = { date, meals: { 'petit-dej': [], 'dejeuner': [], 'diner': [], 'snack': [] }, weight: null, belly: null };
             }
+            dataByDate[date].water = waterByDate[date] || 0;
+            dataByDate[date].steps = stepsByDate[date] || 0;
         });
-        
-        allWeights.forEach(w => {
-            if (dataByDate[w.date]) dataByDate[w.date].weight = w.weight;
-        });
-        
-        allWater.forEach(w => {
-            if (dataByDate[w.date]) dataByDate[w.date].water = w.totalMl;
-        });
-        
-        allSteps.forEach(s => {
-            if (dataByDate[s.date]) dataByDate[s.date].steps = s.steps;
-        });
-        
+
         // Convertir en tableau et calculer les totaux
         rawData = Object.values(dataByDate)
             .map(day => {
                 const dayTotals = calculateDayTotals(day.meals || { 'petit-dej': [], 'dejeuner': [], 'diner': [], 'snack': [] }, foods, composedMeals);
                 return {
-                    date: day.date,
+                    date:   day.date,
                     weight: day.weight || null,
-                    belly: day.belly || null,
-                    water: day.water || 0,
-                    steps: day.steps || 0,
+                    belly:  day.belly  || null,
+                    water:  day.water  || 0,
+                    steps:  day.steps  || 0,
                     ...dayTotals
                 };
             })
@@ -316,7 +341,9 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
     }
     
     // Déterminer le mode de regroupement
-    const groupingMode = getGroupingMode(period);
+    const groupingMode = isCustomDateRange(period)
+        ? getGroupingMode(getDateRangeDayCount(period.startDate, period.endDate))
+        : getGroupingMode(period);
     
     // Appliquer le regroupement si nécessaire
     let data;
@@ -612,12 +639,9 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
     });
 
     // --- NOUVEAU : Graphique de l'Hydratation (Barres) ---
-    const waterData = await import('./db.js').then(module => module.loadPeriodWater(period));
-    const waterLabels = waterData.map(d => new Date(d.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
-    
     const waterDatasets = [{
         label: 'Hydratation (ml)',
-        data: waterData.map(d => d.totalMl),
+        data: data.map(d => d.water || 0),
         backgroundColor: '#06b6d4',
         order: 2
     }];
@@ -626,7 +650,7 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
         waterDatasets.push({
             label: 'Objectif',
             type: 'line',
-            data: Array(waterLabels.length).fill(goals.waterGoal),
+            data: Array(labels.length).fill(goals.waterGoal),
             borderColor: '#ef4444',
             borderDash: [5, 5],
             borderWidth: 2,
@@ -640,19 +664,16 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
     charts.water = new Chart(document.getElementById('waterChart'), {
         type: 'bar',
         data: {
-            labels: waterLabels,
+            labels: labels,
             datasets: waterDatasets
         },
         options: getResponsiveOptions(goals && goals.waterGoal)
     });
 
     // --- NOUVEAU : Graphique des Pas (Barres) ---
-    const stepsData = await import('./db.js').then(module => module.loadPeriodSteps(period));
-    const stepsLabels = stepsData.map(d => new Date(d.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
-    
     const stepsDatasets = [{
         label: 'Nombre de pas',
-        data: stepsData.map(d => d.steps),
+        data: data.map(d => d.steps || 0),
         backgroundColor: '#f97316',
         order: 2
     }];
@@ -661,7 +682,7 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
         stepsDatasets.push({
             label: 'Objectif',
             type: 'line',
-            data: Array(stepsLabels.length).fill(goals.stepsGoal),
+            data: Array(labels.length).fill(goals.stepsGoal),
             borderColor: '#ef4444',
             borderDash: [5, 5],
             borderWidth: 2,
@@ -675,7 +696,7 @@ export async function updateCharts(period, foods, goals = null, composedMeals = 
     charts.steps = new Chart(document.getElementById('stepsChart'), {
         type: 'bar',
         data: {
-            labels: stepsLabels,
+            labels: labels,
             datasets: stepsDatasets
         },
         options: getResponsiveOptions(goals && goals.stepsGoal)

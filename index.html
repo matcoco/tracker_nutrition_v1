@@ -336,6 +336,7 @@
                 <button class="stats-nav-btn" data-section="costs">💰 Coûts</button>
                 <button class="stats-nav-btn" data-section="activities">🏃 Activités</button>
                 <button class="stats-nav-btn" data-section="foods">📋 Aliments</button>
+                <button class="stats-nav-btn" data-section="journal">🗓️ Journal</button>
             </div>
             
             <!-- Section Évolution -->
@@ -350,6 +351,17 @@
                 <button class="period-btn" data-period="180">6 mois</button>
                 <button class="period-btn" data-period="365">1 an</button>
                 <button class="period-btn" data-period="all">Tout</button>
+            </div>
+            <div class="stats-custom-range">
+                <div class="stats-custom-range-field">
+                    <label for="statsStartDate">Date de début</label>
+                    <input type="date" id="statsStartDate">
+                </div>
+                <div class="stats-custom-range-field">
+                    <label for="statsEndDate">Date de fin</label>
+                    <input type="date" id="statsEndDate">
+                </div>
+                <button id="applyStatsDateRangeBtn" class="period-btn">Appliquer</button>
             </div>
             <!-- Grille pour les graphiques -->
             <div class="stats-grid">
@@ -623,6 +635,16 @@
             </div>
             <!-- ===================================== -->
             </div>
+
+            <!-- Section Journal des repas -->
+            <div id="stats-journal" class="stats-section">
+                <h2 class="section-title">🗓️ Journal des Repas</h2>
+                <p class="journal-period-info" id="journalPeriodInfo"></p>
+                <div id="journalTimeline" class="journal-timeline">
+                    <p class="journal-empty">Chargement...</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
