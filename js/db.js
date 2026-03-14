@@ -162,9 +162,46 @@ export async function loadPeriodMeals(days, foods, composedMeals = {}) {
         const meals = await loadDayMeals(targetDate);
         const weight = await loadDayWeight(targetDate);
         const belly = await loadDayBelly(targetDate);
+        const waterData = await loadDayWater(targetDate);
+        const stepsData = await loadDaySteps(targetDate);
         const dayTotals = calculateDayTotals(meals, foods, composedMeals);
-        data.push({ date: formatDateKey(targetDate), weight, belly, ...dayTotals });
+        data.push({
+            date: formatDateKey(targetDate),
+            weight,
+            belly,
+            water: waterData.totalMl || 0,
+            steps: stepsData || 0,
+            ...dayTotals
+        });
     }
+    return data;
+}
+
+export async function loadMealsByDateRange(startDate, endDate, foods, composedMeals = {}) {
+    const data = [];
+    const currentDate = new Date(startDate);
+    currentDate.setHours(0, 0, 0, 0);
+    const finalDate = new Date(endDate);
+    finalDate.setHours(0, 0, 0, 0);
+
+    while (currentDate <= finalDate) {
+        const meals = await loadDayMeals(currentDate);
+        const weight = await loadDayWeight(currentDate);
+        const belly = await loadDayBelly(currentDate);
+        const waterData = await loadDayWater(currentDate);
+        const stepsData = await loadDaySteps(currentDate);
+        const dayTotals = calculateDayTotals(meals, foods, composedMeals);
+        data.push({
+            date: formatDateKey(currentDate),
+            weight,
+            belly,
+            water: waterData.totalMl || 0,
+            steps: stepsData || 0,
+            ...dayTotals
+        });
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
     return data;
 }
 

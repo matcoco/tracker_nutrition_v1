@@ -42,31 +42,46 @@ export function calculateDayTotals(meals, foods, composedMeals = {}) {
                 }
                 
                 if (food) {
-                    // CAS 1 : Repas avec customPortions -> calculer à partir des ingrédients
+                    // CAS 1 : Repas avec customPortions -> calculer à partir des ingrédients puis ratio poids consommé
                     if (item.isMeal && item.customPortions && food.ingredients) {
+                        let cpTotals = { cal: 0, prot: 0, carbs: 0, fats: 0, sugars: 0, fibers: 0 };
+                        let customTotalWeight = 0;
                         food.ingredients.forEach(ing => {
                             const ingredientFood = foods[ing.foodId];
                             const weight = item.customPortions[ing.foodId] || 0;
+                            customTotalWeight += weight;
                             
                             if (ingredientFood && weight > 0) {
-                                const factor = weight / 100;
-                                totals.calories += (ingredientFood.calories || 0) * factor;
-                                totals.proteins += (ingredientFood.proteins || 0) * factor;
-                                totals.carbs += (ingredientFood.carbs || 0) * factor;
-                                totals.fats += (ingredientFood.fats || 0) * factor;
-                                totals.sugars += (ingredientFood.sugars || 0) * factor;
-                                totals.fibers += (ingredientFood.fibers || 0) * factor;
+                                const f = weight / 100;
+                                cpTotals.cal += (ingredientFood.calories || 0) * f;
+                                cpTotals.prot += (ingredientFood.proteins || 0) * f;
+                                cpTotals.carbs += (ingredientFood.carbs || 0) * f;
+                                cpTotals.fats += (ingredientFood.fats || 0) * f;
+                                cpTotals.sugars += (ingredientFood.sugars || 0) * f;
+                                cpTotals.fibers += (ingredientFood.fibers || 0) * f;
                             }
                         });
+                        const totalRecipeWeight = food.totalWeight || customTotalWeight || 1;
+                        const consumedWeight = item.weight || totalRecipeWeight;
+                        const ratio = consumedWeight / totalRecipeWeight;
+                        totals.calories += cpTotals.cal * ratio;
+                        totals.proteins += cpTotals.prot * ratio;
+                        totals.carbs += cpTotals.carbs * ratio;
+                        totals.fats += cpTotals.fats * ratio;
+                        totals.sugars += cpTotals.sugars * ratio;
+                        totals.fibers += cpTotals.fibers * ratio;
                     } 
-                    // CAS 2 : Repas ajustable sans customPortions -> valeurs déjà totales
+                    // CAS 2 : Repas ajustable sans customPortions -> appliquer le prorata selon le poids consommé
                     else if (item.isMeal && food.isPortionAdjustable) {
-                        totals.calories += (food.calories || 0);
-                        totals.proteins += (food.proteins || 0);
-                        totals.carbs += (food.carbs || 0);
-                        totals.fats += (food.fats || 0);
-                        totals.sugars += (food.sugars || 0);
-                        totals.fibers += (food.fibers || 0);
+                        const totalRecipeWeight = food.totalWeight || 100;
+                        const consumedWeight = item.weight || totalRecipeWeight;
+                        const factor = totalRecipeWeight > 0 ? consumedWeight / totalRecipeWeight : 1;
+                        totals.calories += (food.calories || 0) * factor;
+                        totals.proteins += (food.proteins || 0) * factor;
+                        totals.carbs += (food.carbs || 0) * factor;
+                        totals.fats += (food.fats || 0) * factor;
+                        totals.sugars += (food.sugars || 0) * factor;
+                        totals.fibers += (food.fibers || 0) * factor;
                     }
                     // CAS 3 : Calcul normal (aliment ou repas pour 100g)
                     else {
@@ -107,31 +122,46 @@ export function calculateMealTotals(mealItems, foods, composedMeals = {}) {
         }
         
         if (food) {
-            // CAS 1 : Repas avec customPortions -> calculer à partir des ingrédients
+            // CAS 1 : Repas avec customPortions -> calculer à partir des ingrédients puis ratio poids consommé
             if (item.isMeal && item.customPortions && food.ingredients) {
+                let cpTotals = { cal: 0, prot: 0, carbs: 0, fats: 0, sugars: 0, fibers: 0 };
+                let customTotalWeight = 0;
                 food.ingredients.forEach(ing => {
                     const ingredientFood = foods[ing.foodId];
                     const weight = item.customPortions[ing.foodId] || 0;
+                    customTotalWeight += weight;
                     
                     if (ingredientFood && weight > 0) {
-                        const factor = weight / 100;
-                        totals.calories += (ingredientFood.calories || 0) * factor;
-                        totals.proteins += (ingredientFood.proteins || 0) * factor;
-                        totals.carbs += (ingredientFood.carbs || 0) * factor;
-                        totals.fats += (ingredientFood.fats || 0) * factor;
-                        totals.sugars += (ingredientFood.sugars || 0) * factor;
-                        totals.fibers += (ingredientFood.fibers || 0) * factor;
+                        const f = weight / 100;
+                        cpTotals.cal += (ingredientFood.calories || 0) * f;
+                        cpTotals.prot += (ingredientFood.proteins || 0) * f;
+                        cpTotals.carbs += (ingredientFood.carbs || 0) * f;
+                        cpTotals.fats += (ingredientFood.fats || 0) * f;
+                        cpTotals.sugars += (ingredientFood.sugars || 0) * f;
+                        cpTotals.fibers += (ingredientFood.fibers || 0) * f;
                     }
                 });
+                const totalRecipeWeight = food.totalWeight || customTotalWeight || 1;
+                const consumedWeight = item.weight || totalRecipeWeight;
+                const ratio = consumedWeight / totalRecipeWeight;
+                totals.calories += cpTotals.cal * ratio;
+                totals.proteins += cpTotals.prot * ratio;
+                totals.carbs += cpTotals.carbs * ratio;
+                totals.fats += cpTotals.fats * ratio;
+                totals.sugars += cpTotals.sugars * ratio;
+                totals.fibers += cpTotals.fibers * ratio;
             }
-            // CAS 2 : Repas ajustable sans customPortions -> valeurs déjà totales
+            // CAS 2 : Repas ajustable sans customPortions -> appliquer le prorata selon le poids consommé
             else if (item.isMeal && food.isPortionAdjustable) {
-                totals.calories += (food.calories || 0);
-                totals.proteins += (food.proteins || 0);
-                totals.carbs += (food.carbs || 0);
-                totals.fats += (food.fats || 0);
-                totals.sugars += (food.sugars || 0);
-                totals.fibers += (food.fibers || 0);
+                const totalRecipeWeight = food.totalWeight || 100;
+                const consumedWeight = item.weight || totalRecipeWeight;
+                const factor = totalRecipeWeight > 0 ? consumedWeight / totalRecipeWeight : 1;
+                totals.calories += (food.calories || 0) * factor;
+                totals.proteins += (food.proteins || 0) * factor;
+                totals.carbs += (food.carbs || 0) * factor;
+                totals.fats += (food.fats || 0) * factor;
+                totals.sugars += (food.sugars || 0) * factor;
+                totals.fibers += (food.fibers || 0) * factor;
             }
             // CAS 3 : Calcul normal (aliment ou repas pour 100g)
             else {
@@ -224,23 +254,33 @@ export function calculateDayCost(meals, foods, composedMeals = {}) {
                     if (item.customPrice !== undefined && item.customPrice !== null) {
                         cost += item.customPrice;
                     }
-                    // CAS 1 : Repas avec customPortions -> calculer à partir des ingrédients
+                    // CAS 1 : Repas avec customPortions -> calculer puis ratio poids consommé
                     else if (item.isMeal && item.customPortions && food.ingredients) {
+                        let cpCost = 0;
+                        let customTotalWeight = 0;
                         food.ingredients.forEach(ing => {
                             const ingredientFood = foods[ing.foodId];
                             const weight = item.customPortions[ing.foodId] || 0;
+                            customTotalWeight += weight;
                             
                             if (ingredientFood && weight > 0 && ingredientFood.price) {
                                 const pricePer100g = getPricePer100g(ingredientFood);
                                 if (pricePer100g !== null) {
-                                    cost += (pricePer100g / 100) * weight;
+                                    cpCost += (pricePer100g / 100) * weight;
                                 }
                             }
                         });
+                        const totalRecipeWeight = food.totalWeight || customTotalWeight || 1;
+                        const consumedWeight = item.weight || totalRecipeWeight;
+                        const ratio = consumedWeight / totalRecipeWeight;
+                        cost += cpCost * ratio;
                     }
-                    // CAS 2 : Repas ajustable sans customPortions -> prix déjà total
+                    // CAS 2 : Repas ajustable sans customPortions -> appliquer le prorata du prix de la recette
                     else if (item.isMeal && food.isPortionAdjustable && food.price) {
-                        cost += food.price;
+                        const totalRecipeWeight = food.totalWeight || 100;
+                        const consumedWeight = item.weight || totalRecipeWeight;
+                        const factor = totalRecipeWeight > 0 ? consumedWeight / totalRecipeWeight : 1;
+                        cost += food.price * factor;
                     }
                     // CAS 3 : Calcul normal
                     else if (food.price) {
@@ -290,23 +330,33 @@ export function calculateCostsByMeal(meals, foods, composedMeals = {}) {
                     if (item.customPrice !== undefined && item.customPrice !== null) {
                         costs[mealType] += item.customPrice;
                     }
-                    // CAS 1 : Repas avec customPortions -> calculer à partir des ingrédients
+                    // CAS 1 : Repas avec customPortions -> calculer puis ratio poids consommé
                     else if (item.isMeal && item.customPortions && food.ingredients) {
+                        let cpCost = 0;
+                        let customTotalWeight = 0;
                         food.ingredients.forEach(ing => {
                             const ingredientFood = foods[ing.foodId];
                             const weight = item.customPortions[ing.foodId] || 0;
+                            customTotalWeight += weight;
                             
                             if (ingredientFood && weight > 0 && ingredientFood.price) {
                                 const pricePer100g = getPricePer100g(ingredientFood);
                                 if (pricePer100g !== null) {
-                                    costs[mealType] += (pricePer100g / 100) * weight;
+                                    cpCost += (pricePer100g / 100) * weight;
                                 }
                             }
                         });
+                        const totalRecipeWeight = food.totalWeight || customTotalWeight || 1;
+                        const consumedWeight = item.weight || totalRecipeWeight;
+                        const ratio = consumedWeight / totalRecipeWeight;
+                        costs[mealType] += cpCost * ratio;
                     }
-                    // CAS 2 : Repas ajustable sans customPortions -> prix déjà total
+                    // CAS 2 : Repas ajustable sans customPortions -> appliquer le prorata du prix de la recette
                     else if (item.isMeal && food.isPortionAdjustable && food.price) {
-                        costs[mealType] += food.price;
+                        const totalRecipeWeight = food.totalWeight || 100;
+                        const consumedWeight = item.weight || totalRecipeWeight;
+                        const factor = totalRecipeWeight > 0 ? consumedWeight / totalRecipeWeight : 1;
+                        costs[mealType] += food.price * factor;
                     }
                     // CAS 3 : Calcul normal
                     else if (food.price) {

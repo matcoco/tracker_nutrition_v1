@@ -302,41 +302,79 @@ function hideMealForm() {
 }
 
 /**
- * Ajoute une ligne d'ingrédient
+ * Ajoute une ligne d'ingrédient avec champ de recherche
  */
 function addIngredientRow(foods, ingredient = null) {
     const container = document.getElementById('mealIngredientsContainer');
     const row = document.createElement('div');
     row.className = 'ingredient-row';
-    
-    const foodsOptions = Object.entries(foods).map(([id, food]) => {
-        const selected = ingredient && ingredient.foodId === id ? 'selected' : '';
-        return `<option value="${id}" ${selected}>${food.name}</option>`;
-    }).join('');
-    
+
+    const initialName = ingredient && foods[ingredient.foodId] ? foods[ingredient.foodId].name : '';
+    const initialId   = ingredient ? ingredient.foodId : '';
     const weightValue = ingredient ? ingredient.weight : 100;
-    
+
     row.innerHTML = `
-        <select class="ingredient-select" required>
-            <option value="">-- Sélectionner --</option>
-            ${foodsOptions}
-        </select>
-        <input type="number" class="ingredient-weight" value="${weightValue}" min="1" step="1" placeholder="Poids (g)" required>
+        <div class="ingredient-search-wrap">
+            <input type="text" class="ingredient-search-input" placeholder="Rechercher un aliment..." value="${initialName}" autocomplete="off">
+            <input type="hidden" class="ingredient-select" value="${initialId}">
+            <ul class="ingredient-dropdown"></ul>
+        </div>
+        <input type="number" class="ingredient-weight" value="${weightValue}" min="1" step="1" placeholder="g" required>
         <button type="button" class="remove-ingredient-btn" title="Retirer">❌</button>
     `;
-    
+
     container.appendChild(row);
-    
-    // Event listeners
+
+    const searchInput = row.querySelector('.ingredient-search-input');
+    const hiddenInput = row.querySelector('.ingredient-select');
+    const dropdown    = row.querySelector('.ingredient-dropdown');
+
+    // Construire la liste des aliments triée par nom
+    const foodEntries = Object.entries(foods).sort((a, b) => a[1].name.localeCompare(b[1].name));
+
+    function renderDropdown(query) {
+        const q = query.trim().toLowerCase();
+        const matches = q
+            ? foodEntries.filter(([, f]) => f.name.toLowerCase().includes(q)).slice(0, 20)
+            : foodEntries.slice(0, 20);
+
+        dropdown.innerHTML = '';
+        if (matches.length === 0) {
+            dropdown.innerHTML = '<li class="ingredient-dropdown-empty">Aucun résultat</li>';
+        } else {
+            matches.forEach(([id, food]) => {
+                const li = document.createElement('li');
+                li.className = 'ingredient-dropdown-item';
+                li.textContent = food.name;
+                li.dataset.id = id;
+                li.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    searchInput.value = food.name;
+                    hiddenInput.value = id;
+                    dropdown.classList.remove('open');
+                    updateMealPreview(foods);
+                    updateTotalWeightFromIngredients();
+                });
+                dropdown.appendChild(li);
+            });
+        }
+        dropdown.classList.add('open');
+    }
+
+    searchInput.addEventListener('focus', () => renderDropdown(searchInput.value));
+    searchInput.addEventListener('input', () => {
+        hiddenInput.value = '';
+        renderDropdown(searchInput.value);
+    });
+    searchInput.addEventListener('blur', () => {
+        setTimeout(() => dropdown.classList.remove('open'), 150);
+    });
+
     row.querySelector('.remove-ingredient-btn').addEventListener('click', () => {
         row.remove();
         updateMealPreview(foods);
     });
-    
-    row.querySelector('.ingredient-select').addEventListener('change', () => {
-        updateMealPreview(foods);
-        updateTotalWeightFromIngredients();
-    });
+
     row.querySelector('.ingredient-weight').addEventListener('input', () => {
         updateMealPreview(foods);
         updateTotalWeightFromIngredients();
