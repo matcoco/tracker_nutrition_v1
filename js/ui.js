@@ -55,6 +55,8 @@ const elements = {
     totalSugars: document.getElementById('totalSugars'),
     weightInput: document.getElementById('weightInput'),
     saveWeightBtn: document.getElementById('saveWeightBtn'),
+    bellyInput: document.getElementById('bellyInput'),
+    saveBellyBtn: document.getElementById('saveBellyBtn'),
     foodsList: document.getElementById('foodsList'),
     foodsListManage: document.getElementById('foodsListManage'),
     addFoodForm: document.getElementById('addFoodForm'),
@@ -224,6 +226,18 @@ export function updateWeightDisplay(weight) {
         elements.weightInput.value = weight;
     } else {
         elements.weightInput.value = '';
+    }
+}
+
+/**
+ * Met à jour l'affichage du tour de ventre pour la journée.
+ * @param {number|null} belly - Le tour de ventre en cm, ou null si non renseigné.
+ */
+export function updateBellyDisplay(belly) {
+    if (belly !== null && belly !== undefined) {
+        elements.bellyInput.value = belly;
+    } else {
+        elements.bellyInput.value = '';
     }
 }
 
@@ -552,9 +566,12 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
                         }
                     });
                 }
-                // CAS 2 : Repas ajustable sans customPortions -> prix déjà total
+                // CAS 2 : Repas ajustable sans customPortions -> appliquer le prorata du prix de la recette
                 else if (item.isMeal && food.isPortionAdjustable && hasPrice(food)) {
-                    mealCost += food.price;
+                    const totalRecipeWeight = food.totalWeight || 100;
+                    const consumedWeight = item.weight || totalRecipeWeight;
+                    const factor = totalRecipeWeight > 0 ? consumedWeight / totalRecipeWeight : 1;
+                    mealCost += food.price * factor;
                 }
                 // CAS 3 : Calcul normal
                 else if (hasPrice(food)) {
@@ -604,14 +621,19 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
             
             // Calcul des macros : 3 cas possibles
             let cal, prot, carb, fat, sug, fib;
+            const totalRecipeWeight = isMealComposed && food.isPortionAdjustable ? (food.totalWeight || 100) : null;
+            const consumedWeight = isMealComposed && food.isPortionAdjustable ? (item.weight || totalRecipeWeight) : item.weight;
             
             if (isMealComposed && item.customPortions) {
                 // CAS 1 : Repas avec portions personnalisées (ajustées)
+                // Calculer les macros depuis les customPortions puis appliquer le ratio poids consommé
                 let totals = { calories: 0, proteins: 0, carbs: 0, fats: 0, sugars: 0, fibers: 0 };
+                let customTotalWeight = 0;
                 
                 food.ingredients.forEach(ing => {
                     const ingredientFood = foods[ing.foodId];
                     const weight = item.customPortions[ing.foodId] || 0;
+                    customTotalWeight += weight;
                     
                     if (ingredientFood && weight > 0) {
                         totals.calories += (ingredientFood.calories * weight / 100);
@@ -623,20 +645,24 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
                     }
                 });
                 
-                cal = totals.calories.toFixed(0);
-                prot = totals.proteins.toFixed(1);
-                carb = totals.carbs.toFixed(1);
-                fat = totals.fats.toFixed(1);
-                sug = totals.sugars.toFixed(1);
-                fib = totals.fibers.toFixed(1);
+                // Appliquer le ratio poids consommé / poids total recette
+                const refWeight = totalRecipeWeight || customTotalWeight || 1;
+                const factor = consumedWeight / refWeight;
+                cal = (totals.calories * factor).toFixed(0);
+                prot = (totals.proteins * factor).toFixed(1);
+                carb = (totals.carbs * factor).toFixed(1);
+                fat = (totals.fats * factor).toFixed(1);
+                sug = (totals.sugars * factor).toFixed(1);
+                fib = (totals.fibers * factor).toFixed(1);
             } else if (isMealComposed && food.isPortionAdjustable) {
-                // CAS 2 : Repas ajustable sans customPortions -> valeurs déjà totales
-                cal = food.calories.toFixed(0);
-                prot = food.proteins.toFixed(1);
-                carb = food.carbs.toFixed(1);
-                fat = food.fats.toFixed(1);
-                sug = (food.sugars || 0).toFixed(1);
-                fib = (food.fibers || 0).toFixed(1);
+                // CAS 2 : Repas ajustable sans customPortions -> appliquer le prorata selon le poids consommé
+                const factor = totalRecipeWeight > 0 ? consumedWeight / totalRecipeWeight : 1;
+                cal = ((food.calories || 0) * factor).toFixed(0);
+                prot = ((food.proteins || 0) * factor).toFixed(1);
+                carb = ((food.carbs || 0) * factor).toFixed(1);
+                fat = ((food.fats || 0) * factor).toFixed(1);
+                sug = (((food.sugars || 0) * factor)).toFixed(1);
+                fib = (((food.fibers || 0) * factor)).toFixed(1);
             } else {
                 // CAS 3 : Calcul normal (aliment ou repas pour 100g)
                 cal = (food.calories * item.weight / 100).toFixed(0);
@@ -654,11 +680,13 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
                 costInfo = ` | 💰 ${item.customPrice.toFixed(2)}€`;
             }
             else if (isMealComposed && item.customPortions) {
-                // Repas avec portions personnalisées : calculer le prix à partir des ingrédients
+                // Repas avec portions personnalisées : calculer le prix puis appliquer le ratio
                 let totalCost = 0;
+                let customTotalW = 0;
                 food.ingredients.forEach(ing => {
                     const ingredientFood = foods[ing.foodId];
                     const weight = item.customPortions[ing.foodId] || 0;
+                    customTotalW += weight;
                     
                     if (ingredientFood && weight > 0 && hasPrice(ingredientFood)) {
                         const pricePer100g = getPricePer100g(ingredientFood);
@@ -666,13 +694,16 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
                     }
                 });
                 if (totalCost > 0) {
-                    costInfo = ` | 💰 ${totalCost.toFixed(2)}€`;
+                    const refW = totalRecipeWeight || customTotalW || 1;
+                    const costFactor = consumedWeight / refW;
+                    costInfo = ` | 💰 ${(totalCost * costFactor).toFixed(2)}€`;
                 }
             } else if (hasPrice(food)) {
                 let cost;
                 if (isMealComposed && food.isPortionAdjustable) {
-                    // Repas ajustable sans customPortions : le prix stocké est déjà le prix total
-                    cost = food.price.toFixed(2);
+                    // Repas ajustable sans customPortions : appliquer le prorata du prix de la recette
+                    const factor = totalRecipeWeight > 0 ? consumedWeight / totalRecipeWeight : 1;
+                    cost = (food.price * factor).toFixed(2);
                 } else {
                     // Calcul normal : prix pour 100g * poids / 100
                     const pricePer100g = getPricePer100g(food);
@@ -700,56 +731,85 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
                 inputStep = '1';
             }
 
-            const mealBadge = isMealComposed ? '<span class="meal-badge-small">REPAS</span> ' : '';
+            const mealBadge = isMealComposed ? '<span class="meal-badge-small">REPAS</span>' : '';
             
             // Vérifier si le repas a des portions ajustables
             const isAdjustable = isMealComposed && food.isPortionAdjustable;
-            
-            // Si ajustable, afficher bouton au lieu du champ de poids
+
+            // Zone de quantité
+            const isFullRecipe = isAdjustable && (consumedWeight === totalRecipeWeight);
             let weightSection = '';
             if (isAdjustable) {
+                const stateLabel = item.customPortions ? 'Composition personnalisée' : `sur ${totalRecipeWeight} g`;
                 weightSection = `
-                    <button class="adjust-portions-btn" data-unique-id="${item.uniqueId}" title="Ajuster les portions">
-                        ⚙️ Ajuster
-                    </button>
+                    <div class="ci-qty-row">
+                        <label class="ci-full-recipe">
+                            <input type="checkbox" class="ci-full-recipe-cb" ${isFullRecipe ? 'checked' : ''}>
+                            <span>Recette entière (${totalRecipeWeight} g)</span>
+                        </label>
+                        <div class="ci-qty-block">
+                            <input class="ci-qty-input" type="number" value="${consumedWeight}" min="1" step="1" ${isFullRecipe ? 'disabled' : ''}>
+                            <span class="ci-qty-unit">g</span>
+                        </div>
+                        <span class="ci-qty-hint">${stateLabel}</span>
+                        <button class="ci-adjust-btn" data-unique-id="${item.uniqueId}">⚙ Ajuster</button>
+                    </div>
                 `;
             } else {
                 weightSection = `
-                    <div class="weight-input">
-                        <input type="number" value="${displayValue}" min="0.1" step="${inputStep}">
-                        <span>${displayUnit}</span>
+                    <div class="ci-qty-row">
+                        <div class="ci-qty-block">
+                            <input class="ci-qty-input" type="number" value="${displayValue}" min="0.1" step="${inputStep}">
+                            <span class="ci-qty-unit">${displayUnit}</span>
+                        </div>
                     </div>
                 `;
             }
+
+            // Barre de macros
+            const costChip = costInfo ? `<span class="ci-macro"><b>${costInfo.replace(' | 💰 ', '').replace('€','')}</b><em>€</em></span>` : '';
+            const macrosBar = `
+                <div class="ci-macros">
+                    <span class="ci-macro ci-macro-kcal"><b>${cal}</b><em>kcal</em></span>
+                    <span class="ci-macro"><b>${prot}</b><em>P</em></span>
+                    <span class="ci-macro"><b>${carb}</b><em>G</em></span>
+                    <span class="ci-macro"><b>${fat}</b><em>L</em></span>
+                    <span class="ci-macro"><b>${fib}</b><em>F</em></span>
+                    ${costChip}
+                </div>
+            `;
             
             el.innerHTML = `
-                <div class="meal-item-header">
-                    <span class="meal-item-name">${mealBadge}${food.name}</span>
-                    <div class="meal-item-actions">
-                        <button class="duplicate-btn" title="Dupliquer">📋</button>
-                        <button class="remove-btn">✕</button>
+                <div class="ci-part1">
+                    <div class="ci-drag">⠿</div>
+                    ${mealBadge}
+                    <div class="ci-actions">
+                        <button class="ci-btn-dup" title="Dupliquer">⧉</button>
+                        <button class="ci-btn-del" title="Supprimer">✕</button>
                     </div>
                 </div>
-                ${weightSection}
-                <div class="meal-item-macros">${cal} kcal | P: ${prot}g | G: ${carb}g | F: ${fib}g | L: ${fat}g | S: ${sug}g${costInfo}</div>
+                <div class="ci-part2">
+                    <span class="ci-name">${food.name}</span>
+                </div>
+                <div class="ci-part3">
+                    ${weightSection}
+                    ${macrosBar}
+                </div>
             `;
 
-            el.querySelector('.remove-btn').onclick = () => removeHandler(type, item.uniqueId);
+            el.querySelector('.ci-btn-del').onclick = () => removeHandler(type, item.uniqueId);
             
-            // Attacher le handler de duplication
-            el.querySelector('.duplicate-btn').onclick = (e) => {
-                e.stopPropagation(); // Empêcher le drag
+            el.querySelector('.ci-btn-dup').onclick = (e) => {
+                e.stopPropagation();
                 if (window.handleDuplicateMealItem) {
                     window.handleDuplicateMealItem(type, item);
                 }
             };
             
-            // Si bouton ajuster présent, attacher le listener
-            const adjustBtn = el.querySelector('.adjust-portions-btn');
+            const adjustBtn = el.querySelector('.ci-adjust-btn');
             if (adjustBtn && isAdjustable) {
                 adjustBtn.onclick = (e) => {
-                    e.stopPropagation(); // Empêcher le drag
-                    // Appeler le handler global avec les données nécessaires
+                    e.stopPropagation();
                     if (window.handleAdjustPortions) {
                         window.handleAdjustPortions(type, item.uniqueId, item.id, item.customPortions, item.customPrice);
                     }
@@ -790,17 +850,43 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
                 // Le nettoyage se fera dans handleDrop après utilisation
             });
             
-            // Maintenant on configure l'input SI il existe (pas de repas ajustable)
-            const weightInput = el.querySelector('input[type="number"]');
+            // Configurer l'input de poids
+            const weightInput = el.querySelector('.ci-qty-input');
             if (weightInput) {
-                weightInput.onchange = (e) => {
-                    let valueInGrams = parseFloat(e.target.value);
-                    // Si c'est basé sur des portions, convertir en grammes
+                let updating = false;
+                const triggerUpdate = () => {
+                    if (updating) return;
+                    const newVal = parseFloat(weightInput.value);
+                    if (isNaN(newVal) || newVal <= 0) return;
+                    let valueInGrams = newVal;
                     if (isPortionBased && portionWeight) {
-                        valueInGrams = valueInGrams * portionWeight;
+                        valueInGrams = newVal * portionWeight;
                     }
+                    updating = true;
                     weightChangeHandler(type, item.uniqueId, valueInGrams);
                 };
+                weightInput.addEventListener('change', triggerUpdate);
+                weightInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        triggerUpdate();
+                    }
+                });
+            }
+
+            // Checkbox "recette entière"
+            const fullRecipeCb = el.querySelector('.ci-full-recipe-cb');
+            if (fullRecipeCb && isAdjustable) {
+                fullRecipeCb.addEventListener('change', () => {
+                    if (fullRecipeCb.checked) {
+                        weightInput.value = totalRecipeWeight;
+                        weightInput.disabled = true;
+                        weightChangeHandler(type, item.uniqueId, totalRecipeWeight);
+                    } else {
+                        weightInput.disabled = false;
+                        weightInput.focus();
+                    }
+                });
             }
             
             container.appendChild(el);
@@ -1218,18 +1304,21 @@ export function updateDailySummary(meals, foods, totals, date, waterData = 0, st
                         mealCost += itemCost;
                         totalCost += itemCost;
                     }
-                    // CAS 2 : Repas ajustable sans customPortions -> valeurs déjà totales
+                    // CAS 2 : Repas ajustable sans customPortions -> appliquer le prorata selon le poids consommé
                     else if (item.isMeal && food.isPortionAdjustable) {
-                        itemCal = food.calories;
-                        itemProt = food.proteins;
-                        itemCarb = food.carbs;
-                        itemFat = food.fats;
+                        const totalRecipeWeight = food.totalWeight || 100;
+                        const consumedWeight = item.weight || totalRecipeWeight;
+                        const factor = totalRecipeWeight > 0 ? consumedWeight / totalRecipeWeight : 1;
+                        itemCal = food.calories * factor;
+                        itemProt = food.proteins * factor;
+                        itemCarb = food.carbs * factor;
+                        itemFat = food.fats * factor;
                         
                         // Utiliser prix personnalisé si défini, sinon prix du repas
                         if (item.customPrice !== undefined && item.customPrice !== null) {
                             itemCost = item.customPrice;
                         } else if (hasPrice(food)) {
-                            itemCost = food.price;
+                            itemCost = food.price * factor;
                         }
                         
                         // Ajouter aux totaux
@@ -1436,18 +1525,21 @@ export function generateSummaryText(meals, foods, totals, date, waterData = 0, s
                         mealCost += itemCost;
                         totalCost += itemCost;
                     }
-                    // CAS 2 : Repas ajustable sans customPortions -> valeurs déjà totales
+                    // CAS 2 : Repas ajustable sans customPortions -> appliquer le prorata selon le poids consommé
                     else if (item.isMeal && food.isPortionAdjustable) {
-                        itemCal = food.calories;
-                        itemProt = food.proteins;
-                        itemCarb = food.carbs;
-                        itemFat = food.fats;
+                        const totalRecipeWeight = food.totalWeight || 100;
+                        const consumedWeight = item.weight || totalRecipeWeight;
+                        const factor = totalRecipeWeight > 0 ? consumedWeight / totalRecipeWeight : 1;
+                        itemCal = food.calories * factor;
+                        itemProt = food.proteins * factor;
+                        itemCarb = food.carbs * factor;
+                        itemFat = food.fats * factor;
                         
                         // Utiliser prix personnalisé si défini, sinon prix du repas
                         if (item.customPrice !== undefined && item.customPrice !== null) {
                             itemCost = item.customPrice;
                         } else if (hasPrice(food)) {
-                            itemCost = food.price;
+                            itemCost = food.price * factor;
                         }
                         
                         // Ajouter aux totaux
