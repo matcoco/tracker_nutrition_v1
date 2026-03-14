@@ -1,436 +1,301 @@
-# 🍽️ Tracker Nutritionnel
+# Tracker Nutritionnel
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.5.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![JavaScript](https://img.shields.io/badge/javascript-100%25-yellow.svg)
 ![Responsive](https://img.shields.io/badge/responsive-mobile%20%7C%20tablet%20%7C%20desktop-purple.svg)
 
-**Une application web moderne et intuitive pour suivre votre alimentation quotidienne**
+**Application web complète pour suivre alimentation, activite physique et bien-etre au quotidien.**
 
-[🚀 Démo Live](#) • [📖 Documentation](#fonctionnalités) • [🐛 Signaler un Bug](../../issues) • [✨ Demander une Fonctionnalité](../../issues)
-
-</div>
-
----
-
-## 📸 Aperçu
-
-<div align="center">
-  <img src="docs/screenshots/dashboard.png" alt="Dashboard" width="800"/>
-  <p><em>Interface principale avec suivi quotidien et barres de progression</em></p>
-</div>
-
-<details>
-<summary>📱 Plus de captures d'écran</summary>
-
-<div align="center">
-  <img src="docs/screenshots/stats.png" alt="Statistiques" width="400"/>
-  <img src="docs/screenshots/mobile.png" alt="Version Mobile" width="400"/>
-</div>
-
-</details>
-
----
-
-## 🆕 Nouveautés Version 1.5.0
-
-Cette version majeure apporte des fonctionnalités essentielles pour personnaliser vos objectifs :
-
-### 🎯 **5 Profils d'Objectifs Nutritionnels**
-- **🔥 Sèche** : Déficit 10-25%, protéines 2.2g/kg
-- **📉 Perte de poids** : Déficit 10-20%, protéines 1.8g/kg
-- **💪 Prise de masse** : Surplus 5-20%, protéines 2.0g/kg
-- **⚖️ Maintien** : Ajustement -2% à +2%, protéines 1.6g/kg
-- **🎯 Recomposition** : Déficit 5-10%, protéines 2.4g/kg
-
-### 📝 **Améliorations Clés**
-- 💡 **Conseils personnalisés** : Recommandations dynamiques selon votre profil
-- 💰 **Prix personnalisé** : Définissez un prix custom pour vos repas ajustables
-- 🔍 **Recherche de repas** : Filtrez vos repas composés en temps réel
-- 📊 **Comparaison améliorée** : Labels dynamiques et textes explicatifs
-- 📚 **Documentation complète** : Guide détaillé des calculs (OBJECTIFS-GUIDE.md)
-
-**🔗 Documentation complète** : Consultez [FONCTIONNALITES.md](FONCTIONNALITES.md) pour tous les détails
-
----
-
-## ✨ Fonctionnalités
-
-### 📊 Suivi Nutritionnel Complet
-- ✅ **Tracking en temps réel** : Calories, protéines, glucides, lipides, sucres, fibres
-- ✅ **Barres de progression visuelles** : Visualisez vos objectifs en un coup d'œil
-- ✅ **Système de repas** : Petit déjeuner, déjeuner, dîner, snacks
-- ✅ **Suivi du poids** : Enregistrement quotidien et graphique d'évolution
-- ✅ **Résumé journalier** : Format texte copiable avec tous les détails
-
-### 🎯 Gestion Intelligente
-- ✅ **Drag & Drop** : Déplacez vos aliments entre les repas
-- ✅ **Ajout rapide** : Bouton + pour ajouter instantanément
-- ✅ **Recherche instantanée** : Trouvez vos aliments en quelques secondes
-- ✅ **Portions personnalisables** : Ajustez les quantités en grammes
-
-### 📈 Statistiques & Analyses
-- ✅ **Graphiques interactifs** : Chart.js pour des visualisations élégantes
-- ✅ **Multi-périodes** : Analyses sur 7, 14 ou 30 jours
-- ✅ **Graphique de poids** : Suivez votre évolution corporelle
-- ✅ **Répartition macros** : Donut chart des macronutriments (incluant fibres et sucres)
-- ✅ **Moyennes hebdomadaires/mensuelles** : Analyses sur 12 semaines ou 6 mois
-- ✅ **Graphiques de sucres** : 3 seuils de recommandation (25g/50g/100g)
-- ✅ **Graphiques de fibres** : Suivi vs objectif minimum
-
-### 🎯 Calcul d'Objectifs Multi-Profils
-- ✅ **5 profils disponibles** : Sèche, Perte de poids, Prise de masse, Maintien, Recomposition
-- ✅ **Formule Mifflin-St Jeor** : Calcul du métabolisme de base (MB)
-- ✅ **TDEE adaptatif** : Selon votre niveau d'activité
-- ✅ **Macros optimisés** : Ratios spécifiques pour chaque profil
-- ✅ **Conseils personnalisés** : Recommandations adaptées à votre objectif
-- ✅ **Documentation complète** : Guide OBJECTIFS-GUIDE.md avec exemples de calcul
-
-### 🍽️ Repas Composés
-- ✅ **Création de repas** : Combinez plusieurs aliments
-- ✅ **Portions ajustables** : Personnalisez les quantités
-- ✅ **Prix personnalisé** : Définissez un prix custom pour vos repas
-- ✅ **Recherche instantanée** : Filtrez vos repas en temps réel
-- ✅ **Calculs automatiques** : Nutrition et coûts mis à jour
-
-### 🥗 Base de Données Aliments
-- ✅ **100+ aliments pré-enregistrés** : Base complète incluse
-- ✅ **Ajout d'aliments personnalisés** : Créez votre propre bibliothèque
-- ✅ **Modification facile** : Cliquez pour éditer
-- ✅ **Gestion des prix** : Prix au 100g et par portion
-- ✅ **Import/Export** : Sauvegardez vos données en JSON (version 1.5)
-
-### 📱 Design Moderne
-- ✅ **100% Responsive** : Mobile, tablette, desktop
-- ✅ **Interface épurée** : Design Material-inspired
-- ✅ **Dark mode ready** : Variables CSS pour thème sombre
-- ✅ **Animations fluides** : Transitions CSS optimisées
-
-### 💰 Gestion des Coûts
-- ✅ **Suivi budgétaire** : Prix des aliments et calcul automatique
-- ✅ **Coût par repas** : Affichage du coût de chaque repas
-- ✅ **Coût journalier** : Total des dépenses alimentaires
-- ✅ **Analyses des coûts** : Graphiques sur 7/14/30 jours
-- ✅ **Top 5 aliments chers** : Identification des postes de dépense
-- ✅ **Projection mensuelle** : Estimation du budget alimentaire
-
-### 🥗 Analyse par Aliment
-- ✅ **Consommation détaillée** : Poids et coût par aliment
-- ✅ **Ratio qualité-prix** : Prix pour 100g de protéines
-- ✅ **Tableau triable** : Tri par nom, poids, coût, macros
-- ✅ **Export CSV** : Téléchargement des analyses
-- ✅ **Top 10 graphiques** : Visualisation des aliments principaux
-
-### 💧 Bien-être & Activité
-- ✅ **Suivi hydratation** : Enregistrement quotidien (ml)
-- ✅ **Nombre de pas** : Suivi de l'activité quotidienne
-- ✅ **Activités physiques** : Enregistrement des sports (durée, calories)
-- ✅ **Activités personnalisées** : Créez vos propres types d'activités
-- ✅ **Graphiques wellness** : Hydratation et pas sur plusieurs périodes
-
-### 🔒 Confidentialité
-- ✅ **Données locales** : Stockage IndexedDB dans votre navigateur
-- ✅ **Aucun serveur** : Vos données ne quittent jamais votre appareil
-- ✅ **Offline-ready** : Fonctionne sans connexion internet
-
----
-
-## 🛠️ Technologies
-
-<div align="center">
-
-| Technologie | Description |
-|------------|-------------|
-| ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) | Structure sémantique |
-| ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white) | Design moderne avec variables CSS |
-| ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) | Vanilla JS (ES6+) modules |
-| ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=flat&logo=chartdotjs&logoColor=white) | Graphiques interactifs |
-| ![IndexedDB](https://img.shields.io/badge/IndexedDB-00758F?style=flat&logo=database&logoColor=white) | Base de données locale |
+[Documentation](#fonctionnalites) | [Installation](#installation) | [Structure](#structure-du-projet) | [Changelog](CHANGELOG.md)
 
 </div>
 
-**Architecture :**
-- 🏗️ **Pattern MVC** : Séparation claire des responsabilités
-- 📦 **ES6 Modules** : Code modulaire et maintenable
-- 🎨 **CSS Variables** : Thème facilement personnalisable
-- ⚡ **Performance optimisée** : Pas de framework lourd
+---
+
+## Vue d'ensemble
+
+Tracker Nutritionnel est une application front-end pure (HTML / CSS / Vanilla JS ES6 modules) qui stocke toutes les donnees localement dans IndexedDB. Aucun serveur, aucun compte, aucune donnee envoyee en ligne.
+
+L'application s'organise en **7 onglets** :
+
+| Onglet | Description |
+|--------|-------------|
+| **Suivi Quotidien** | Journal alimentaire du jour, hydratation, pas, activites, poids, tour de ventre |
+| **Statistiques** | 6 sous-sections de graphiques et analyses (evolution, moyennes, couts, activites, aliments, journal) |
+| **Objectifs** | Calculateur TDEE multi-profils avec conseils personnalises |
+| **Aliments** | Base de 100+ aliments, ajout/edition/suppression, filtres par categorie, prix |
+| **Repas** | Creation de repas composes avec ingredients et portions ajustables |
+| **Comparaison** | Comparaison visuelle d'aliments/repas sur base 100 g, 200 kcal ou 2 EUR |
+| **Parametres** | Import/export JSON, reinitialisation, outils de diagnostic |
 
 ---
 
-## 🚀 Installation
+## Fonctionnalites
 
-### Prérequis
-- Un navigateur moderne (Chrome, Firefox, Edge, Safari)
-- Un serveur local pour le développement (Live Server, http-server, etc.)
+### Suivi Quotidien
 
-### Méthode 1 : Cloner le repository
+- **Navigation par date** : jour precedent/suivant, date picker, bouton Aujourd'hui
+- **4 types de repas** : petit-dejeuner, dejeuner, diner, snacks
+- **Drag & drop** : glisser un aliment depuis la liste vers un repas, deplacer entre repas
+- **Ajout rapide** : bouton `+` sur chaque aliment
+- **Recherche instantanee** : filtre par nom avec chargement progressif
+- **Filtres par categorie** : fruits, legumes, viandes, feculents, etc.
+- **Portions personnalisables** : poids en grammes, checkbox recette entiere pour les repas composes
+- **Duplication** : dupliquer un aliment deja ajoute
+- **Resume journalier** : barres de progression pour calories, proteines, glucides, lipides, sucres, fibres + copie texte
+- **Suivi du poids** : enregistrement quotidien (kg)
+- **Tour de ventre** : enregistrement quotidien (cm)
+- **Hydratation** : ajout rapide par increments (100/250/500 ml), edition manuelle, historique du jour
+- **Nombre de pas** : saisie quotidienne
+- **Activites physiques** : ajout de seances (type, duree, calories brulees), activites personnalisees
+
+### Statistiques (6 sous-sections)
+
+Toutes les sections partagent le **selecteur de periode global** : 7 / 14 / 30 / 90 / 180 / 365 jours, Tout, ou plage de dates personnalisee. L'etat de la configuration (periodes, section active) est **persiste dans localStorage** et restaure au rechargement.
+
+#### Evolution
+
+11 graphiques interactifs (Chart.js) avec regroupement automatique (quotidien / hebdomadaire / mensuel selon la periode) :
+
+- Calories (ligne + objectif)
+- Repartition macronutriments (donut : proteines, glucides, lipides, sucres, fibres)
+- Proteines, Glucides, Lipides (barres + objectif)
+- Sucres (barres + 3 seuils : 25 g ideal, 50 g recommande, 100 g max)
+- Fibres (barres + seuil min)
+- Poids (ligne avec spanGaps)
+- Tour de ventre (ligne)
+- Hydratation (barres + objectif)
+- Nombre de pas (barres + objectif)
+
+#### Moyennes
+
+9 graphiques de moyennes hebdomadaires (12 semaines) ou mensuelles (6 mois) : calories, proteines, glucides, lipides, fibres, poids, tour de ventre, hydratation, pas.
+
+#### Couts
+
+- **Cartes de synthese** : cout total, cout moyen/jour, projection mensuelle
+- **4 graphiques** : evolution des couts quotidiens, repartition par repas, top 5 aliments les plus chers, comparaison hebdo/mensuelle
+- Periode independante : 7 / 14 / 30 jours
+
+#### Activites physiques
+
+- **6 graphiques** : calories brulees/jour, temps d'activite total, repartition par type, top 5, calories par type, comparaison hebdo/mensuelle
+- Periode independante : 7 / 14 / 30 jours
+
+#### Analyse par aliment
+
+- **Cartes de synthese** : nombre d'aliments differents, poids total, cout total
+- **Tableau detaille triable** : par nom, poids, cout, proteines, glucides, lipides, fibres, sucres, prot/100 g, prix/100 g de proteines
+- **Selecteur de colonnes** : afficher/masquer chaque colonne de macro
+- **Export** : copie presse-papier + export CSV
+- **2 graphiques** : top 10 poids consomme, top 10 cout total
+- Periode independante : 7 / 30 / 365 jours
+
+#### Journal des repas
+
+- **Timeline chronologique** par jour (du plus recent au plus ancien)
+- **Card par jour** depliable : date, badge Aujourd'hui, nombre d'aliments, macros resumes en badges colores
+- **Barre de macros** coloree (proteines / glucides / lipides) avec pourcentages
+- **Detail par type de repas** : petit-dejeuner, dejeuner, diner, snacks
+- **Ligne par aliment** : nom, poids, calories, macros, badge REPAS pour les repas composes
+- Synchronise avec la periode principale des stats
+
+### Objectifs nutritionnels
+
+- **5 profils** : Seche, Perte de poids, Prise de masse, Maintien, Recomposition
+- **Formule Mifflin-St Jeor** pour le metabolisme de base
+- **TDEE adaptatif** selon 5 niveaux d'activite (sedentaire a tres actif)
+- **Curseur d'intensite** adapte a chaque profil (deficit/surplus/ajustement)
+- **Macros optimises** : ratios proteines/glucides/lipides specifiques par profil
+- **Conseils personnalises** : recommandations dynamiques sur l'entrainement, l'alimentation, le suivi
+- **Objectifs hydratation et pas** personnalisables
+
+### Base de donnees aliments
+
+- **100+ aliments pre-enregistres** avec valeurs nutritionnelles et prix
+- **Ajout / edition / suppression** d'aliments personnalises
+- **Filtres par categorie** : tous, fruits, legumes, viandes, poissons, feculents, etc.
+- **Gestion des prix** : prix d'achat et poids d'achat pour calcul automatique du cout/100 g
+- **Recherche** avec chargement progressif (10 resultats a la fois)
+
+### Repas composes
+
+- **Creation de recettes** : combiner plusieurs aliments avec quantites
+- **Recherche d'ingredients** : champ de recherche avec dropdown filtre dans le formulaire
+- **Portions ajustables** : les repas marques ajustables permettent de modifier le poids consomme
+- **Prix personnalise** : possibilite de definir un prix custom pour un repas
+- **Recherche de repas** : filtre en temps reel dans la liste des repas
+- **Calculs automatiques** : nutrition et couts mis a jour en temps reel
+
+### Comparaison d'aliments
+
+- **3 modes de comparaison** : pour 100 g, pour 200 kcal, pour 2 EUR
+- **Selection multiple** : comparer jusqu'a N aliments/repas simultanement
+- **Graphique barres groupees** : proteines, glucides, lipides cote a cote
+- **Labels dynamiques** et texte explicatif adapte au mode choisi
+- **Inclut les repas composes** normalises sur 100 g
+
+### Import / Export / Parametres
+
+- **Export complet** en JSON (aliments, repas, journal, objectifs, eau, pas, activites)
+- **Import** avec remplacement complet ou fusion
+- **Export/import selectif** d'aliments et repas avec gestion des dependances
+- **Reinitialisation** de la base de donnees
+- **Outils de diagnostic** accessibles en console : `dbDiagnose()`, `dbCheck()`, `dbExport()`, `dbFixStructure()`
+
+### Bien-etre & Activite
+
+- **Hydratation** : boutons rapides (100/250/500 ml), edition, reset, historique, objectif
+- **Pas** : saisie quotidienne, objectif
+- **Activites physiques** : selection parmi une liste d'activites (course, velo, natation, musculation...) + activites personnalisees
+- **Graphiques dedies** dans les statistiques (evolution + moyennes)
+
+### Technique & Confidentialite
+
+- **100 % local** : IndexedDB, aucun serveur, aucune donnee envoyee
+- **Offline-ready** : fonctionne sans connexion (sauf CDN Chart.js)
+- **Responsive** : mobile, tablette, desktop
+- **Persistance de l'etat stats** : la configuration des statistiques (periodes, section active) est sauvegardee dans localStorage
+
+---
+
+## Technologies
+
+| Technologie | Usage |
+|------------|-------|
+| **HTML5** | Structure semantique |
+| **CSS3** | Design moderne, variables CSS, responsive, animations |
+| **JavaScript ES6+** | Vanilla JS, modules natifs, async/await |
+| **Chart.js** | Graphiques interactifs (CDN) |
+| **IndexedDB** | Base de donnees locale persistante |
+| **localStorage** | Persistance de la configuration stats |
+
+**Architecture** : pattern MVC avec 14 modules JS specialises, zero framework, zero build step.
+
+---
+
+## Installation
+
+### Prerequis
+
+- Navigateur moderne (Chrome, Firefox, Edge, Safari)
+- Serveur HTTP local (les modules ES6 ne fonctionnent pas en `file://`)
+
+### Demarrage
 
 ```bash
-# Cloner le projet
-git clone https://github.com/votre-username/nutrition-tracker.git
+git clone https://github.com/matcoco/tracker_nutrition_v1.git
+cd tracker_nutrition_v1
 
-# Aller dans le dossier
-cd nutrition-tracker
-
-# Ouvrir avec un serveur local
-# Option 1 : VS Code Live Server
+# Option 1 : VS Code Live Server (extension)
 # Option 2 : Python
 python -m http.server 8000
 # Option 3 : Node.js
 npx http-server
 ```
 
-### Méthode 2 : Téléchargement direct
-
-1. Téléchargez le ZIP du projet
-2. Extrayez l'archive
-3. Ouvrez `index.html` avec un serveur local
-
-> ⚠️ **Important** : Ne pas ouvrir directement `index.html` avec `file://` car les modules ES6 nécessitent un serveur HTTP.
+Ouvrez `http://localhost:8000` dans votre navigateur.
 
 ---
 
-## 📖 Utilisation
-
-### Démarrage rapide
-
-1. **Ouvrez l'application** dans votre navigateur
-2. **Configurez vos objectifs** (onglet 🎯 Objectifs)
-3. **Ajoutez vos aliments** pour la journée
-4. **Suivez votre progression** avec les barres visuelles
-
-### Fonctionnalités détaillées
-
-#### 📅 Suivi Quotidien
-
-**Ajouter un aliment :**
-- **Méthode 1** : Glissez-déposez depuis la liste
-- **Méthode 2** : Cliquez sur le bouton `+` (ajout rapide)
-- **Méthode 3** : Recherchez puis drag & drop
-
-**Gérer vos repas :**
-- Modifiez les portions en grammes
-- Déplacez entre repas (drag & drop)
-- Supprimez avec le bouton `✕`
-
-#### 📊 Statistiques
-
-1. Sélectionnez la période (7, 14 ou 30 jours)
-2. Consultez les graphiques :
-   - **Calories** : Évolution sur la période
-   - **Macros** : Répartition en donut chart
-   - **Poids** : Suivi de votre courbe
-   - **Nutriments** : Barres par jour
-
-#### 🎯 Objectifs
-
-1. Renseignez vos informations :
-   - Sexe, âge, taille, poids
-   - Niveau d'activité physique
-   - Objectif (perte/maintien/prise)
-2. Le calcul automatique vous propose :
-   - Calories journalières
-   - Répartition en protéines/glucides/lipides
-
-#### 🥗 Aliments
-
-- **Recherchez** dans la barre de recherche
-- **Cliquez** sur un aliment pour le modifier
-- **Ajoutez** de nouveaux aliments personnalisés
-
-#### ⚙️ Paramètres
-
-- **Exportez** vos données (backup JSON)
-- **Importez** des données précédentes
-- **Réinitialisez** (attention : action irréversible)
-
----
-
-## 📁 Structure du Projet
+## Structure du projet
 
 ```
 nutrition-tracker/
-├── 📄 index.html              # Point d'entrée
-├── 📁 css/
-│   └── style.css              # Styles (2000+ lignes)
-├── 📁 js/
-│   ├── app.js                 # Point d'entrée JS & orchestration
-│   ├── db.js                  # Gestion IndexedDB
-│   ├── ui.js                  # Manipulation DOM
-│   ├── utils.js               # Fonctions utilitaires
-│   ├── charts.js              # Graphiques nutritionnels (Chart.js)
-│   ├── costs.js               # Graphiques des coûts
-│   ├── food-analysis.js       # Analyse par aliment
-│   ├── db-utils.js            # Utilitaires diagnostic DB
-│   ├── config.js              # Configuration et données par défaut
-│   └── foods-data.js          # Base de données aliments (100+)
-├── 📄 README.md               # Documentation principale
-└── 📄 FONCTIONNALITES.md      # Documentation détaillée
+├── index.html                  # Point d'entree unique (SPA)
+├── css/
+│   └── style.css               # Styles (4600+ lignes)
+├── js/
+│   ├── app.js                  # Orchestration, state, event listeners
+│   ├── db.js                   # CRUD IndexedDB (8 stores)
+│   ├── ui.js                   # Manipulation DOM, modales, notifications
+│   ├── utils.js                # Calculs nutritionnels, TDEE, couts
+│   ├── charts.js               # Graphiques evolution (Chart.js)
+│   ├── costs.js                # Graphiques analyse des couts
+│   ├── activities-charts.js    # Graphiques activites physiques
+│   ├── food-analysis.js        # Analyse detaillee par aliment
+│   ├── food-comparison.js      # Comparaison d'aliments
+│   ├── meals.js                # Gestion des repas composes
+│   ├── meal-history.js         # Journal des repas (timeline)
+│   ├── import-export.js        # Import/export JSON
+│   ├── db-utils.js             # Diagnostic et reparation DB
+│   └── config.js               # Configuration, aliments par defaut
+├── CHANGELOG.md
+├── FONCTIONNALITES.md
+├── OBJECTIFS-GUIDE.md
+├── GUIDE-PRIX.md
+└── LICENSE
 ```
 
-### Modules JavaScript
+### Stores IndexedDB
 
-| Fichier | Responsabilité |
-|---------|----------------|
-| `app.js` | Initialisation, event listeners, orchestration |
-| `db.js` | CRUD IndexedDB (meals, goals, foods, weight, water, steps, activities) |
-| `ui.js` | Affichage, modales, notifications |
-| `utils.js` | Calculs (TDEE, macros, totaux, coûts) |
-| `charts.js` | Graphiques nutritionnels (Chart.js) |
-| `costs.js` | Graphiques d'analyse des coûts |
-| `food-analysis.js` | Analyse détaillée par aliment |
-| `db-utils.js` | Diagnostic et réparation de la base de données |
-| `config.js` | Configuration globale et données par défaut |
-| `foods-data.js` | 100+ aliments pré-enregistrés avec prix |
+| Store | Cle | Contenu |
+|-------|-----|---------|
+| `foods` | `id` | Aliments (nom, calories, macros, prix) |
+| `meals` | `id` | Repas composes (ingredients, portions) |
+| `dailyMeals` | `date` | Journal alimentaire + poids + tour de ventre |
+| `goals` | `id` | Objectifs nutritionnels |
+| `dailyWater` | `date` | Hydratation quotidienne |
+| `dailySteps` | `date` | Nombre de pas quotidien |
+| `dailyActivities` | `date` | Activites physiques quotidiennes |
+| `customActivities` | `id` | Activites personnalisees |
 
 ---
 
-## 🎨 Personnalisation
+## Personnalisation
 
-### Modifier les couleurs
-
-Éditez les variables CSS dans `style.css` :
+### Couleurs
 
 ```css
 :root {
-    --color-primary-start: #667eea;  /* Violet */
-    --color-primary-end: #764ba2;    /* Violet foncé */
-    --color-success: #10b981;        /* Vert */
-    --color-warning: #f59e0b;        /* Orange */
-    --color-danger: #ef4444;         /* Rouge */
+    --color-primary-start: #667eea;
+    --color-primary-end: #764ba2;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
 }
 ```
 
-### Ajouter des aliments par défaut
+### Aliments par defaut
 
-Éditez `js/foods-data.js` :
-
-```javascript
-export const defaultFoods = {
-    'mon-aliment': {
-        name: 'Mon Aliment',
-        calories: 100,
-        proteins: 10,
-        carbs: 20,
-        fats: 5,
-        sugars: 2
-    }
-};
-```
+Editez `js/config.js` pour ajouter des aliments a la base initiale.
 
 ---
 
-## 🗺️ Roadmap
+## Problemes connus
 
-### Version 1.6 (À venir)
-- [ ] 🌙 Mode sombre
-- [ ] 📸 Scan de codes-barres (Open Food Facts API)
-- [ ] 🗑️ Suppression d'aliments
-- [ ] 📸 Photos des repas
-- [ ] 🏷️ Catégories d'aliments
-- [ ] ⭐ Aliments favoris
-- [ ] 📊 Graphiques de tendance par profil
-
-### Version 2.0 (Futur)
-- [ ] 🍴 Recettes avec calcul automatique
-- [ ] 📊 Export PDF des statistiques
-- [ ] 🔥 Synchronisation Firebase (multi-appareils)
-- [ ] 🔐 Authentification Google
-- [ ] 👥 Partage de recettes entre utilisateurs
-- [ ] 🤖 Suggestions IA basées sur l'historique
-- [ ] 📱 Application mobile native (React Native)
-- [ ] 🛒 Génération de liste de courses
-- [ ] 📅 Planification de repas hebdomadaire
-- [ ] 🔔 Rappels hydratation et repas
+- IndexedDB est efface en navigation privee
+- Les modules ES6 necessitent un serveur HTTP (pas `file://`)
+- Chart.js est charge via CDN (connexion necessaire au premier chargement)
 
 ---
 
-## 🤝 Contribution
+## Documentation
 
-Les contributions sont les bienvenues ! 
-
-### Comment contribuer ?
-
-1. **Forkez** le projet
-2. **Créez** une branche (`git checkout -b feature/AmazingFeature`)
-3. **Committez** vos changements (`git commit -m 'Add: Amazing Feature'`)
-4. **Pushez** vers la branche (`git push origin feature/AmazingFeature`)
-5. **Ouvrez** une Pull Request
-
-### Guidelines
-
-- ✅ Code commenté et lisible
-- ✅ Respect de l'architecture existante
-- ✅ Tests sur mobile/tablette/desktop
-- ✅ Commit messages clairs
-
----
-
-## 🐛 Problèmes Connus
-
-- ⚠️ IndexedDB peut être effacé par le navigateur en mode navigation privée
-- ⚠️ Drag & drop nécessite un serveur HTTP (pas `file://`)
-- ⚠️ Chart.js nécessite une connexion pour le CDN (ou téléchargement local)
-
----
-
-## 📝 Licence
-
-Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
-```
-MIT License
-
-Copyright (c) 2025 [Votre Nom]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction...
-```
-
----
-
-## 👤 Auteur
-
-**[Votre Nom]**
-
-- GitHub: [@votre-username](https://github.com/votre-username)
-- LinkedIn: [Votre Profile](https://linkedin.com/in/votre-profile)
-- Email: votre.email@example.com
-
----
-
-## 🙏 Remerciements
-
-- [Chart.js](https://www.chartjs.org/) - Bibliothèque de graphiques
-- [Google Fonts](https://fonts.google.com/) - Police Inter
-- [Lucide Icons](https://lucide.dev/) - Icônes (inspiration)
-- Communauté Open Source 💜
-
----
-
-## 📚 Ressources Supplémentaires
-
-### Documentation du Projet
-- [FONCTIONNALITES.md](FONCTIONNALITES.md) - Liste complète des fonctionnalités
-- [OBJECTIFS-GUIDE.md](OBJECTIFS-GUIDE.md) - Guide détaillé des calculs d'objectifs (5 profils)
+- [FONCTIONNALITES.md](FONCTIONNALITES.md) - Liste exhaustive des fonctionnalites
+- [OBJECTIFS-GUIDE.md](OBJECTIFS-GUIDE.md) - Guide des calculs d'objectifs (5 profils, exemples)
 - [CHANGELOG.md](CHANGELOG.md) - Historique des versions
-- [GUIDE-PRIX.md](GUIDE-PRIX.md) - Guide de réparation base de données prix
+- [GUIDE-PRIX.md](GUIDE-PRIX.md) - Guide de reparation base de donnees prix
 
-### Références Externes
-- [Documentation IndexedDB](https://developer.mozilla.org/fr/docs/Web/API/IndexedDB_API)
-- [Guide Chart.js](https://www.chartjs.org/docs/latest/)
-- [Formule Mifflin-St Jeor](https://en.wikipedia.org/wiki/Basal_metabolic_rate#Mifflin_St_Jeor_equation)
-- [Guide nutrition](https://www.anses.fr/fr)
+---
+
+## Licence
+
+MIT - voir [LICENSE](LICENSE).
+
+---
+
+## Auteur
+
+**matcoco** - [GitHub](https://github.com/matcoco)
 
 ---
 
 <div align="center">
 
-**⭐ Si ce projet vous plaît, n'oubliez pas de lui donner une étoile sur GitHub ! ⭐**
-
-Made with ❤️ and ☕
+**Si ce projet vous plait, n'hesitez pas a lui donner une etoile sur GitHub.**
 
 </div>
