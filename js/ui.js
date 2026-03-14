@@ -816,39 +816,13 @@ export function displayMeals(meals, foods, removeHandler, weightChangeHandler, c
                 };
             }
             
-            // ATTACHER LES LISTENERS DE DRAG
-            console.log('🔧 Attachement des listeners pour', item.id, '- draggable:', el.draggable);
-            
-            // TEST: mousedown pour voir si l'élément reçoit les événements
-            el.addEventListener('mousedown', function(e) {
-                console.log('🖱️ MOUSEDOWN sur meal-item:', this.dataset.foodId, '- target:', e.target.tagName);
-            });
-            
-            el.addEventListener('dragstart', function(e) {
-                console.log('🚀 DRAGSTART déclenché !', this.dataset.foodId);
-                
-                // COMME DANS L'EXEMPLE : stocker this (la référence DOM)
-                window.draggedMealElement = this;
-                
-                // Stocker aussi les données pour la BDD
-                window.draggedMealData = {
-                    sourceMeal: this.dataset.sourceMeal,
-                    uniqueId: parseInt(this.dataset.uniqueId, 10),
-                    foodId: this.dataset.foodId,
-                    weight: parseFloat(this.dataset.weight),
-                    isMeal: this.dataset.isMeal === 'true'
-                };
-                
-                // Effet visuel
-                setTimeout(() => this.classList.add('dragging'), 0);
-            });
-            
-            el.addEventListener('dragend', function() {
-                console.log('✋ DRAGEND déclenché');
-                this.classList.remove('dragging');
-                // NE PAS nettoyer window.draggedMealElement ici !
-                // Le nettoyage se fera dans handleDrop après utilisation
-            });
+            if (window.handleMealItemDragStart) {
+                el.addEventListener('dragstart', window.handleMealItemDragStart);
+            }
+
+            if (window.handleMealItemDragEnd) {
+                el.addEventListener('dragend', window.handleMealItemDragEnd);
+            }
             
             // Configurer l'input de poids
             const weightInput = el.querySelector('.ci-qty-input');

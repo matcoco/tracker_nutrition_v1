@@ -4,6 +4,17 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 
 ---
 
+## [1.5.1] - 2026-03-14
+
+### 🐛 Corrections de bugs
+
+#### Suivi quotidien - duplication et déplacement d'une carte
+- Correction d'un bug où une carte dupliquée puis déplacée restait affichée dans son repas d'origine
+- Refactorisation du drag & drop des cartes repas pour s'appuyer uniquement sur `sourceMeal` et `uniqueId`
+- Fiabilisation du déplacement entre repas avec rechargement complet depuis IndexedDB après le drop
+
+---
+
 ## [1.5.0] - 2025-11-01
 
 ### ✨ Nouvelles fonctionnalités

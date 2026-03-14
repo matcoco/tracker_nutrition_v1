@@ -205,6 +205,16 @@ function handleDragStart(event) {
     event.target.classList.add('dragging');
 }
 
+function handleMealItemDragStart(event) {
+    const mealItem = event.currentTarget;
+    state.draggedFoodId = null;
+    state.draggedMealItem = {
+        sourceMeal: mealItem.dataset.sourceMeal,
+        uniqueId: Number(mealItem.dataset.uniqueId)
+    };
+    mealItem.classList.add('dragging');
+}
+
 function handleDragEnd(event) {
     // Retirer la classe dragging de l'élément (food-item ou meal-item)
     const draggingElement = event.target.closest('.food-item') || event.target.closest('.meal-item') || event.target;
@@ -221,13 +231,13 @@ function handleDragEnd(event) {
     // Le nettoyage complet est effectué à la fin de handleDrop()
 }
 
+function handleMealItemDragEnd(event) {
+    handleDragEnd(event);
+}
+
 async function handleDrop(event) {
     event.preventDefault();
     event.stopPropagation();
-    console.log('📦 DROP déclenché !', event.currentTarget.dataset.meal);
-    console.log('   draggedMealElement:', window.draggedMealElement);
-    console.log('   draggedMealData:', window.draggedMealData);
-    
     const targetMealType = event.currentTarget.dataset.meal;
     event.currentTarget.classList.remove('drag-over');
     
@@ -240,63 +250,36 @@ async function handleDrop(event) {
     
     const meals = await db.loadDayMeals(state.currentDate);
     
-    console.log('🔍 Test conditions:');
-    console.log('   window.draggedMealElement:', window.draggedMealElement);
-    console.log('   window.draggedMealData:', window.draggedMealData);
-    console.log('   state.draggedFoodId:', state.draggedFoodId);
-    
-    // CAS 1 (PRIORITAIRE) : Drop d'un meal-item depuis un autre repas (APPROCHE DE L'EXEMPLE)
-    if (window.draggedMealElement && window.draggedMealData) {
-        console.log('🎯 ENTRÉE dans le if meal-item !');
-        const sourceMeal = window.draggedMealData.sourceMeal;
+    if (state.draggedMealItem) {
+        const { sourceMeal, uniqueId } = state.draggedMealItem;
         
-        // Si on déplace vers le même repas, ne rien faire
         if (sourceMeal === targetMealType) {
-            console.log('⚠️ Même repas, pas de déplacement');
-            // Nettoyer l'état avant de sortir
             state.draggedFoodId = null;
-            window.draggedMealElement = null;
-            window.draggedMealData = null;
+            state.draggedMealItem = null;
             return;
         }
         
-        console.log('✅ Déplacement de', sourceMeal, 'vers', targetMealType);
-        
-        // Déplacement logique: mettre à jour la BDD
-        meals[sourceMeal] = meals[sourceMeal].filter(item => item.uniqueId !== window.draggedMealData.uniqueId);
-        const movedItem = {
-            id: window.draggedMealData.foodId,
-            weight: window.draggedMealData.weight,
-            isMeal: window.draggedMealData.isMeal || false,
-            uniqueId: window.draggedMealData.uniqueId
-        };
-        if (window.draggedMealData.customPortions) {
-            movedItem.customPortions = { ...window.draggedMealData.customPortions };
+        const sourceIndex = meals[sourceMeal].findIndex(item => item.uniqueId === uniqueId);
+        if (sourceIndex === -1) {
+            state.draggedFoodId = null;
+            state.draggedMealItem = null;
+            return;
         }
-        if (window.draggedMealData.customPrice !== undefined && window.draggedMealData.customPrice !== null) {
-            movedItem.customPrice = window.draggedMealData.customPrice;
-        }
+
+        const [movedItem] = meals[sourceMeal].splice(sourceIndex, 1);
         meals[targetMealType].push(movedItem);
         
         await db.saveDayMeals(state.currentDate, meals);
-        console.log('💾 BDD mise à jour');
         
-        // Re-render des repas pour mettre à jour les en-têtes et refléter l'état (fiable)
-        ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, state.meals);
-        // Mettre à jour le résumé de la journée
-        const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
-        ui.updateSummary(totals, state.goals);
+        await loadCurrentDay();
         
         ui.showNotification(`Aliment déplacé vers ${getMealName(targetMealType)} !`);
     }
     
     // CAS 2 : Drop d'un aliment ou repas depuis la liste disponible
     else if (state.draggedFoodId) {
-        console.log('➕ Ajout depuis la liste:', state.draggedFoodId);
-        
         // Vérifier si c'est un repas composé
         if (state.meals[state.draggedFoodId]) {
-            // C'est un repas → l'ajouter comme bloc (pas de décomposition)
             const meal = state.meals[state.draggedFoodId];
             const defaultMealWeight = meal.totalWeight || 100;
             meals[targetMealType].push({ 
@@ -306,10 +289,7 @@ async function handleDrop(event) {
                 uniqueId: Date.now()
             });
             await db.saveDayMeals(state.currentDate, meals);
-            // Re-render repas + résumé
-            ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, state.meals);
-            const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
-            ui.updateSummary(totals, state.goals);
+            await loadCurrentDay();
             ui.showNotification(`${meal.name} ajouté !`);
         }
         // Sinon, c'est un aliment simple
@@ -319,18 +299,14 @@ async function handleDrop(event) {
             const defaultWeight = (food.isPortionBased && food.portionWeight) ? food.portionWeight : 100;
             meals[targetMealType].push({ id: state.draggedFoodId, weight: defaultWeight, uniqueId: Date.now() });
             await db.saveDayMeals(state.currentDate, meals);
-            // Re-render repas + résumé
-            ui.displayMeals(meals, state.foods, handleRemoveMealItem, handleUpdateWeight, state.meals);
-            const totals = utils.calculateDayTotals(meals, state.foods, state.meals);
-            ui.updateSummary(totals, state.goals);
+            await loadCurrentDay();
+            ui.showNotification(`${food.name} ajouté !`);
         }
     }
     
     // Nettoyer l'état à la fin du drop
     state.draggedFoodId = null;
     state.draggedMealItem = null;
-    window.draggedMealElement = null;
-    window.draggedMealData = null;
 }
 
 // Fonction helper pour obtenir le nom du repas
@@ -351,16 +327,12 @@ async function handleRemoveMealItem(mealType, uniqueId) {
     loadCurrentDay();
 }
 async function handleUpdateWeight(mealType, uniqueId, newWeight) {
-    console.log('📦 handleUpdateWeight appelé:', mealType, uniqueId, newWeight);
     const meals = await db.loadDayMeals(state.currentDate);
     const item = meals[mealType].find(i => i.uniqueId === uniqueId);
     if (item) {
         item.weight = parseFloat(newWeight) || item.weight || 100;
-        console.log('💾 Sauvegarde poids:', item.weight, 'pour', item.id);
         await db.saveDayMeals(state.currentDate, meals);
         loadCurrentDay();
-    } else {
-        console.warn('⚠️ Item non trouvé:', mealType, uniqueId);
     }
 }
 
@@ -372,19 +344,8 @@ async function handleUpdateWeight(mealType, uniqueId, newWeight) {
 async function handleDuplicateMealItem(mealType, item) {
     const meals = await db.loadDayMeals(state.currentDate);
     
-    // Créer une copie de l'item avec un nouveau uniqueId
-    const duplicatedItem = {
-        id: item.id,
-        weight: item.weight,
-        uniqueId: Date.now() + Math.random() // Garantir l'unicité
-    };
-    
-    // Copier les propriétés optionnelles si elles existent
-    if (item.isMeal) duplicatedItem.isMeal = true;
-    if (item.customPortions) duplicatedItem.customPortions = { ...item.customPortions };
-    if (item.customPrice !== undefined && item.customPrice !== null) {
-        duplicatedItem.customPrice = item.customPrice;
-    }
+    const duplicatedItem = structuredClone(item);
+    duplicatedItem.uniqueId = Date.now() + Math.random();
     
     // Ajouter l'item dupliqué au même type de repas
     meals[mealType].push(duplicatedItem);
@@ -1699,6 +1660,8 @@ async function saveAdjustedPortions() {
 // Exposer les fonctions globalement pour ui.js
 window.handleAdjustPortions = handleAdjustPortions;
 window.handleDuplicateMealItem = handleDuplicateMealItem;
+window.handleMealItemDragStart = handleMealItemDragStart;
+window.handleMealItemDragEnd = handleMealItemDragEnd;
 
 // =================== FIN AJUSTEMENT DES PORTIONS ===================
 
