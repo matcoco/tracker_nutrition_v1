@@ -1,0 +1,268 @@
+/* =============================================
+   11. ONGLET OBJECTIFS - UI AMÉLIORÉE
+   ============================================= */
+#goals-tab .section-title {
+    font-size: 2em;
+    text-align: center;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+/* Style pour les boutons radio de sexe */
+.gender-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.gender-option {
+    position: relative;
+}
+
+.gender-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* L'input est transparent : sans cette règle, tabuler sur « Homme / Femme »
+   ne montrait aucun indicateur de position. */
+.gender-option input[type="radio"]:focus-visible + .gender-label {
+    outline: 3px solid var(--color-secondary-start);
+    outline-offset: 2px;
+}
+
+.gender-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--color-bg-light);
+    border: 3px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    min-height: 100px;
+}
+
+.gender-label .emoji {
+    font-size: 2.5em;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.gender-option input[type="radio"]:checked + .gender-label {
+    background: var(--gradient-primary);
+    color: var(--color-text-light);
+    border-color: var(--color-primary-end);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.gender-option input[type="radio"]:not(:checked) + .gender-label:hover {
+    border-color: var(--color-primary-start);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Styles pour les selects dans l'onglet Objectifs */
+#goals-tab select {
+    padding: 14px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 1em;
+    background: white;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+#goals-tab select:focus {
+    border-color: var(--color-border-active);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    outline: none;
+}
+
+#goals-tab select:hover {
+    border-color: var(--color-primary-start);
+}
+
+/* Section des résultats - Animation */
+#goalsResults {
+    animation: slideInUp 0.5s ease;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Cartes de résultats avec effet glassmorphism */
+.result-card {
+    background: rgba(255, 255, 255, 0.9);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.result-card-highlight {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 25px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card-highlight::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+}
+
+/* Macros cards dans Objectifs */
+#goalsResults .summary {
+    background: transparent;
+    padding: 0;
+    gap: 15px;
+}
+
+#goalsResults .summary-item {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 25px;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#goalsResults .summary-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+#goalsResults .summary-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+#goalsResults .summary-item h3 {
+    color: var(--color-text-dark);
+    font-size: 0.95em;
+    margin-bottom: 12px;
+    opacity: 0.8;
+}
+
+#goalsResults .summary-item p {
+    color: var(--color-primary-start);
+    font-size: 2em;
+    font-weight: 700;
+}
+
+/* Info box conseils */
+.goals-info-box {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-left: 5px solid #ffc107;
+    padding: 20px;
+    margin-top: 25px;
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+}
+
+.goals-info-box h4 {
+    color: #856404;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.goals-info-box p {
+    color: #856404;
+    font-size: 0.95em;
+    line-height: 1.8;
+}
+
+.goals-info-box p br {
+    margin-bottom: 5px;
+}
+
+/* Bouton Calculer amélioré */
+#goalsForm .add-btn {
+    background: var(--gradient-primary);
+    font-size: 1.1em;
+    padding: 16px 30px;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+#goalsForm .add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+#goalsForm .add-btn::after {
+    content: '→';
+    position: absolute;
+    right: 20px;
+    transition: transform 0.3s ease;
+}
+
+#goalsForm .add-btn:hover::after {
+    transform: translateX(5px);
+}
+
+/* Amélioration des labels et inputs du formulaire Objectifs */
+#goalsForm .form-group label {
+    font-weight: 600;
+    color: var(--color-text-dark);
+    font-size: 0.95em;
+}
+
+#goalsForm .form-group input[type="number"] {
+    padding: 14px;
+    font-size: 1em;
+}
+
+#goalsForm .form-group input[type="number"]:focus {
+    transform: translateY(-1px);
+}
+

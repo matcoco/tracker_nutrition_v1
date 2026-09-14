@@ -1,0 +1,132 @@
+/* =============================================
+   BOUTONS
+   ============================================= */
+.save-btn, .load-btn, .reset-btn, .add-btn, .today-btn, .period-btn {
+    color: var(--color-text-light);
+    border: none;
+    padding: 12px 25px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+.save-btn:hover, .load-btn:hover, .reset-btn:hover, .add-btn:hover, .period-btn:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+.save-btn { background: var(--gradient-primary); }
+.load-btn { background: var(--gradient-secondary); }
+.reset-btn { background: var(--gradient-danger); }
+.add-btn { background: var(--gradient-primary); grid-column: 1 / -1; }
+.today-btn { background: var(--color-success) !important; color: var(--color-text-light) !important; }
+
+.meal-item-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.remove-btn {
+    background: var(--color-danger-solid);
+    color: var(--color-text-light);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: background-color 0.2s;
+}
+.remove-btn:hover { background: #c23616; }
+
+.duplicate-btn {
+    background: var(--color-primary);
+    color: var(--color-text-light);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: all 0.2s;
+}
+.duplicate-btn:hover { 
+    background: #2563eb; 
+    transform: scale(1.05);
+}
+
+
+/* Bouton d'action rapide (+) */
+.quick-action-btn {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    min-width: 32px; /* Empêche la réduction */
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    flex-shrink: 0; /* Empêche le bouton de se réduire */
+}
+
+.quick-action-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+}
+
+.quick-action-btn:active {
+    transform: scale(0.95);
+}
+
+/* Bouton de suppression d'aliment */
+.delete-food-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+    opacity: 0;
+}
+
+#foodsListManage .food-item:hover .delete-food-btn,
+#foodsListManage .food-item:focus-within .delete-food-btn {
+    opacity: 1;
+}
+
+/* Sur un appareil tactile il n'y a pas de survol fiable : sans cette règle,
+   la suppression d'un aliment était inaccessible sur mobile/tablette. */
+@media (hover: none) and (pointer: coarse) {
+    #foodsListManage .delete-food-btn {
+        opacity: 1;
+    }
+}
+
+.delete-food-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.delete-food-btn:active {
+    transform: scale(0.95);
+}

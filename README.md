@@ -1,15 +1,15 @@
 # 🍽️ Tracker Nutritionnel
-
+# matcoco
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.5.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![JavaScript](https://img.shields.io/badge/javascript-100%25-yellow.svg)
 ![Responsive](https://img.shields.io/badge/responsive-mobile%20%7C%20tablet%20%7C%20desktop-purple.svg)
 
 **Une application web moderne et intuitive pour suivre votre alimentation quotidienne**
 
-[🚀 Démo Live](#) • [📖 Documentation](#fonctionnalités) • [🐛 Signaler un Bug](../../issues) • [✨ Demander une Fonctionnalité](../../issues)
+[📖 Documentation](#-fonctionnalités) • [🐛 Signaler un Bug](../../issues) • [✨ Demander une Fonctionnalité](../../issues)
 
 </div>
 
@@ -17,20 +17,10 @@
 
 ## 📸 Aperçu
 
-<div align="center">
-  <img src="docs/screenshots/dashboard.png" alt="Dashboard" width="800"/>
-  <p><em>Interface principale avec suivi quotidien et barres de progression</em></p>
-</div>
+> ℹ️ **Captures d'écran** : le dossier `docs/screenshots/` n'existe pas dans ce dépôt.
+> Lancez l'application (`node tools/nutrition-app-server.js`) pour la voir.
 
-<details>
-<summary>📱 Plus de captures d'écran</summary>
-
-<div align="center">
-  <img src="docs/screenshots/stats.png" alt="Statistiques" width="400"/>
-  <img src="docs/screenshots/mobile.png" alt="Version Mobile" width="400"/>
-</div>
-
-</details>
+Les captures d'écran ne sont pas versionnées.
 
 ---
 
@@ -50,9 +40,9 @@ Cette version majeure apporte des fonctionnalités essentielles pour personnalis
 - 💰 **Prix personnalisé** : Définissez un prix custom pour vos repas ajustables
 - 🔍 **Recherche de repas** : Filtrez vos repas composés en temps réel
 - 📊 **Comparaison améliorée** : Labels dynamiques et textes explicatifs
-- 📚 **Documentation complète** : Guide détaillé des calculs (OBJECTIFS-GUIDE.md)
+- 📚 **Documentation complète** : voir [divers/FONCTIONNALITES.md](divers/FONCTIONNALITES.md)
 
-**🔗 Documentation complète** : Consultez [FONCTIONNALITES.md](FONCTIONNALITES.md) pour tous les détails
+**🔗 Documentation complète** : Consultez [divers/FONCTIONNALITES.md](divers/FONCTIONNALITES.md) pour tous les détails
 
 ---
 
@@ -86,7 +76,7 @@ Cette version majeure apporte des fonctionnalités essentielles pour personnalis
 - ✅ **TDEE adaptatif** : Selon votre niveau d'activité
 - ✅ **Macros optimisés** : Ratios spécifiques pour chaque profil
 - ✅ **Conseils personnalisés** : Recommandations adaptées à votre objectif
-- ✅ **Documentation complète** : Guide OBJECTIFS-GUIDE.md avec exemples de calcul
+- ✅ **Documentation complète** : voir [divers/FONCTIONNALITES.md](divers/FONCTIONNALITES.md)
 
 ### 🍽️ Repas Composés
 - ✅ **Création de repas** : Combinez plusieurs aliments
@@ -96,11 +86,12 @@ Cette version majeure apporte des fonctionnalités essentielles pour personnalis
 - ✅ **Calculs automatiques** : Nutrition et coûts mis à jour
 
 ### 🥗 Base de Données Aliments
-- ✅ **100+ aliments pré-enregistrés** : Base complète incluse
+- ✅ **Base d'aliments personnelle** : l'application démarre avec une base **vide**
+  (`defaultFoods = {}`) ; vous créez vos propres aliments (manuelle, IA, import)
 - ✅ **Ajout d'aliments personnalisés** : Créez votre propre bibliothèque
 - ✅ **Modification facile** : Cliquez pour éditer
 - ✅ **Gestion des prix** : Prix au 100g et par portion
-- ✅ **Import/Export** : Sauvegardez vos données en JSON (version 1.5)
+- ✅ **Import/Export** : Sauvegardez vos données en JSON (format 1.6.0)
 
 ### 📱 Design Moderne
 - ✅ **100% Responsive** : Mobile, tablette, desktop
@@ -169,10 +160,10 @@ Cette version majeure apporte des fonctionnalités essentielles pour personnalis
 
 ```bash
 # Cloner le projet
-git clone https://github.com/votre-username/nutrition-tracker.git
+git clone https://github.com/matcoco/tracker_nutrition_v1.git
 
 # Aller dans le dossier
-cd nutrition-tracker
+cd tracker_nutrition_v1
 
 # Ouvrir avec un serveur local
 # Option 1 : VS Code Live Server
@@ -256,34 +247,35 @@ nutrition-tracker/
 ├── 📁 css/
 │   └── style.css              # Styles (2000+ lignes)
 ├── 📁 js/
-│   ├── app.js                 # Point d'entrée JS & orchestration
-│   ├── db.js                  # Gestion IndexedDB
-│   ├── ui.js                  # Manipulation DOM
-│   ├── utils.js               # Fonctions utilitaires
-│   ├── charts.js              # Graphiques nutritionnels (Chart.js)
-│   ├── costs.js               # Graphiques des coûts
-│   ├── food-analysis.js       # Analyse par aliment
-│   ├── db-utils.js            # Utilitaires diagnostic DB
-│   ├── config.js              # Configuration et données par défaut
-│   └── foods-data.js          # Base de données aliments (100+)
+│   ├── app.js                 # Point d'entrée & orchestration
+│   ├── config.js              # Configuration, version de schéma, données par défaut
+│   ├── core/                  # db, utils, state, db-utils
+│   ├── ui/                    # ui-core, ui-meals
+│   ├── stats/                 # graphiques, coûts, activités, comparaison, analyse
+│   ├── features/              # repas, journal, comparaison, santé, assistants IA
+│   ├── handlers/              # gestionnaires d'événements par domaine
+│   └── data/                  # import/export, validation de sauvegarde
+├── 📁 tests/                  # Suite de tests (Vitest + jsdom)
+├── 📁 divers/                 # Documentation et guides
 ├── 📄 README.md               # Documentation principale
-└── 📄 FONCTIONNALITES.md      # Documentation détaillée
+└── 📄 AUDIT.md                # Rapport d'audit et couverture de tests
 ```
 
 ### Modules JavaScript
 
-| Fichier | Responsabilité |
-|---------|----------------|
-| `app.js` | Initialisation, event listeners, orchestration |
-| `db.js` | CRUD IndexedDB (meals, goals, foods, weight, water, steps, activities) |
-| `ui.js` | Affichage, modales, notifications |
-| `utils.js` | Calculs (TDEE, macros, totaux, coûts) |
-| `charts.js` | Graphiques nutritionnels (Chart.js) |
-| `costs.js` | Graphiques d'analyse des coûts |
-| `food-analysis.js` | Analyse détaillée par aliment |
-| `db-utils.js` | Diagnostic et réparation de la base de données |
-| `config.js` | Configuration globale et données par défaut |
-| `foods-data.js` | 100+ aliments pré-enregistrés avec prix |
+| Dossier | Modules | Responsabilité |
+|---------|---------|----------------|
+| *(racine)* | `app.js`, `config.js` | Initialisation, orchestration, configuration |
+| `core/` | `db.js`, `utils.js`, `state.js`, `db-utils.js` | IndexedDB, calculs, état global, diagnostic |
+| `ui/` | `ui-core.js`, `ui-meals.js` | Affichage, modales, notifications |
+| `stats/` | `charts.js`, `charts-averages.js`, `costs.js`, `activities-charts.js`, `period-comparison.js`, `food-analysis.js` | Graphiques et analyses |
+| `features/` | `meals.js`, `meal-history.js`, `food-comparison.js`, `health-events.js`, `ai-food-assistant.js`, `ai-meal-generator.js` | Fonctionnalités métier |
+| `handlers/` | `daily-handlers.js`, `food-handlers.js`, `goals-handlers.js`, `activity-handlers.js`, `stats-handlers.js`, `ai-handlers.js` | Écouteurs d'événements |
+| `data/` | `import-export.js`, `backup-format.js` | Import/export et validation |
+
+> ℹ️ **Base d'aliments** : l'application démarre avec une base **vide**
+> (`defaultFoods = {}` dans `js/config.js`). Les aliments sont créés par
+> l'utilisateur (saisie manuelle, import JSON ou assistants IA).
 
 ---
 
@@ -383,7 +375,7 @@ Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus
 ```
 MIT License
 
-Copyright (c) 2025 [Votre Nom]
+Copyright (c) 2025-2026 matcoco
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -394,11 +386,10 @@ in the Software without restriction...
 
 ## 👤 Auteur
 
-**[Votre Nom]**
+**matcoco**
 
-- GitHub: [@votre-username](https://github.com/votre-username)
-- LinkedIn: [Votre Profile](https://linkedin.com/in/votre-profile)
-- Email: votre.email@example.com
+- GitHub: [@matcoco](https://github.com/matcoco)
+- Dépôt : [tracker_nutrition_v1](https://github.com/matcoco/tracker_nutrition_v1)
 
 ---
 
@@ -414,10 +405,11 @@ in the Software without restriction...
 ## 📚 Ressources Supplémentaires
 
 ### Documentation du Projet
-- [FONCTIONNALITES.md](FONCTIONNALITES.md) - Liste complète des fonctionnalités
-- [OBJECTIFS-GUIDE.md](OBJECTIFS-GUIDE.md) - Guide détaillé des calculs d'objectifs (5 profils)
-- [CHANGELOG.md](CHANGELOG.md) - Historique des versions
-- [GUIDE-PRIX.md](GUIDE-PRIX.md) - Guide de réparation base de données prix
+- [divers/FONCTIONNALITES.md](divers/FONCTIONNALITES.md) - Liste complète des fonctionnalités
+- [divers/CHANGELOG.md](divers/CHANGELOG.md) - Historique des versions
+- [divers/GUIDE-PRIX.md](divers/GUIDE-PRIX.md) - Gestion des prix
+- [AUDIT.md](AUDIT.md) - Rapport d'audit et couverture de tests
+- [tests/README.md](tests/README.md) - Suite de tests unitaires
 
 ### Références Externes
 - [Documentation IndexedDB](https://developer.mozilla.org/fr/docs/Web/API/IndexedDB_API)

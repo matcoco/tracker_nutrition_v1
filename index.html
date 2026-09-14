@@ -7,6 +7,8 @@
     <title>Tracker Nutritionnel</title>
     <!-- Librairie externe pour les graphiques -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- OCR local navigateur pour lire les captures d'étiquettes nutritionnelles -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/tesseract.min.js"></script>
     <!-- Liaison vers le fichier de styles CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -18,6 +20,7 @@
         <!-- =================== NAVIGATION PAR ONGLETS =================== -->
         <div class="nav-tabs">
             <button class="nav-tab active" data-tab="tracker">📅 Suivi Quotidien</button>
+            <button class="nav-tab" data-tab="events">📝 Événements</button>
             <button class="nav-tab" data-tab="stats">📊 Statistiques</button>
             <button class="nav-tab" data-tab="goals">🎯 Objectifs</button>
             <button class="nav-tab" data-tab="foods">🥗 Aliments</button>
@@ -35,9 +38,10 @@
                     <h2 id="currentDate"></h2>
                     <input type="date" id="datePicker" class="date-picker" title="Sélectionner une date">
                 </div>
-                <div>
+                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                     <button id="today-btn" class="today-btn">Aujourd'hui</button>
                     <button id="next-day-btn">Jour Suivant →</button>
+                    <button id="aiGenerateMealsBtn" class="ai-generate-btn" title="Générer mes repas avec l'IA GLM">✨ Générer avec l'IA</button>
                 </div>
             </div>
 
@@ -94,7 +98,7 @@
                         <span class="progress-values" id="totalFibers">0 g</span>
                     </div>
                     <div class="progress-bar">
-                        <div class="progress-fill" id="fibersProgress" style="width: 0%; background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);"></div>
+                        <div class="progress-fill" id="fibersProgress" style="width: 0%;"></div>
                     </div>
                 </div>
                 <div class="progress-card weight-card">
@@ -113,6 +117,25 @@
                     <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
                         <input type="number" id="bellyInput" step="0.1" placeholder="cm" style="flex: 1; padding: 8px; border: 2px solid var(--color-border); border-radius: 8px; font-size: 1em;">
                         <button id="saveBellyBtn" class="quick-action-btn">💾</button>
+                    </div>
+                </div>
+                <div class="progress-card weight-card">
+                    <div class="progress-header">
+                        <span class="progress-label">🛌 Heure de coucher</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                        <input type="time" id="bedtimeInput" style="flex: 1; padding: 8px; border: 2px solid var(--color-border); border-radius: 8px; font-size: 1em;">
+                        <button id="saveBedtimeBtn" class="quick-action-btn">💾</button>
+                    </div>
+                </div>
+                <div class="progress-card weight-card">
+                    <div class="progress-header">
+                        <span class="progress-label">💤 Durée du sommeil</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                        <input type="number" id="sleepDurationHoursInput" min="0" max="24" step="1" placeholder="h" style="width: 70px; padding: 8px; border: 2px solid var(--color-border); border-radius: 8px; font-size: 1em;">
+                        <input type="number" id="sleepDurationMinutesInput" min="0" max="59" step="5" placeholder="min" style="width: 80px; padding: 8px; border: 2px solid var(--color-border); border-radius: 8px; font-size: 1em;">
+                        <button id="saveSleepDurationBtn" class="quick-action-btn">💾</button>
                     </div>
                 </div>
             </div>
@@ -160,6 +183,17 @@
                 </div>
             </div>
 
+            <!-- Événements du jour -->
+            <div class="daily-events-section">
+                <div class="activities-header">
+                    <h3>📝 Événements actifs</h3>
+                    <button type="button" class="daily-event-manage-btn" id="openHealthEventsTabBtn">Gérer les événements</button>
+                </div>
+                <div class="daily-events-list" id="dailyEventsList">
+                    <p class="no-daily-events">Aucun événement actif ce jour</p>
+                </div>
+            </div>
+
             <!-- Section Activités Physiques -->
             <div class="activities-section">
                 <div class="activities-header">
@@ -172,9 +206,19 @@
                     <select id="activitySelect" class="activity-select">
                         <option value="">Sélectionner une activité...</option>
                     </select>
+                    <input type="time" id="activityTime" class="activity-input" title="Heure de l'activité">
                     <input type="number" id="activityDuration" placeholder="Durée (min)" min="1" class="activity-input">
                     <input type="number" id="activityCalories" placeholder="Calories brûlées" min="0" class="activity-input">
                     <button class="activity-btn add-btn" id="addActivityBtn">➕ Ajouter</button>
+                </div>
+                <div class="strength-details-panel" id="strengthDetailsPanel" style="display: none;">
+                    <div class="strength-details-header">
+                        <strong>Détail musculation</strong>
+                        <button type="button" class="activity-btn add-btn" id="addStrengthExerciseBtn">➕ Exercice</button>
+                    </div>
+                    <datalist id="strengthExerciseOptions"></datalist>
+                    <datalist id="strengthMuscleOptions"></datalist>
+                    <div class="strength-exercises-list" id="strengthExercisesList"></div>
                 </div>
 
                 <!-- Liste des activités du jour -->
@@ -305,17 +349,35 @@
             <!-- Grille des repas de la journée -->
             <div class="meals-grid">
                 <div class="meal-column" data-meal="petit-dej">
-                    <div class="meal-title">🌅 Petit Déjeuner</div>
+                    <div class="meal-title">
+                        <span>🌅 Petit Déj</span>
+                        <label class="meal-time-field" title="Heure du petit déjeuner">
+                            <span>🕒</span>
+                            <input type="time" id="mealTime-petit-dej" class="meal-time-input" value="08:00">
+                        </label>
+                    </div>
                     <div class="meal-summary" id="summary-petit-dej"></div>
                     <div class="meal-items" id="petit-dej"></div>
                 </div>
                 <div class="meal-column" data-meal="dejeuner">
-                    <div class="meal-title">☀️ Déjeuner</div>
+                    <div class="meal-title">
+                        <span>☀️ Déjeuner</span>
+                        <label class="meal-time-field" title="Heure du déjeuner">
+                            <span>🕒</span>
+                            <input type="time" id="mealTime-dejeuner" class="meal-time-input" value="12:30">
+                        </label>
+                    </div>
                     <div class="meal-summary" id="summary-dejeuner"></div>
                     <div class="meal-items" id="dejeuner"></div>
                 </div>
                 <div class="meal-column" data-meal="diner">
-                    <div class="meal-title">🌙 Dîner</div>
+                    <div class="meal-title">
+                        <span>🌙 Dîner</span>
+                        <label class="meal-time-field" title="Heure du dîner">
+                            <span>🕒</span>
+                            <input type="time" id="mealTime-diner" class="meal-time-input" value="19:30">
+                        </label>
+                    </div>
                     <div class="meal-summary" id="summary-diner"></div>
                     <div class="meal-items" id="diner"></div>
                 </div>
@@ -327,11 +389,56 @@
             </div>
         </div>
 
+        <!-- =================== CONTENU DE L'ONGLET "ÉVÉNEMENTS" =================== -->
+        <div id="events-tab" class="tab-content">
+            <h2 class="section-title">📝 Événements</h2>
+            <div class="health-events-layout">
+                <section class="health-event-editor">
+                    <h3>Ajouter ou modifier un événement</h3>
+                    <form id="healthEventForm" class="health-event-form">
+                        <input type="hidden" id="healthEventId">
+                        <label>
+                            <span>Type</span>
+                            <select id="healthEventType" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="sick">🤒 Malade</option>
+                                <option value="fatigue">😴 Fatigue</option>
+                                <option value="good-sleep">🛌 Bien dormi</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Date de début</span>
+                            <input type="date" id="healthEventStartDate" required>
+                        </label>
+                        <label>
+                            <span>Date de fin <small>(facultative si en cours)</small></span>
+                            <input type="date" id="healthEventEndDate">
+                        </label>
+                        <label class="health-event-comment-field">
+                            <span>Commentaire</span>
+                            <textarea id="healthEventComment" maxlength="300" rows="3" placeholder="Commentaire optionnel"></textarea>
+                        </label>
+                        <div class="health-event-form-actions">
+                            <button type="submit" class="daily-event-manage-btn" id="healthEventSubmitBtn">➕ Ajouter</button>
+                            <button type="button" class="daily-event-cancel-btn" id="healthEventCancelBtn" style="display: none;">Annuler</button>
+                        </div>
+                    </form>
+                </section>
+                <section class="health-events-history">
+                    <h3>Historique</h3>
+                    <div id="healthEventsManageList" class="daily-events-list">
+                        <p class="no-daily-events">Aucun événement enregistré</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+
         <!-- =================== CONTENU DE L'ONGLET "STATISTIQUES" =================== -->
         <div id="stats-tab" class="tab-content">
             <!-- Barre de navigation des sections -->
             <div class="stats-nav-bar">
                 <button class="stats-nav-btn active" data-section="evolution">📊 Évolution</button>
+                <button class="stats-nav-btn" data-section="comparison">⚖️ Comparer</button>
                 <button class="stats-nav-btn" data-section="averages">📈 Moyennes</button>
                 <button class="stats-nav-btn" data-section="costs">💰 Coûts</button>
                 <button class="stats-nav-btn" data-section="activities">🏃 Activités</button>
@@ -342,6 +449,82 @@
             <!-- Section Évolution -->
             <div id="stats-evolution" class="stats-section">
                 <h2 class="section-title">📊 Statistiques Nutritionnelles</h2>
+                <section class="recomp-guidance">
+                    <div class="recomp-guidance-header">
+                        <h3>🔥 Recomposition corporelle</h3>
+                        <p>Perdre du gras tout en préservant ou gagnant du muscle demande surtout une bonne intensité d'entraînement, un déficit calorique modéré et assez de protéines.</p>
+                    </div>
+                    <div class="recomp-guidance-grid">
+                        <div class="recomp-guidance-item">
+                            <span class="recomp-guidance-icon">🏋️</span>
+                            <strong>Entraînement intense</strong>
+                            <p>Si les séries sont trop faciles, le muscle reçoit trop peu de signal pour progresser.</p>
+                        </div>
+                        <div class="recomp-guidance-item">
+                            <span class="recomp-guidance-icon">⚖️</span>
+                            <strong>Déficit contrôlé</strong>
+                            <p>Surveille surtout le poids moyen de la semaine, pas une seule pesée isolée.</p>
+                        </div>
+                        <div class="recomp-guidance-item">
+                            <span class="recomp-guidance-icon">📉</span>
+                            <strong>Rythme idéal</strong>
+                            <p>Une baisse de 0,5 à 1% du poids par semaine reste une bonne zone pour recomposer.</p>
+                        </div>
+                        <div class="recomp-guidance-item">
+                            <span class="recomp-guidance-icon">🥩</span>
+                            <strong>Protéines suffisantes</strong>
+                            <p>Vise environ 1,8 g de protéines par kilo de poids de corps par jour.</p>
+                        </div>
+                    </div>
+                    <div class="weekly-weight-loss-panel">
+                        <div class="weekly-weight-loss-header">
+                            <h4>Suivi hebdomadaire du rythme de perte</h4>
+                            <p>Objectif recomposition : perdre environ 0,5 à 1% du poids moyen par semaine.</p>
+                        </div>
+                        <div class="weekly-weight-loss-legend">
+                            <span><strong>Perte > 1%</strong> : monter les kcal</span>
+                            <span><strong>Perte 0,5 à 1%</strong> : parfait</span>
+                            <span><strong>Pas assez de perte</strong> : baisser les kcal</span>
+                        </div>
+                        <div class="weekly-weight-loss-controls">
+                            <label>
+                                <span>Date de début</span>
+                                <input type="date" id="weeklyWeightStartDate">
+                            </label>
+                            <label>
+                                <span>Date de fin</span>
+                                <input type="date" id="weeklyWeightEndDate">
+                            </label>
+                            <button type="button" id="applyWeeklyWeightRangeBtn">Appliquer</button>
+                            <button type="button" id="resetWeeklyWeightRangeBtn">Réinitialiser</button>
+                            <p id="weeklyWeightRangeStatus">Période actuelle des statistiques.</p>
+                        </div>
+                        <div class="weekly-weight-loss-table-wrapper">
+                            <table class="weekly-weight-loss-table">
+                                <thead>
+                                    <tr>
+                                        <th>Semaine</th>
+                                        <th>Pesées</th>
+                                        <th>Poids moyen</th>
+                                        <th>Variation</th>
+                                        <th>% / semaine</th>
+                                        <th>Kcal net/j</th>
+                                        <th>Activités pratiquées</th>
+                                        <th>Temps activité</th>
+                                        <th>Kcal brûlées</th>
+                                        <th>Lecture</th>
+                                        <th>Ajustement calories</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="weeklyWeightLossTableBody">
+                                    <tr>
+                                        <td colspan="11">Chargement...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
                 <!-- Boutons pour choisir la période d'affichage -->
             <div class="stats-period">
                 <button class="period-btn active" data-period="7">7 jours</button>
@@ -363,8 +546,27 @@
                 </div>
                 <button id="applyStatsDateRangeBtn" class="period-btn">Appliquer</button>
             </div>
+            <div style="text-align: right; margin: 10px 0 4px;">
+                <button id="exportStatsJsonBtn" style="
+                    padding: 9px 18px;
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    font-size: 0.9em;
+                    cursor: pointer;
+                    box-shadow: 0 2px 8px rgba(16,185,129,0.3);
+                    transition: opacity 0.2s;
+                " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                    📥 Exporter JSON (analyse IA)
+                </button>
+            </div>
             <!-- Grille pour les graphiques -->
             <div class="stats-grid">
+                <div class="chart-container" style="grid-column: 1 / -1;">
+                    <h3>📊 Vue Combinée</h3><canvas id="combinedStatsChart"></canvas>
+                </div>
                 <div class="chart-container">
                     <h3>Évolution des Calories</h3><canvas id="caloriesChart"></canvas>
                 </div>
@@ -373,6 +575,9 @@
                 </div>
                 <div class="chart-container">
                     <h3>Évolution des Protéines</h3><canvas id="proteinsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🥩 Ratio Protéines / Poids</h3><canvas id="proteinRatioChart"></canvas>
                 </div>
                 <div class="chart-container">
                     <h3>Évolution des Glucides</h3><canvas id="carbsChart"></canvas>
@@ -393,12 +598,71 @@
                     <h3>📏 Évolution du Tour de Ventre</h3><canvas id="bellyChart"></canvas>
                 </div>
                 <div class="chart-container">
+                    <h3>🛌 Suivi des Heures de Coucher</h3><canvas id="bedtimeChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>💤 Suivi de la Durée du Sommeil</h3><canvas id="sleepDurationChart"></canvas>
+                </div>
+                <div class="chart-container">
                     <h3>💧 Hydratation Quotidienne</h3><canvas id="waterChart"></canvas>
                 </div>
                 <div class="chart-container">
                     <h3>👟 Nombre de Pas</h3><canvas id="stepsChart"></canvas>
                 </div>
             </div>
+            </div>
+
+            <!-- Section Comparaison de périodes -->
+            <div id="stats-comparison" class="stats-section">
+                <h2 class="section-title">⚖️ Comparaison de Périodes</h2>
+                <div class="period-comparison-controls">
+                    <div class="period-comparison-block">
+                        <h3>Période A</h3>
+                        <label>Début <input type="date" id="comparisonPeriodAStart"></label>
+                        <label>Fin <input type="date" id="comparisonPeriodAEnd"></label>
+                    </div>
+                    <div class="period-comparison-block">
+                        <h3>Période B</h3>
+                        <label>Début <input type="date" id="comparisonPeriodBStart"></label>
+                        <label>Fin <input type="date" id="comparisonPeriodBEnd"></label>
+                    </div>
+                    <button id="comparePeriodsBtn" class="period-btn">Comparer</button>
+                </div>
+                <p id="periodComparisonStatus" class="period-comparison-status"></p>
+                <div class="period-comparison-table-wrapper">
+                    <table class="period-comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Indicateur</th>
+                                <th>Période A</th>
+                                <th>Période B</th>
+                                <th>Écart</th>
+                            </tr>
+                        </thead>
+                        <tbody id="periodComparisonTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="period-comparison-chart-header">
+                    <h3>Évolution journalière comparée</h3>
+                    <label>
+                        Indicateur
+                        <select id="periodComparisonMetric">
+                            <option value="calories">Calories consommées</option>
+                            <option value="netCalories">Calories nettes</option>
+                            <option value="calorieGoal">Objectif calorique</option>
+                            <option value="weight">Poids</option>
+                            <option value="proteinRatio">Protéines / poids</option>
+                            <option value="carbs">Glucides</option>
+                            <option value="sugars">Sucres</option>
+                            <option value="fibers">Fibres</option>
+                            <option value="caloriesBurned">Activité physique</option>
+                            <option value="water">Hydratation</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="chart-container period-comparison-chart">
+                    <canvas id="periodComparisonChart"></canvas>
+                </div>
             </div>
 
             <!-- Section Moyennes -->
@@ -691,6 +955,14 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="bmrFormula">🧮 Mode de calcul du métabolisme</label>
+                    <select id="bmrFormula" required>
+                        <option value="mifflin">Mifflin-St Jeor</option>
+                        <option value="harris">Harris-Benedict</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label for="age">🎂 Âge (années)</label>
                     <input type="number" id="age" min="15" max="100" placeholder="30" required>
                 </div>
@@ -846,6 +1118,28 @@
         <!-- Section pour ajouter un nouvel aliment -->
         <div class="add-food-section">
             <h2 class="section-title">➕ Ajouter un Aliment</h2>
+            <div class="food-ai-panel">
+                <div class="food-ai-header">
+                    <h3>Assistant IA aliment</h3>
+                    <span>DeepSeek V4 Flash + Brave Search</span>
+                </div>
+                <div class="food-ai-grid">
+                    <div class="form-group">
+                        <label>Produit, marque, texte d'étiquette</label>
+                        <input type="text" id="aiFoodQuery" placeholder="Ex: Bjorg framboise 175g ou valeurs copiées">
+                    </div>
+                    <div class="form-group">
+                        <label>Photo / capture</label>
+                        <input type="file" id="aiFoodImage" accept="image/*">
+                    </div>
+                </div>
+                <div class="food-ai-actions">
+                    <button type="button" id="aiFoodAnalyzeBtn" class="ai-refresh-btn">Analyser image/texte</button>
+                    <button type="button" id="aiFoodSearchBtn" class="ai-refresh-btn">Rechercher web</button>
+                </div>
+                <div id="aiFoodStatus" class="ai-status" style="display:none;"></div>
+                <div id="aiFoodCandidates" class="ai-food-candidates"></div>
+            </div>
             <form class="add-food-form" id="addFoodForm">
                 <!-- Nom -->
                 <div class="form-group">
@@ -919,6 +1213,10 @@
                         <label><span id="foodFatsLabel">Lipides (g)</span></label>
                         <input type="number" step="0.1" id="foodFats" required>
                     </div>
+                    <div class="form-group">
+                        <label>Indice glycémique</label>
+                        <input type="number" step="1" id="foodGlycemicIndex" min="0" max="100" placeholder="55">
+                    </div>
                 </div>
                 
                 <!-- Prix -->
@@ -937,7 +1235,7 @@
                     <div style="display: flex; gap: 8px; align-items: center; flex-wrap: nowrap;">
                         <input type="number" step="0.01" id="foodPrice" placeholder="4.50" min="0" style="width: 70px; min-width: 70px; flex-shrink: 0;">
                         <span style="flex-shrink: 0;">€</span>
-                        <input type="number" step="1" id="foodPriceQuantity" placeholder="500" min="1" style="width: 70px; min-width: 70px; flex-shrink: 0;">
+                        <input type="number" step="1" id="foodPriceQuantity" placeholder="500" min="0" style="width: 70px; min-width: 70px; flex-shrink: 0;">
                         <span id="foodPriceLabel" style="flex-shrink: 0;">g</span>
                     </div>
                 </div>
@@ -1252,6 +1550,61 @@
     <!-- =================== CONTENU DE L'ONGLET "PARAMÈTRES" =================== -->
     <div id="settings-tab" class="tab-content">
         <h2 class="section-title">⚙️ Paramètres</h2>
+
+        <!-- Section Statistiques -->
+        <div class="settings-section">
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h3>📊 Statistiques</h3>
+                    <p class="settings-description">Ignorez les journées trop basses en calories quand elles correspondent à un suivi incomplet</p>
+                </div>
+                <div class="settings-card-body">
+                    <div class="settings-actions">
+                        <div class="settings-action-item">
+                            <div class="action-info">
+                                <h4>Filtrer les journées incomplètes</h4>
+                                <p>Exclut des graphiques d'évolution les jours sous le seuil choisi.</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-weight: 600;">
+                                    <input type="checkbox" id="excludeLowCalorieDaysInput">
+                                    Activer
+                                </label>
+                                <input type="number" id="lowCalorieThresholdInput" min="0" step="50" value="1500" style="width: 110px; padding: 10px; border: 2px solid var(--color-border); border-radius: 8px;">
+                                <span style="font-weight: 600; color: #666;">kcal</span>
+                                <button id="saveStatsFilterSettingsBtn" class="settings-btn export-btn">💾 Sauvegarder</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Musculation -->
+        <div class="settings-section">
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h3>🏋️ Musculation</h3>
+                    <p class="settings-description">Gérez les mouvements disponibles dans le détail des activités de musculation</p>
+                </div>
+                <div class="settings-card-body">
+                    <div class="settings-actions">
+                        <div class="settings-action-item strength-settings-item-wrap">
+                            <div class="action-info">
+                                <h4>Catalogue des exercices</h4>
+                                <p>Ajoutez un mouvement et le muscle principal travaillé. Il apparaîtra ensuite dans le menu déroulant.</p>
+                            </div>
+                            <div class="strength-settings-form">
+                                <input type="text" id="strengthExerciseNameInput" list="strengthExerciseOptions" placeholder="Mouvement">
+                                <input type="text" id="strengthExerciseMuscleInput" list="strengthMuscleOptions" placeholder="Muscle travaillé">
+                                <button id="addStrengthExerciseSettingBtn" class="settings-btn export-btn" type="button">➕ Ajouter</button>
+                            </div>
+                        </div>
+                        <div class="strength-settings-list" id="strengthExerciseSettingsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <!-- Section Gestion des Données -->
         <div class="settings-section">
@@ -1320,6 +1673,72 @@
             </div>
         </div>
 
+        <!-- Section Intelligence Artificielle (GLM) -->
+        <div class="settings-section">
+            <div class="settings-card ai-settings-card">
+                <div class="settings-card-header">
+                    <h3>✨ Intelligence Artificielle – DeepSeek API</h3>
+                    <p class="settings-description">Connectez l'API DeepSeek pour générer vos repas et remplir les aliments automatiquement</p>
+                    <span id="glmApiStatus" class="glm-status glm-status--missing">⚠️ Non configurée</span>
+                </div>
+                <div class="settings-card-body">
+                    <div class="settings-actions">
+                        <div class="settings-action-item">
+                            <div class="action-info">
+                                <h4>🔑 Clé API DeepSeek</h4>
+                                <p>Obtenez votre clé sur <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">DeepSeek Platform</a>. Elle est stockée localement sur votre appareil.</p>
+                                <div style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+                                    <label style="font-size:0.88em; color:#666; font-weight:600;">Modèle :</label>
+                                    <select id="glmModelSelect" class="ai-source-select" style="min-width:180px; font-size:0.9em; padding:6px 10px;">
+                                        <option value="deepseek-v4-flash">deepseek-v4-flash (V4 Flash)</option>
+                                        <option value="deepseek-v4-pro">deepseek-v4-pro (V4 Pro)</option>
+                                        <option value="deepseek-chat">deepseek-chat (ancien alias)</option>
+                                        <option value="deepseek-reasoner">deepseek-reasoner (ancien alias)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="ai-key-form">
+                                <input type="password" id="glmApiKeyInput" placeholder="Collez votre clé DeepSeek ici (sk-...)" class="ai-key-input" autocomplete="off">
+                                <div style="display:flex; gap:8px; margin-top:8px;">
+                                    <button id="saveGlmApiKeyBtn" class="settings-btn export-btn">💾 Sauvegarder &amp; Tester</button>
+                                    <button id="clearGlmApiKeyBtn" class="settings-btn reset-btn" style="padding:12px 16px;">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-action-item">
+                            <div class="action-info">
+                                <h4>🔎 Recherche internet Brave</h4>
+                                <p>Obtenez une clé sur <a href="https://api-dashboard.search.brave.com/" target="_blank" rel="noopener">Brave Search API</a>. Lancez l'application avec <code>tools/start-nutrition-app.bat</code> pour activer la recherche web.</p>
+                                <span id="braveSearchApiStatus" class="glm-status glm-status--missing">⚠️ Recherche web non configurée</span>
+                            </div>
+                            <div class="ai-key-form">
+                                <input type="password" id="braveSearchApiKeyInput" placeholder="Collez votre clé Brave Search API ici" class="ai-key-input" autocomplete="off">
+                                <div style="display:flex; gap:8px; margin-top:8px;">
+                                    <button id="saveBraveSearchApiKeyBtn" class="settings-btn export-btn">💾 Sauvegarder</button>
+                                    <button id="clearBraveSearchApiKeyBtn" class="settings-btn reset-btn" style="padding:12px 16px;">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-action-item">
+                            <div class="action-info">
+                                <h4>🏬 Enseignes prioritaires</h4>
+                                <p>Une enseigne par ligne. L'ordre sert de priorité, puis la recherche continue ailleurs si besoin.</p>
+                            </div>
+                            <div class="ai-key-form">
+                                <label style="display:flex; align-items:center; gap:8px; font-weight:600; margin-bottom:10px;">
+                                    <input type="checkbox" id="preferRetailerSearchInput">
+                                    Prioriser ces enseignes
+                                </label>
+                                <textarea id="preferredRetailersInput" class="ai-key-input" rows="4" style="width:100%; resize:vertical;" placeholder="Intermarché Senonches France&#10;Carrefour&#10;Lidl"></textarea>
+                                <button id="saveFoodSearchPreferenceBtn" class="settings-btn export-btn" style="margin-top:8px;">💾 Sauvegarder</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Section Zone Dangereuse -->
         <div class="settings-section">
             <div class="settings-card danger-card">
@@ -1373,12 +1792,100 @@
     </div>
 
     <!-- =============================================
+         MODALE GÉNÉRATION IA
+    ============================================= -->
+    <div id="aiMealModal" class="modal">
+        <div class="modal-content ai-modal-content">
+            <button class="modal-close-btn" id="closeAiMealModal">&times;</button>
+            <div class="ai-modal-header">
+                <span class="ai-modal-icon">✨</span>
+                <div>
+                    <h3>Générer mes repas avec l'IA</h3>
+                    <p class="ai-modal-subtitle" id="aiModalDateLabel">Pour aujourd'hui</p>
+                </div>
+            </div>
+
+            <!-- Étape 1 : Repas à générer -->
+            <div class="ai-step">
+                <h4 class="ai-step-title">1. Quels repas générer ?</h4>
+                <div class="ai-meal-types">
+                    <label class="ai-meal-type-label">
+                        <input type="checkbox" id="ai-meal-petit-dej" checked>
+                        <span>🌅 Petit Déjeuner</span>
+                    </label>
+                    <label class="ai-meal-type-label">
+                        <input type="checkbox" id="ai-meal-dejeuner" checked>
+                        <span>☀️ Déjeuner</span>
+                    </label>
+                    <label class="ai-meal-type-label">
+                        <input type="checkbox" id="ai-meal-diner" checked>
+                        <span>🌙 Dîner</span>
+                    </label>
+                    <label class="ai-meal-type-label">
+                        <input type="checkbox" id="ai-meal-snack" checked>
+                        <span>🍎 Snack</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Étape 2 : Sources -->
+            <div class="ai-step">
+                <h4 class="ai-step-title">2. Sources autorisées</h4>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <select id="ai-source-type" class="ai-source-select">
+                        <option value="both">🍱 Ingrédients + Repas composés</option>
+                        <option value="foods">🥦 Ingrédients uniquement</option>
+                        <option value="meals">🍽️ Repas composés uniquement</option>
+                    </select>
+                    <button id="aiRefreshPromptBtn" class="ai-refresh-btn" title="Régénérer le prompt">🔄 Aperçu prompt</button>
+                </div>
+            </div>
+
+            <!-- Étape 3 : Prompt éditable -->
+            <div class="ai-step">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                    <h4 class="ai-step-title" style="margin:0;">3. Prompt envoyé à l'IA <small style="font-weight:400; color:#888;">(éditable)</small></h4>
+                    <button id="aiCopyPromptBtn" class="ai-refresh-btn" title="Copier le prompt dans le presse-papiers" style="font-size:0.85em;">📋 Copier le prompt</button>
+                </div>
+                <textarea id="aiPromptPreview" class="ai-prompt-textarea" rows="8" placeholder="Le prompt sera généré ici..."></textarea>
+            </div>
+
+            <!-- Mode manuel : coller une réponse JSON -->
+            <div class="ai-step" id="aiManualSection" style="border:1px dashed #a78bfa; border-radius:10px; padding:12px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; cursor:pointer;" id="aiManualToggle">
+                    <h4 class="ai-step-title" style="margin:0;">🔧 Mode Manuel <small style="font-weight:400; color:#aaa;">(coller la réponse d'une autre IA)</small></h4>
+                    <span id="aiManualArrow" style="color:#a78bfa; font-size:1.2em;">▶</span>
+                </div>
+                <div id="aiManualBody" style="display:none; margin-top:12px;">
+                    <p style="font-size:0.85em; color:#aaa; margin-bottom:8px;">
+                        1. Copiez le prompt ci-dessus.<br>
+                        2. Collez-le dans ChatGPT, Claude ou autre IA.<br>
+                        3. Copiez le JSON renvoyé par l'IA et collez-le ici.
+                    </p>
+                    <textarea id="aiManualResponseInput" class="ai-prompt-textarea" rows="10" placeholder='Collez ici le JSON de réponse de l&apos;IA, ex: {"plan": { "petit-dej": [...], ...}}'></textarea>
+                    <button id="aiProcessManualBtn" class="settings-btn export-btn" style="margin-top:10px; width:100%; font-size:1em;">▶ Traiter et injecter le JSON</button>
+                </div>
+            </div>
+
+            <!-- Status / erreur -->
+            <div id="aiGenerationStatus" class="ai-status" style="display:none;"></div>
+
+            <!-- Actions -->
+            <div class="modal-buttons" style="margin-top:20px;">
+                <button id="aiGenerateBtn" class="settings-btn export-btn" style="font-size:1.05em;">✨ Générer mes repas</button>
+                <button id="cancelAiMealBtn" class="settings-btn" style="background:#6c757d; color:white; border:none;">Annuler</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =============================================
          MODALE DE MODIFICATION D'ALIMENT
          (cachée par défaut avec le CSS)
     ============================================= -->
     <div id="editFoodModal" class="modal">
         <div class="modal-content">
-            <button class="modal-close-btn">&times;</button>
+            <button class="modal-close-btn" id="closeEditFoodModal">&times;</button>
             <h3>Modifier l'Aliment</h3>
             <form id="editFoodForm" class="add-food-form">
                 <input type="hidden" id="editFoodId">
@@ -1455,6 +1962,10 @@
                         <label><span id="editFoodFatsLabel">Lipides (g)</span></label>
                         <input type="number" step="0.1" id="editFoodFats" required>
                     </div>
+                    <div class="form-group">
+                        <label>Indice glycémique</label>
+                        <input type="number" step="1" id="editFoodGlycemicIndex" min="0" max="100" placeholder="55">
+                    </div>
                 </div>
                 
                 <!-- Prix -->
@@ -1473,7 +1984,7 @@
                     <div style="display: flex; gap: 8px; align-items: center; flex-wrap: nowrap;">
                         <input type="number" step="0.01" id="editFoodPrice" placeholder="4.50" min="0" style="width: 80px; min-width: 70px; flex-shrink: 0;">
                         <span style="flex-shrink: 0;">€</span>
-                        <input type="number" step="1" id="editFoodPriceQuantity" placeholder="500" min="1" style="width: 90px; min-width: 70px; flex-shrink: 0;">
+                        <input type="number" step="1" id="editFoodPriceQuantity" placeholder="500" min="0" style="width: 90px; min-width: 70px; flex-shrink: 0;">
                         <span id="editFoodPriceLabel" style="flex-shrink: 0;">g</span>
                     </div>
                 </div>
@@ -1521,12 +2032,23 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>Heure</label>
+                    <input type="time" id="editActivityTime">
+                </div>
+                <div class="form-group">
                     <label>Durée (minutes)</label>
                     <input type="number" id="editActivityDuration" min="1" required>
                 </div>
                 <div class="form-group">
                     <label>Calories brûlées</label>
                     <input type="number" id="editActivityCalories" min="0" required>
+                </div>
+                <div class="strength-details-panel" id="editStrengthDetailsPanel" style="display: none;">
+                    <div class="strength-details-header">
+                        <strong>Détail musculation</strong>
+                        <button type="button" class="activity-btn add-btn" id="editAddStrengthExerciseBtn">➕ Exercice</button>
+                    </div>
+                    <div class="strength-exercises-list" id="editStrengthExercisesList"></div>
                 </div>
                 <div class="modal-buttons">
                     <button type="submit" class="add-btn">Sauvegarder</button>
@@ -1830,7 +2352,7 @@
     </script>
 
     <!-- Le script principal de l'application, chargé à la fin -->
-    <script src="js/app.js?v=20251101-1653" type="module"></script>
+    <script src="js/app.js?v=20260531-health-events-periods" type="module"></script>
 </body>
 
 </html>

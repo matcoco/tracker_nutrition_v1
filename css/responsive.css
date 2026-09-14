@@ -1,0 +1,734 @@
+/* =============================================
+   RESPONSIVE DESIGN - PRIORITÉ MOBILE FIRST
+   ============================================= */
+
+/* Améliorations générales pour le touch */
+@media (hover: none) and (pointer: coarse) {
+    /* Augmenter les zones de touch pour les appareils tactiles */
+    button, .nav-tab, .food-item, .meal-item, input {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Retirer les effets hover sur tactile */
+    .food-item:hover,
+    .meal-item:hover,
+    .nav-tab:hover {
+        transform: none;
+    }
+
+    /* Désactiver le user-select pour éviter la sélection accidentelle */
+    .nav-tabs, .meals-grid, .foods-list {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* TABLETTE (768px - 1024px) */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 95%;
+        padding: 15px;
+    }
+
+    /* Navigation par onglets */
+    .nav-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .nav-tab {
+        font-size: 0.9em;
+        padding: 12px 16px;
+        white-space: nowrap;
+    }
+
+    /* Grilles adaptatives */
+    .meals-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .foods-list {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+
+    /* Résumé avec barres de progression */
+    .summary-modern {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Formulaires */
+    .add-food-form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Grille des statistiques */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* MOBILE (< 768px) */
+@media (max-width: 768px) {
+    /* === GÉNÉRAL === */
+    body {
+        font-size: 14px;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        text-align: center;
+    }
+
+    .section-title {
+        font-size: 1.3em;
+    }
+
+    /* === NAVIGATION === */
+    .nav-tabs {
+        display: flex;
+        overflow-x: auto;
+        gap: 5px;
+        padding: 5px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-tab {
+        font-size: 0.85em;
+        padding: 10px 12px;
+        min-width: fit-content;
+        white-space: nowrap;
+    }
+
+    /* === CALENDRIER === */
+    .calendar-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .calendar-header button {
+        font-size: 0.85em;
+        padding: 8px 15px;
+    }
+
+    .calendar-header h2 {
+        font-size: 1.4em;
+    }
+
+    .date-picker {
+        font-size: 0.9em;
+        padding: 6px 10px;
+    }
+
+    /* === RÉSUMÉ JOURNALIER === */
+    .summary-modern {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .progress-card {
+        padding: 15px;
+    }
+
+    .progress-label {
+        font-size: 0.9em;
+    }
+
+    .progress-values {
+        font-size: 0.85em;
+    }
+
+    /* === BARRE DE RECHERCHE === */
+    .search-container {
+        max-width: 100%;
+        flex: 1;
+    }
+
+    .search-input {
+        font-size: 0.9em;
+        padding: 10px 12px;
+    }
+
+    /* === FILTRES DE CATÉGORIE === */
+    .category-filters {
+        gap: 8px;
+        padding: 12px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        flex-wrap: nowrap;
+    }
+    
+    .category-filter-btn {
+        padding: 8px 14px;
+        font-size: 0.85em;
+        min-width: fit-content;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .filter-icon {
+        font-size: 1.1em;
+    }
+    
+    .filter-text {
+        font-size: 0.9em;
+    }
+
+    /* === LISTE DES ALIMENTS === */
+    .foods-list {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+    }
+
+    .food-item {
+        padding: 12px;
+    }
+
+    .food-name {
+        font-size: 0.9em;
+    }
+
+    .food-calories {
+        font-size: 0.8em;
+    }
+
+    /* Bouton d'action rapide */
+    .quick-action-btn {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        font-size: 1em;
+        flex-shrink: 0;
+    }
+
+    /* Bouton "Voir plus" */
+    .load-more-btn {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+
+    /* === GRILLE DES REPAS === */
+    .meals-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .meal-column {
+        padding: 15px;
+        min-height: auto;
+    }
+
+    .meal-title {
+        font-size: 1.1em;
+    }
+
+    .meal-summary {
+        font-size: 0.75em;
+    }
+
+    .meal-item {
+        padding: 12px;
+    }
+
+    .meal-item-name {
+        font-size: 0.9em;
+    }
+
+    .meal-item-macros {
+        font-size: 0.7em;
+    }
+
+    .weight-input input {
+        width: 60px;
+        padding: 5px;
+    }
+
+    /* === HYDRATATION & PAS === */
+    .wellness-section {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .wellness-card {
+        padding: 20px;
+    }
+
+    .wellness-header h3 {
+        font-size: 1.2em;
+    }
+
+    /* === ÉVÉNEMENTS & ACTIVITÉS PHYSIQUES === */
+    .daily-events-section,
+    .activities-section {
+        padding: 15px;
+    }
+
+    .activities-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .activity-form {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .daily-event-form {
+        grid-template-columns: 1fr;
+    }
+
+    .strength-exercise-row {
+        grid-template-columns: 1fr;
+    }
+
+    .strength-details-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .strength-settings-form {
+        grid-template-columns: 1fr;
+        min-width: 100%;
+    }
+
+    .strength-settings-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .health-events-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .recomp-guidance-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .weekly-weight-loss-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .weekly-weight-loss-controls {
+        align-items: stretch;
+    }
+
+    .weekly-weight-loss-controls label,
+    .weekly-weight-loss-controls button {
+        width: 100%;
+    }
+
+    .activity-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .activity-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .activities-summary {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .wellness-actions {
+        flex-direction: column;
+    }
+
+    .water-btn, .steps-btn {
+        width: 100%;
+    }
+
+    /* === RÉSUMÉ QUOTIDIEN === */
+    .daily-summary-card {
+        padding: 15px;
+    }
+
+    .daily-summary-header {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .daily-summary-header h3 {
+        font-size: 1.1em;
+        flex: 1;
+    }
+
+    .summary-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .copy-btn {
+        width: auto;
+        padding: 8px 15px;
+        font-size: 0.85em;
+    }
+
+    .toggle-summary-btn {
+        width: 28px;
+        height: 28px;
+    }
+
+    .daily-summary-content {
+        font-size: 0.85em;
+        padding: 15px;
+    }
+
+    /* === ÉDITION MACROS === */
+    .edit-macros-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    #macroEditActions {
+        flex-direction: column;
+    }
+
+    #macroEditActions button {
+        width: 100%;
+        margin: 5px 0 !important;
+    }
+
+    /* === ONGLET STATISTIQUES === */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .stats-period {
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+
+    .period-btn, .average-period-btn, .cost-period-btn, .activity-period-btn, .food-analysis-period-btn {
+        flex: 0 1 auto;
+        min-width: 70px;
+        font-size: 0.8em;
+        padding: 8px 12px;
+        white-space: nowrap;
+    }
+
+    .chart-container {
+        margin-bottom: 20px;
+        padding: 15px;
+        min-height: 250px;
+    }
+
+    .chart-container canvas {
+        max-height: 300px !important;
+    }
+
+    /* Titre des graphiques plus petit sur mobile */
+    .chart-container h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+
+    /* === ONGLET OBJECTIFS === */
+    .gender-selector {
+        grid-template-columns: 1fr;
+    }
+
+    .gender-label {
+        padding: 15px;
+        min-height: 80px;
+    }
+
+    .gender-label .emoji {
+        font-size: 2em;
+    }
+
+    #goalsResults .summary {
+        grid-template-columns: 1fr;
+    }
+
+    #goalsResults .summary-item {
+        padding: 20px;
+    }
+
+    #goals-tab .section-title {
+        font-size: 1.3em;
+    }
+
+    /* Formulaire des objectifs */
+    #goalsForm {
+        gap: 15px;
+    }
+
+    #goalsForm .form-group {
+        grid-column: span 2;
+    }
+
+    /* === ONGLET ALIMENTS === */
+    .add-food-section {
+        padding: 15px;
+    }
+
+    .add-food-form {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .add-food-form button {
+        width: 100%;
+    }
+    
+    .nutrition-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    /* === NAVIGATION STATS === */
+    .stats-nav-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 6px;
+        padding: 10px;
+    }
+    
+    .stats-nav-btn {
+        flex: 0 0 auto;
+        min-width: fit-content;
+        padding: 10px 16px;
+        font-size: 0.85em;
+    }
+
+    /* Liste de gestion des aliments */
+    #foodsListManage .food-item {
+        padding: 12px;
+    }
+
+    /* === ONGLET PARAMÈTRES === */
+    .settings-card {
+        margin-bottom: 20px;
+    }
+
+    .settings-card-header {
+        padding: 20px;
+    }
+
+    .settings-card-header h3 {
+        font-size: 1.2em;
+    }
+
+    .settings-card-body {
+        padding: 15px;
+    }
+
+    .settings-action-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .action-info h4 {
+        font-size: 1em;
+    }
+
+    .action-info p {
+        font-size: 0.85em;
+    }
+
+    .settings-btn {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* === MODALE === */
+    .modal-content {
+        width: 95%;
+        max-width: 100%;
+        max-height: 95vh;
+        margin: 10px auto;
+        padding: 20px 15px;
+    }
+    
+    .modal-content h3 {
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+
+    .modal-close-btn {
+        font-size: 1.5em;
+    }
+
+    /* === BOUTONS === */
+    .btn, button {
+        padding: 10px 16px;
+        font-size: 0.9em;
+    }
+
+    /* === TABLES & FORMULAIRES === */
+    input[type="text"],
+    input[type="number"],
+    select {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    /* === HELPERS === */
+    .flex-wrap {
+        flex-wrap: wrap;
+    }
+
+    /* Cacher les éléments sur mobile si nécessaire */
+    .hide-mobile {
+        display: none !important;
+    }
+}
+
+/* TRÈS PETIT MOBILE (< 480px) */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .nav-tab {
+        font-size: 0.8em;
+        padding: 8px 10px;
+    }
+
+    .foods-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 8px;
+    }
+
+    .food-item {
+        padding: 10px;
+    }
+
+    .summary-modern {
+        gap: 10px;
+    }
+
+    .progress-card {
+        padding: 12px;
+    }
+
+    .calendar-header h2 {
+        font-size: 1.2em;
+    }
+
+    .meal-column {
+        padding: 12px;
+    }
+
+    .settings-card-header,
+    .settings-card-body {
+        padding: 15px;
+    }
+
+    /* Graphiques encore plus compacts */
+    .chart-container {
+        padding: 10px;
+        min-height: 200px;
+    }
+
+    .chart-container canvas {
+        max-height: 250px !important;
+    }
+
+    .chart-container h3 {
+        font-size: 1em;
+    }
+
+    .period-btn, .average-period-btn, .cost-period-btn, .activity-period-btn, .food-analysis-period-btn {
+        font-size: 0.75em;
+        padding: 6px 10px;
+        min-width: 60px;
+    }
+
+    .stats-period {
+        gap: 5px;
+    }
+}
+/* --- Responsive Statistiques & Analyse --- */
+/* Responsive */
+@media (max-width: 768px) {
+    .food-analysis-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .food-analysis-export-buttons {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .export-btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .food-analysis-table {
+        font-size: 0.85em;
+    }
+
+    .food-analysis-table th,
+    .food-analysis-table td {
+        padding: 10px 12px;
+    }
+    
+    .food-analysis-columns-selector {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .column-checkbox {
+        width: 100%;
+    }
+}
+/* --- Responsive Journal Historique --- */
+/* Responsive */
+@media (max-width: 600px) {
+    .journal-day-macros-inline { display: none; }
+    .ji-macros { display: none; }
+    .journal-day-header { padding: 12px 14px; }
+    .journal-day-body { padding: 12px 14px 16px; }
+}
+
+/* =============================================
+   ACCESSIBILITÉ — INDICATEUR DE FOCUS CLAVIER
+   =============================================
+   Plusieurs composants déclarent `outline: none` (champs de quantité et
+   d'heure de la prise alimentaire, recherche). Sur le clavier, l'utilisateur
+   n'avait alors plus aucun repère. On rétablit un anneau visible uniquement
+   lors d'une navigation au clavier. */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--color-secondary-start);
+    outline-offset: 2px;
+}

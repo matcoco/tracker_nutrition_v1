@@ -1,0 +1,339 @@
+/* =============================================
+   FORMULAIRES & MODALES
+   ============================================= */
+/* =============================================
+   7. GESTION DES ALIMENTS (FORMULAIRE)
+   ============================================= */
+.add-food-section { background: var(--color-bg-light); padding: 25px; border-radius: var(--border-radius-md); margin-top: 30px; }
+.food-ai-panel {
+    background: white;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    padding: 18px;
+    margin: 15px 0 18px;
+}
+.food-ai-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.food-ai-header h3 {
+    margin: 0;
+    color: var(--color-primary-start);
+    font-size: 1.05em;
+}
+.food-ai-header span {
+    color: var(--color-text-muted);
+    font-size: 0.85em;
+    font-weight: 600;
+}
+.food-ai-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 12px;
+}
+.food-ai-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+.ai-food-candidates {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.ai-food-candidate {
+    border: 1.5px solid var(--color-border);
+    background: #fff;
+    color: var(--color-text-dark);
+    border-radius: var(--border-radius-sm);
+    padding: 8px 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.ai-food-candidate.primary {
+    border-color: var(--color-primary-start);
+    color: var(--color-primary-start);
+}
+.add-food-form { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    margin-top: 15px; 
+}
+.form-group { display: flex; flex-direction: column; }
+.form-group label { font-size: 0.9em; color: var(--color-text-muted); margin-bottom: 5px; }
+.form-group input {
+    padding: 12px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 1em;
+    transition: var(--transition-fast);
+}
+.form-group input:focus {
+    border-color: var(--color-border-active);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    outline: none;
+}
+.form-group select {
+    padding: 12px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 1em;
+    background-color: white;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.form-group select:focus {
+    border-color: var(--color-border-active);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    outline: none;
+}
+.weight-input input { flex: 1; padding: 8px; border: 2px solid var(--color-border); border-radius: 5px; font-size: 1em; }
+
+/* Grille pour les valeurs nutritionnelles */
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.nutrition-grid .form-group {
+    margin: 0;
+}
+
+.nutrition-grid .form-group label {
+    font-size: 0.85em;
+    margin-bottom: 4px;
+}
+
+.nutrition-grid .form-group input {
+    padding: 10px;
+    font-size: 0.95em;
+}
+
+/* Éviter le bug du bouton au survol */
+.add-food-form .add-btn {
+    width: 100%;
+    transform: none !important;
+}
+.add-food-form .add-btn:hover {
+    transform: none !important;
+    opacity: 0.9;
+}
+
+
+
+/* =============================================
+   9. NOTIFICATIONS
+   ============================================= */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--color-success);
+    color: var(--color-text-light);
+    padding: 15px 25px;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-md);
+    z-index: 1000;
+    animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* =============================================
+   10. MODALE
+   ============================================= */
+.modal {
+    display: none; /* Cachée par défaut */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.show {
+    display: flex; /* Affichée via JS */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: var(--color-bg-container);
+    padding: 30px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    width: 90%;
+    max-width: 800px;
+    overflow-y: auto;
+    position: relative;
+    animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.3);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.5);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.modal-close-btn:hover,
+.modal-close-btn:focus {
+    color: var(--color-text-dark);
+}
+
+.modal-buttons {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* On s'assure que les boutons dans la modale prennent toute la largeur disponible */
+.modal-buttons > button {
+    flex: 1;
+}
+
+/* Styles pour la modal de confirmation */
+.modal-confirm {
+    max-width: 500px;
+    text-align: center;
+}
+
+.modal-confirm-icon {
+    font-size: 4em;
+    margin-bottom: 15px;
+    animation: scaleIn 0.4s ease-out;
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+/* `.food-name` est défini dans daily-tracker.css (nom en violet, gras, flex:1
+   dans l'en-tête de carte). La règle dupliquée qui se trouvait ici gagnait par
+   ordre d'import et imposait un gris #333 + une marge parasite de 8 px. */
+
+.food-category-icon {
+    position: absolute;
+    top: -20px;
+    right: -8px;
+    font-size: 1em;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 2px solid var(--color-border);
+    z-index: 2;
+    pointer-events: none;
+    transition: transform 0.2s ease;
+}
+
+.food-item:hover .food-category-icon {
+    transform: scale(1.1);
+}
+
+.modal-confirm h3 {
+    margin-bottom: 15px;
+    color: var(--color-text-dark);
+    font-size: 1.5em;
+}
+
+.modal-confirm-text {
+    color: var(--color-text);
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.modal-confirm-text strong {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.modal-confirm-warning {
+    color: #f59e0b;
+    font-size: 0.95em;
+    margin-bottom: 25px;
+    padding: 10px;
+    background: rgba(245, 158, 11, 0.1);
+    border-radius: 8px;
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+

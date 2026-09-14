@@ -1,0 +1,122 @@
+/* =============================================
+   1. VARIABLES & CONFIGURATION GLOBALE
+   ============================================= */
+:root {
+    /* Couleurs primaires et dégradés */
+    --color-primary-start: #667eea;
+    --color-primary-end: #764ba2;
+    --gradient-primary: linear-gradient(135deg, var(--color-primary-start) 0%, var(--color-primary-end) 100%);
+    
+    /* Couleurs secondaires (import) */
+    --color-secondary-start: #48c6ef;
+    --color-secondary-end: #6f86d6;
+    --gradient-secondary: linear-gradient(135deg, var(--color-secondary-start) 0%, var(--color-secondary-end) 100%);
+
+    /* Couleurs de danger (reset) */
+    --color-danger-start: #ff6b6b;
+    --color-danger-end: #ee5a6f;
+    --gradient-danger: linear-gradient(135deg, var(--color-danger-start) 0%, var(--color-danger-end) 100%);
+    
+    /* Couleurs de succès et de notification */
+    --color-success: #10b981;
+    --color-danger-solid: #ff4757;
+
+    /* Palette de couleurs de texte et de fond */
+    --color-text-light: #ffffff;
+    --color-text-dark: #333;
+    --color-text-muted: #666;
+    /* Alias utilisés par les composants. Sans eux, `var(--color-primary)` et
+       `var(--color-text)` étaient invalides : la déclaration était ignorée
+       silencieusement (aucune erreur en console). */
+    --color-text: var(--color-text-dark);
+    --color-text-medium: var(--color-text-muted);
+    --color-primary: var(--color-primary-start);
+    --color-bg-light: #f8f9fa;
+    --color-bg-container: #ffffff;
+    
+    /* Bordures */
+    --color-border: #dee2e6;
+    --color-border-dashed: #c5cde0;
+    --color-border-active: var(--color-primary-start);
+
+    /* Ombres */
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+
+    /* Dimensions et espacements */
+    --border-radius-sm: 8px;
+    --border-radius-md: 15px;
+    --border-radius-lg: 20px;
+    
+    /* Typographie */
+    --font-family-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    /* Transitions */
+    --transition-fast: all 0.2s ease-in-out;
+    --transition-smooth: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-main);
+    background: var(--gradient-primary);
+    padding: 20px;
+    min-height: 100vh;
+    color: var(--color-text-dark);
+}
+
+/* Pour une meilleure accessibilité au clavier */
+:focus-visible {
+    outline: 3px solid var(--color-secondary-start);
+    outline-offset: 2px;
+}
+
+/* =============================================
+   2. LAYOUT PRINCIPAL
+   ============================================= */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: var(--color-bg-container);
+    border-radius: var(--border-radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-lg);
+}
+
+.section-title {
+    font-size: 1.5em;
+    color: var(--color-text-dark);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-primary-start);
+}
+
+/* =============================================
+   3. TYPOGRAPHIE
+   ============================================= */
+h1 {
+    color: var(--color-primary-start);
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: 700;
+}
+
+h2 {
+    color: var(--color-text-dark);
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+h3 {
+    color: var(--color-primary-start);
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.3em;
+}

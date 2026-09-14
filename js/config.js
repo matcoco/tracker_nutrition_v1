@@ -1,6 +1,6 @@
 // js/config.js
 export const DB_NAME = 'NutritionTrackerDB';
-export const DB_VERSION = 7; // v7: Support des catégories d'aliments
+export const DB_VERSION = 8; // v8: Périodes d'événements de santé et bien-être
 
 export const defaultActivities = [
     '🚶 Marche',

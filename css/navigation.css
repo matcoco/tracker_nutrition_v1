@@ -1,0 +1,93 @@
+/* =============================================
+   NAVIGATION PAR ONGLETS
+   ============================================= */
+.nav-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.nav-tab {
+    background: transparent;
+    border: none;
+    padding: 15px 30px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--color-text-muted);
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+    transition: var(--transition-smooth);
+    border-bottom: 3px solid transparent;
+    transform: translateY(2px);
+}
+
+.nav-tab:hover {
+    background: var(--color-bg-light);
+    color: var(--color-primary-start);
+}
+
+.nav-tab.active {
+    background: var(--gradient-primary);
+    color: var(--color-text-light);
+    border-bottom-color: var(--color-primary-end);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+
+/* --- Navigation Statistiques --- */
+.stats-nav-bar {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: var(--border-radius-md);
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: wrap;
+}
+
+.stats-nav-btn {
+    flex: 1;
+    min-width: fit-content;
+    padding: 12px 20px;
+    border: 2px solid var(--color-border);
+    background: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
+.stats-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    border-color: var(--color-primary-start);
+    color: var(--color-primary-start);
+}
+
+.stats-nav-btn.active {
+    background: var(--gradient-primary);
+    color: white;
+    border-color: var(--color-primary-start);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transform: scale(1.02);
+}
+
+.stats-section {
+    margin-bottom: 50px;
+    scroll-margin-top: 80px;
+}
+

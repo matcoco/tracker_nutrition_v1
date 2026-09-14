@@ -1,0 +1,14 @@
+# Dépendances de développement (tests unitaires)
+node_modules/
+
+# Rapports de couverture
+coverage/
+
+# Divers
+.DS_Store
+__pycache__/
+
+# Sauvegarde de données personnelles (143 jours de repas, 75 pesées,
+# tour de ventre, événements de santé). Exclue d'un dépôt PUBLIC.
+# Les sauvegardes 2025 de divers/ sont, elles, déjà dans l'historique public.
+nutrition-tracker-backup-2026-05-18.json
