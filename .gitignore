@@ -8,7 +8,9 @@ coverage/
 .DS_Store
 __pycache__/
 
-# Sauvegarde de données personnelles (143 jours de repas, 75 pesées,
-# tour de ventre, événements de santé). Exclue d'un dépôt PUBLIC.
-# Les sauvegardes 2025 de divers/ sont, elles, déjà dans l'historique public.
-nutrition-tracker-backup-2026-05-18.json
+# Sauvegardes de données personnelles (repas, poids, tour de ventre, sommeil,
+# événements de santé). Le dépôt est PUBLIC : aucun fichier de ce type ne doit
+# être suivi par Git, où qu'il se trouve dans l'arborescence.
+nutrition-tracker-backup-*.json
+nutrition-data_*.json
+sauvegardes/

@@ -1,3 +1,8 @@
+> 🗄️ **Guide historique.** Il décrit la conversion de l'ancien format de prix
+> `priceGrams` vers le format actuel. L'application **lit nativement** les deux
+> formats : cette conversion n'est plus nécessaire pour importer une sauvegarde.
+> Conservé pour référence.
+
 # 🔧 Comment corriger une sauvegarde avec l'ancien format
 
 ## 🎯 Problème
@@ -13,22 +18,22 @@ Certains fichiers de sauvegarde contiennent des aliments avec l'ancien format de
 #### 1. Ouvrir un terminal dans le dossier du projet
 
 ```bash
-cd C:\Users\DELL\Downloads\nutrition-tracker
+cd /chemin/vers/tracker_nutrition_v1
 ```
 
 #### 2. Exécuter le script de correction
 
 ```bash
-node fix-backup-format.js
+node divers/fix-backup-format.js /chemin/vers/ma-sauvegarde.json
 ```
 
 #### 3. Résultat
 
 Le script va :
-- ✅ Lire votre fichier de sauvegarde
-- ✅ Corriger tous les aliments avec l'ancien format
-- ✅ Ajouter les propriétés manquantes (`isPortionBased`, `portionWeight`)
-- ✅ Créer un nouveau fichier : `nutrition-data_[nom-retire]_sauvegarde_totale_CORRECTED.json`
+- ✅ Lire votre fichier de sauvegarde (chemin passé en argument)
+- ✅ Corriger les aliments **et les repas composés** portant l'ancien format
+- ✅ **Ne jamais écraser** un `priceQuantity` déjà valide
+- ✅ Écrire un nouveau fichier `<nom>_CORRECTED.json` (l'original n'est pas modifié)
 
 #### 4. Importer le fichier corrigé
 

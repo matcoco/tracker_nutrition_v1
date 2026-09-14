@@ -1,6 +1,11 @@
 // tests/unit/data-backup-format.test.js
-// Validation de sauvegarde, migration des objectifs historiques, et
-// compatibilité réelle des sauvegardes du dossier divers/.
+// Validation de sauvegarde, planification d'import et migration des objectifs
+// historiques.
+//
+// Les sauvegardes personnelles ne sont volontairement PAS versionnées : les
+// tests s'appuient sur des sauvegardes SYNTHÉTIQUES reproduisant fidèlement
+// les schémas rencontrés (actuel et hérité). Si une sauvegarde réelle est
+// présente localement, quelques tests supplémentaires s'exécutent.
 
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
 import fs from 'node:fs';
@@ -13,34 +18,78 @@ import { loadAppDom } from '../helpers/dom.js';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(here, '../..');
 
-// Sauvegardes VERSIONNÉES : présentes dans n'importe quel clone du dépôt.
-const VERSIONED_BACKUPS = {
-    '2025-10-28': 'divers/nutrition-tracker-backup-2025-10-28.json',
-    '2025-11-16': 'divers/nutrition-tracker-backup-2025-11-16.json',
-};
-
-// Sauvegarde la plus récente : NON versionnée (données de santé personnelles,
-// exclue par .gitignore). Les tests qui s'y rapportent ne s'exécutent que si
-// elle est présente — un clone du dépôt doit rester vert sans elle.
-const LOCAL_ONLY_BACKUPS = {
-    '2026-05-18': 'nutrition-tracker-backup-2026-05-18.json',
-};
-
-const BACKUPS = { ...VERSIONED_BACKUPS, ...LOCAL_ONLY_BACKUPS };
-
 /**
- * Sous-ensemble des sauvegardes réellement présentes sur le disque.
- * @param {object} selection
- * @returns {object}
+ * Sauvegarde synthétique au schéma ACTUEL (v1.6) : les objectifs portent
+ * `goalProfile` et `adjustmentPercent`.
  */
-function availableBackups(selection = BACKUPS) {
-    return Object.fromEntries(
-        Object.entries(selection).filter(([, relativePath]) => fs.existsSync(path.join(PROJECT_ROOT, relativePath))),
-    );
+function currentSchemaBackup() {
+    return {
+        version: '1.6.0',
+        exportDate: '2026-01-15T10:00:00.000Z',
+        foods: [
+            { id: 'poulet', name: 'Poulet', category: 'proteins', calories: 165, proteins: 31, carbs: 0, sugars: 0, fibers: 0, fats: 3.6, price: 12.9, priceQuantity: 1000, priceUnit: 'grams' },
+            { id: 'riz', name: 'Riz', category: 'starches', calories: 350, proteins: 7, carbs: 78, sugars: 0.1, fibers: 1.3, fats: 0.6, price: 3, priceQuantity: 1000, priceUnit: 'grams' },
+        ],
+        meals: [
+            { id: 'poulet-riz', name: 'Poulet riz', totalWeight: 400, isPortionAdjustable: true, calories: 400, proteins: 40, carbs: 50, fats: 8, sugars: 1, fibers: 2, price: 5, priceQuantity: 400, priceUnit: 'grams', ingredients: [{ foodId: 'poulet', weight: 200 }, { foodId: 'riz', weight: 200 }] },
+        ],
+        dailyMeals: [
+            { date: '2026-01-14', meals: { 'petit-dej': [], dejeuner: [{ id: 'poulet', weight: 150, uniqueId: 1 }], diner: [], snack: [] }, weight: 80, belly: null, bedtime: null, sleepDuration: null, events: [], calorieGoal: 2100, proteinGoal: 160, carbGoal: 200, fatGoal: 70 },
+            { date: '2026-01-15', meals: { 'petit-dej': [], dejeuner: [], diner: [{ id: 'riz', weight: 100, uniqueId: 2 }], snack: [] }, weight: 79.8, belly: null, bedtime: null, sleepDuration: null, events: [], calorieGoal: 2100, proteinGoal: 160, carbGoal: 200, fatGoal: 70 },
+        ],
+        goals: [{ id: 'current', calories: 2100, proteins: 160, carbs: 200, fats: 70, goalProfile: 'cut', sexe: 'homme', age: 40, weight: 80, taille: 177, activite: 1.55, adjustmentPercent: 0.2, waterGoal: 2000, stepsGoal: 10000, sugarsMax: 25, fibersMin: 25 }],
+        dailyWater: [{ date: '2026-01-15', totalMl: 1500, history: [] }],
+        dailySteps: [{ date: '2026-01-15', steps: 8500 }],
+        dailyActivities: [{ date: '2026-01-15', activities: [{ id: 1, type: '🚶 Marche', time: '08:00', duration: 45, calories: 250 }] }],
+        customActivities: [],
+        healthEvents: [],
+    };
 }
 
-function readBackup(relativePath) {
-    return JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, relativePath), 'utf8'));
+/**
+ * Sauvegarde synthétique au schéma HÉRITÉ (avant novembre 2025) :
+ * `deficitPercent` au lieu de `adjustmentPercent`, pas de `goalProfile`,
+ * et des lignes de repas au format `foodId`/`uid`.
+ */
+function legacySchemaBackup() {
+    const backup = currentSchemaBackup();
+    backup.version = '1.4.0';
+    backup.exportDate = '2025-10-28T10:00:00.000Z';
+    delete backup.healthEvents;
+    backup.goals = [{ id: 'current', calories: 2186, proteins: 171, carbs: 200, fats: 78, mb: 1690, det: 2916, sexe: 'homme', age: 40, weight: 77.9, taille: 177, activite: 1.725, deficitPercent: 0.25, waterGoal: 2000, stepsGoal: 10000, sugarsMax: 50, fibersMin: 25 }];
+    backup.dailyMeals = backup.dailyMeals.map((day, index) => ({
+        ...day,
+        meals: {
+            'petit-dej': [],
+            dejeuner: [{ foodId: index === 0 ? 'poulet' : 'riz', uid: `uid-${index}`, weight: 120, time: '12:30' }],
+            diner: [],
+            snack: [],
+        },
+    }));
+    return backup;
+}
+
+/** Sauvegardes de test, indexées par étiquette. */
+const BACKUPS = {
+    'schema actuel': currentSchemaBackup,
+    'schema hérité': legacySchemaBackup,
+};
+
+// Sauvegardes personnelles éventuellement présentes localement (non versionnées).
+const LOCAL_BACKUP_DIRS = [PROJECT_ROOT, path.join(PROJECT_ROOT, 'divers')];
+
+/** Liste les sauvegardes réelles trouvées sur le disque, s'il y en a. */
+function localBackups() {
+    const found = [];
+    for (const dir of LOCAL_BACKUP_DIRS) {
+        if (!fs.existsSync(dir)) continue;
+        for (const name of fs.readdirSync(dir)) {
+            if (/^nutrition-tracker-backup-.*\.json$/.test(name)) {
+                found.push({ label: name, fullPath: path.join(dir, name) });
+            }
+        }
+    }
+    return found;
 }
 
 describe('backup-format.asArray', () => {
@@ -182,33 +231,37 @@ describe('backup-format.planBackupImport', () => {
         ]);
     });
 
-    it('les sauvegardes réelles du projet préservent toutes les données de santé', () => {
-        for (const [label, relativePath] of Object.entries(availableBackups())) {
-            const plan = planBackupImport(readBackup(relativePath));
-            expect(plan.ok, label).toBe(true);
-            // Aucune de ces sauvegardes ne contient healthEvents : il ne doit
-            // jamais être vidé lors d'un import.
-            expect(plan.preservedStores, label).toContain('healthEvents');
-            expect(plan.storesToReplace, label).not.toContain('healthEvents');
-            // Les fichiers contiennent bien ces stores : ils sont remplacés.
+    it('une sauvegarde SANS healthEvents ne provoque jamais sa suppression', () => {
+        // Cas le plus important : les sauvegardes antérieures à la v1.6 ne
+        // contiennent pas `healthEvents`. L'import doit conserver l'existant.
+        const plan = planBackupImport(legacySchemaBackup());
+        expect(plan.ok).toBe(true);
+        expect(plan.preservedStores).toContain('healthEvents');
+        expect(plan.storesToReplace).not.toContain('healthEvents');
+    });
+
+    it('une sauvegarde AVEC healthEvents (même vide) remplace le store', () => {
+        const plan = planBackupImport(currentSchemaBackup());
+        expect(plan.ok).toBe(true);
+        expect(plan.storesToReplace).toContain('healthEvents');
+        expect(plan.preservedStores).not.toContain('healthEvents');
+    });
+
+    it('les deux schémas remplacent bien les stores qu’ils contiennent', () => {
+        for (const [label, fabrique] of Object.entries(BACKUPS)) {
+            const plan = planBackupImport(fabrique());
             expect(plan.storesToReplace, label).toContain('goals');
             expect(plan.storesToReplace, label).toContain('meals');
+            expect(plan.storesToReplace, label).toContain('foods');
+            expect(plan.storesToReplace, label).toContain('dailyMeals');
         }
     });
 });
 
-describe('compatibilité des sauvegardes réelles du projet', () => {
-    it('les sauvegardes versionnées sont présentes dans le dépôt', () => {
-        // Garde-fou : sans elles, la suite perdrait silencieusement sa couverture
-        // « données réelles ».
-        for (const [label, relativePath] of Object.entries(VERSIONED_BACKUPS)) {
-            expect(fs.existsSync(path.join(PROJECT_ROOT, relativePath)), `${label} (${relativePath})`).toBe(true);
-        }
-    });
-
-    it('les sauvegardes disponibles sont acceptées par l’import actuel', () => {
-        for (const [label, relativePath] of Object.entries(availableBackups())) {
-            const data = readBackup(relativePath);
+describe('compatibilité des sauvegardes (schémas actuel et hérité)', () => {
+    it('les sauvegardes des deux schémas sont acceptées par l’import actuel', () => {
+        for (const [label, fabrique] of Object.entries(BACKUPS)) {
+            const data = fabrique();
             const result = validateBackupPayload(data);
             expect(result.ok, `sauvegarde ${label} refusée : ${result.error}`).toBe(true);
             expect(result.foods.length, label).toBeGreaterThan(0);
@@ -216,26 +269,32 @@ describe('compatibilité des sauvegardes réelles du projet', () => {
         }
     });
 
-    it('la sauvegarde d’octobre 2025 utilise bien l’ancien schéma d’objectifs', () => {
-        const goals = readBackup(BACKUPS['2025-10-28']).goals;
-        const objectifs = Array.isArray(goals) ? goals[0] : goals;
+    it('le schéma hérité utilise bien l’ancien nom d’ajustement calorique', () => {
+        const objectifs = legacySchemaBackup().goals[0];
         expect(objectifs).toHaveProperty('deficitPercent');
         expect(objectifs.adjustmentPercent).toBeUndefined();
         expect(objectifs.goalProfile).toBeUndefined();
     });
 
-    it('les sauvegardes plus récentes utilisent le schéma actuel', () => {
-        const recentes = Object.keys(availableBackups({
-            '2025-11-16': BACKUPS['2025-11-16'],
-            '2026-05-18': BACKUPS['2026-05-18'],
-        }));
-        expect(recentes.length, 'aucune sauvegarde récente disponible').toBeGreaterThan(0);
-        for (const label of recentes) {
-            const goals = readBackup(BACKUPS[label]).goals;
-            const objectifs = Array.isArray(goals) ? goals[0] : goals;
-            expect(objectifs.adjustmentPercent, label).toBeTypeOf('number');
-            expect(objectifs.goalProfile, label).toBeTruthy();
-        }
+    it('le schéma actuel utilise adjustmentPercent et goalProfile', () => {
+        const objectifs = currentSchemaBackup().goals[0];
+        expect(objectifs.adjustmentPercent).toBeTypeOf('number');
+        expect(objectifs.goalProfile).toBeTruthy();
+    });
+
+    it('le schéma hérité contient des lignes de repas au format foodId/uid', () => {
+        const lignes = legacySchemaBackup().dailyMeals.flatMap((day) => Object.values(day.meals).flat());
+        expect(lignes.length).toBeGreaterThan(0);
+        expect(lignes.every((ligne) => ligne.id === undefined && ligne.foodId !== undefined)).toBe(true);
+        expect(lignes.every((ligne) => ligne.uniqueId === undefined && ligne.uid !== undefined)).toBe(true);
+    });
+
+    it('les sauvegardes personnelles ne sont pas versionnées', () => {
+        // Garde-fou de confidentialité : aucun fichier de sauvegarde ne doit
+        // être suivi par Git (le dépôt est public).
+        const suivi = localBackups().filter(({ label }) => label.includes('backup'));
+        expect(Array.isArray(suivi)).toBe(true);
+        // Le test réel est fait par `git ls-files` dans docs-consistency.test.js.
     });
 });
 
@@ -345,8 +404,7 @@ describe('migration des objectifs historiques', () => {
         });
 
         it('un profil d’octobre 2025 permet à nouveau de recalculer les objectifs', async () => {
-            const goals = readBackup(BACKUPS['2025-10-28']).goals;
-            const objectifs = Array.isArray(goals) ? goals[0] : goals;
+            const objectifs = legacySchemaBackup().goals[0];
 
             // Sans migration, les champs requis manquent.
             expect(calculateGoalsFromInputs({ ...objectifs, weight: 77.9 })).toBeNull();
@@ -359,5 +417,17 @@ describe('migration des objectifs historiques', () => {
             expect(recalcules.calories).toBeGreaterThan(0);
             expect(recalcules.goalProfile).toBe('cut');
         });
+    });
+});
+
+describe('sauvegardes personnelles présentes localement (optionnel)', () => {
+    const locales = localBackups();
+
+    it.skipIf(locales.length === 0)('une sauvegarde réelle est acceptée par l’import', () => {
+        for (const { label, fullPath } of locales) {
+            const data = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
+            const result = validateBackupPayload(data);
+            expect(result.ok, `${label} refusée : ${result.error}`).toBe(true);
+        }
     });
 });

@@ -9,6 +9,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(here, '../..');
@@ -103,6 +104,56 @@ describe('documentation — liens et références', () => {
         for (const cible of ['AUDIT.md', 'tests/README.md', 'divers/FONCTIONNALITES.md', 'divers/CHANGELOG.md', 'divers/GUIDE-PRIX.md']) {
             expect(exists(cible), cible).toBe(true);
         }
+    });
+});
+
+describe('confidentialité — aucun fichier de données personnelles suivi', () => {
+    it('aucune sauvegarde personnelle n’est suivie par Git', () => {
+        // Le dépôt est PUBLIC : un fichier de sauvegarde suivi par Git serait
+        // publié, et le resterait dans l'historique même après suppression.
+        const suivis = execFileSync('git', ['ls-files'], { cwd: ROOT, encoding: 'utf8' })
+            .split('\n')
+            .filter(Boolean);
+
+        const interdits = suivis.filter((f) => /nutrition-tracker-backup-.*\.json$/.test(f)
+            || /nutrition-data_.*\.json$/.test(f));
+
+        expect(interdits, `fichiers de données suivi par Git : ${interdits.join(', ')}`).toEqual([]);
+    });
+
+    it('.gitignore exclut toutes les sauvegardes personnelles', () => {
+        const ignore = read('.gitignore');
+        expect(ignore).toContain('nutrition-tracker-backup-*.json');
+        expect(ignore).toContain('nutrition-data_*.json');
+    });
+
+    it('aucun prénom ou e-mail personnel dans les fichiers du dépôt', () => {
+        const fichiers = execFileSync('git', ['ls-files'], { cwd: ROOT, encoding: 'utf8' })
+            .split('\n')
+            .filter(Boolean);
+
+        // Motifs volontairement génériques : noms propres apparus dans
+        // l'historique, et adresses e-mail personnelles connues.
+        const motifs = [/[nom-retire]/i, /[nom-retire]/i, /[email-retire]/i];
+        const coupables = [];
+        for (const fichier of fichiers) {
+            let contenu;
+            try {
+                contenu = fs.readFileSync(path.join(ROOT, fichier), 'utf8');
+            } catch (_) {
+                continue;
+            }
+            // Exemptés : le rapport d'audit et ce fichier de test décrivent le
+            // problème, ils citent donc forcément les motifs recherchés.
+            if (fichier === 'AUDIT.md' || fichier === 'tests/unit/docs-consistency.test.js') continue;
+            for (const motif of motifs) {
+                if (motif.test(fichier) || motif.test(contenu)) {
+                    coupables.push(`${fichier} (${motif})`);
+                    break;
+                }
+            }
+        }
+        expect(coupables, `références personnelles : ${coupables.join(', ')}`).toEqual([]);
     });
 });
 
