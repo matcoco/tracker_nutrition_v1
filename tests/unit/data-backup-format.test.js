@@ -13,11 +13,31 @@ import { loadAppDom } from '../helpers/dom.js';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(here, '../..');
 
-const BACKUPS = {
+// Sauvegardes VERSIONNÉES : présentes dans n'importe quel clone du dépôt.
+const VERSIONED_BACKUPS = {
     '2025-10-28': 'divers/nutrition-tracker-backup-2025-10-28.json',
     '2025-11-16': 'divers/nutrition-tracker-backup-2025-11-16.json',
+};
+
+// Sauvegarde la plus récente : NON versionnée (données de santé personnelles,
+// exclue par .gitignore). Les tests qui s'y rapportent ne s'exécutent que si
+// elle est présente — un clone du dépôt doit rester vert sans elle.
+const LOCAL_ONLY_BACKUPS = {
     '2026-05-18': 'nutrition-tracker-backup-2026-05-18.json',
 };
+
+const BACKUPS = { ...VERSIONED_BACKUPS, ...LOCAL_ONLY_BACKUPS };
+
+/**
+ * Sous-ensemble des sauvegardes réellement présentes sur le disque.
+ * @param {object} selection
+ * @returns {object}
+ */
+function availableBackups(selection = BACKUPS) {
+    return Object.fromEntries(
+        Object.entries(selection).filter(([, relativePath]) => fs.existsSync(path.join(PROJECT_ROOT, relativePath))),
+    );
+}
 
 function readBackup(relativePath) {
     return JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, relativePath), 'utf8'));
@@ -163,10 +183,10 @@ describe('backup-format.planBackupImport', () => {
     });
 
     it('les sauvegardes réelles du projet préservent toutes les données de santé', () => {
-        for (const [label, relativePath] of Object.entries(BACKUPS)) {
+        for (const [label, relativePath] of Object.entries(availableBackups())) {
             const plan = planBackupImport(readBackup(relativePath));
             expect(plan.ok, label).toBe(true);
-            // Aucune des trois sauvegardes ne contient healthEvents : il ne doit
+            // Aucune de ces sauvegardes ne contient healthEvents : il ne doit
             // jamais être vidé lors d'un import.
             expect(plan.preservedStores, label).toContain('healthEvents');
             expect(plan.storesToReplace, label).not.toContain('healthEvents');
@@ -178,8 +198,16 @@ describe('backup-format.planBackupImport', () => {
 });
 
 describe('compatibilité des sauvegardes réelles du projet', () => {
-    it('les trois sauvegardes sont acceptées par l’import actuel', () => {
-        for (const [label, relativePath] of Object.entries(BACKUPS)) {
+    it('les sauvegardes versionnées sont présentes dans le dépôt', () => {
+        // Garde-fou : sans elles, la suite perdrait silencieusement sa couverture
+        // « données réelles ».
+        for (const [label, relativePath] of Object.entries(VERSIONED_BACKUPS)) {
+            expect(fs.existsSync(path.join(PROJECT_ROOT, relativePath)), `${label} (${relativePath})`).toBe(true);
+        }
+    });
+
+    it('les sauvegardes disponibles sont acceptées par l’import actuel', () => {
+        for (const [label, relativePath] of Object.entries(availableBackups())) {
             const data = readBackup(relativePath);
             const result = validateBackupPayload(data);
             expect(result.ok, `sauvegarde ${label} refusée : ${result.error}`).toBe(true);
@@ -197,7 +225,12 @@ describe('compatibilité des sauvegardes réelles du projet', () => {
     });
 
     it('les sauvegardes plus récentes utilisent le schéma actuel', () => {
-        for (const label of ['2025-11-16', '2026-05-18']) {
+        const recentes = Object.keys(availableBackups({
+            '2025-11-16': BACKUPS['2025-11-16'],
+            '2026-05-18': BACKUPS['2026-05-18'],
+        }));
+        expect(recentes.length, 'aucune sauvegarde récente disponible').toBeGreaterThan(0);
+        for (const label of recentes) {
             const goals = readBackup(BACKUPS[label]).goals;
             const objectifs = Array.isArray(goals) ? goals[0] : goals;
             expect(objectifs.adjustmentPercent, label).toBeTypeOf('number');

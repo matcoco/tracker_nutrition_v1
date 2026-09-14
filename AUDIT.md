@@ -15,9 +15,9 @@
 | **Bugs corrigés** | **78** (dont 17 critiques) |
 | Points signalés non corrigés (justifiés) | 8 |
 | Identifiants DOM manquants | **0** (396 ids vérifiés) |
-| **Tests écrits** | **855** |
+| **Tests écrits** | **856** |
 | Fichiers de test | 28 |
-| État final | **855 / 855 verts** |
+| État final | **856 / 856 verts** |
 
 > Ce rapport couvre **deux passes**. La première (sections 2 à 8) a porté sur le
 > code applicatif `js/`. La seconde (section 9) a couvert les zones qui n'avaient
@@ -278,7 +278,7 @@ $ npm test
  ✓ tests/integration/server.test.js             (12 tests)
 
  Test Files  23 passed (23)
-      Tests  748 passed (748)
+      Tests  856 passed (856)
 ```
 
 Le test d'intégration `app.test.js` démarre l'application complète (base IndexedDB, 200+ écouteurs, rendu de la journée) et **vérifie qu'aucune erreur n'est journalisée** pendant l'initialisation.
@@ -416,7 +416,7 @@ qui vous appartient) — c'est le point le plus urgent de tout l'audit.
 | Zone | Fichier de test | Tests |
 |---|---|---|
 | Feuilles de style (structure, variables, cascade, accessibilité) | `css-structure.test.js` | 16 |
-| Validation et planification d'import, compatibilité des sauvegardes réelles | `data-backup-format.test.js` | 33 |
+| Validation et planification d'import, compatibilité des sauvegardes réelles | `data-backup-format.test.js` | 34 |
 | Scripts de `divers/` (réparation de sauvegarde, modèle de prix) | `divers-scripts.test.js` | 22 |
 | Cohérence de la documentation (versions, liens, promesses) | `docs-consistency.test.js` | 13 |
 | Proxy Brave (sécurité CORS, validation, transmission) | `integration/brave-proxy.test.js` | 16 |

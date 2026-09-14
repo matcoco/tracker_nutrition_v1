@@ -36,8 +36,8 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 - Le proxy Brave n'autorise plus toutes les origines (`*`).
 
 ### ✅ Tests
-- Ajout d'une suite de **837 tests** (Vitest + jsdom + fake-indexeddb),
-  dont 2 tests d'intégration (application complète, serveurs locaux).
+- Ajout d'une suite de **856 tests** (Vitest + jsdom + fake-indexeddb),
+  dont 3 tests d'intégration (application complète, serveur local, proxy Brave).
 
 ---
 

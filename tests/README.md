@@ -47,7 +47,7 @@ tests/
 | Rendu des écrans | `ui-core.test.js`, `ui-meals.test.js` | 109 |
 | Repas composés, journal, comparaison, santé, IA | `features-*.test.js` (5 fichiers) | 208 |
 | Import / export | `data-import-export.test.js` | 26 |
-| Validation et planification d'import | `data-backup-format.test.js` | 33 |
+| Validation et planification d'import | `data-backup-format.test.js` | 34 |
 | Configuration, état, diagnostic de la base | `core-misc.test.js` | 23 |
 | **Feuilles de style** (structure, variables, cascade, focus) | `css-structure.test.js` | 16 |
 | **Scripts de `divers/`** (réparation, modèle de prix) | `divers-scripts.test.js` | 22 |
@@ -55,7 +55,7 @@ tests/
 | Démarrage complet de l'application | `integration/app.test.js` | 9 |
 | Serveur local (statique, sécurité) | `integration/server.test.js` | 12 |
 | **Proxy Brave** (CORS, validation, transmission) | `integration/brave-proxy.test.js` | 16 |
-| **Total** | **28 fichiers** | **855** |
+| **Total** | **28 fichiers** | **856** |
 
 ## Notes de conception
 
