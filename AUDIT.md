@@ -144,7 +144,7 @@ Sans objectif, la fonction renvoyait `100` : calories, protéines, glucides et l
 ### 3.9 Serveur local : exposition de `.git/` et des sauvegardes
 `tools/nutrition-app-server.js`
 
-Le serveur écoutait en boucle locale avec `Access-Control-Allow-Origin: *` sur **toutes** les réponses, et servait l'intégralité du dossier racine — dont `.git/` et `nutrition-tracker-backup-2026-05-18.json` (592 Ko de données personnelles). N'importe quelle page web visitée pouvait les lire.
+Le serveur écoutait en boucle locale avec `Access-Control-Allow-Origin: *` sur **toutes** les réponses, et servait l'intégralité du dossier racine — dont `.git/` et une sauvegarde personnelle de 592 Ko. N'importe quelle page web visitée pouvait les lire.
 
 **Correction** : liste de motifs interdits (`.git`, `.vscode`, `node_modules`, `tests`, `divers`, `*.json`, `*backup*`), CORS restreint au seul proxy Brave, ajout de `X-Content-Type-Options: nosniff`.
 
@@ -436,3 +436,56 @@ qui vous appartient) — c'est le point le plus urgent de tout l'audit.
   supprimés pour limiter la surface du diff.
 - **Historique Git** : seuls `git log` et `git status` ont été consultés ; les
   diffs commit par commit n'ont pas été audités.
+
+---
+
+## 10. Confidentialité — remédiation de l'historique Git
+
+### 10.1 Constat
+
+Le dépôt est **public**. Un audit complet de la base Git (469 objets, toutes
+branches) a révélé que l'historique contenait **12 fichiers de sauvegarde
+personnelle** (repas, poids, tour de ventre, événements de santé), dont :
+
+- 9 supprimés de l'arbre courant mais toujours présents dans l'historique ;
+- plusieurs avec un **prénom ou un surnom dans le nom de fichier** ;
+- une adresse e-mail personnelle dans 39 champs auteur/committer.
+
+Ces fichiers étaient **téléchargeables sans authentification** (`HTTP 200` via
+`raw.githubusercontent.com`).
+
+Aucun secret n'était exposé : l'analyse des 469 objets n'a trouvé **aucune clé
+API, aucun mot de passe, aucun IBAN**. Les milliers de détections initiales de
+« téléphones » et de « numéros de sécurité sociale » étaient des faux positifs
+— des fragments de décimales nutritionnelles (`106.97131147540983`) et des
+`uniqueId` (timestamps) — vérifiés un par un.
+
+### 10.2 Actions réalisées
+
+1. Sortie des sauvegardes du dépôt (conservées hors dépôt, non supprimées).
+2. `.gitignore` élargi à `nutrition-tracker-backup-*.json` et
+   `nutrition-data_*.json`, où qu'ils soient.
+3. Réécriture de l'historique (`git filter-repo`) : suppression des 14 chemins
+   concernés et remplacement de l'adresse e-mail par l'adresse `noreply` GitHub.
+4. Purge des occurrences résiduelles dans le contenu de tous les objets.
+5. La suite de tests ne dépend plus d'aucune donnée personnelle : elle s'appuie
+   sur des sauvegardes synthétiques reproduisant les deux schémas (actuel et
+   hérité), plus un test optionnel si une sauvegarde locale est présente.
+6. Garde-fous ajoutés (`tests/unit/docs-consistency.test.js`) : aucune
+   sauvegarde suivie par Git, et aucun terme personnel dans les fichiers du
+   dépôt — les motifs de contrôle y sont encodés pour ne pas les republier.
+
+### 10.3 Ce qui reste à faire
+
+GitHub **conserve les objets non atteignables accessibles par leur SHA** après
+un force-push. Vérifié après réécriture : les anciens commits restent résolus
+par l'API et leurs fichiers restent servis.
+
+Pour un effacement complet, il faut **demander au support GitHub** un
+`git gc` sur le dépôt :
+
+→ https://support.github.com/request
+
+Les données ne sont plus référencées par aucune branche, mais elles restent
+joignables par qui connaît le SHA. À considérer comme exposées depuis
+octobre 2025.
