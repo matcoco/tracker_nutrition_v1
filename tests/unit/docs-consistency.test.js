@@ -132,9 +132,15 @@ describe('confidentialité — aucun fichier de données personnelles suivi', ()
             .split('\n')
             .filter(Boolean);
 
-        // Motifs volontairement génériques : noms propres apparus dans
-        // l'historique, et adresses e-mail personnelles connues.
-        const motifs = [/[nom-retire]/i, /[nom-retire]/i, /[email-retire]/i];
+        // Les motifs sont construits à partir de codes de caractères : ce
+        // fichier est versionné dans un dépôt public, il ne doit donc pas
+        // contenir lui-même les termes qu'il interdit.
+        const terme = (codes) => new RegExp(String.fromCharCode(...codes), 'i');
+        const motifs = [
+            terme([112, 114, 105, 115, 99, 105, 108, 108, 97]),                  // prénom
+            terme([112, 111, 117, 112, 111, 117, 110, 110, 101]),                // surnom
+            terme([98, 95, 106, 97, 121, 115, 111, 110, 64]),                    // adresse e-mail
+        ];
         const coupables = [];
         for (const fichier of fichiers) {
             let contenu;
@@ -143,9 +149,8 @@ describe('confidentialité — aucun fichier de données personnelles suivi', ()
             } catch (_) {
                 continue;
             }
-            // Exemptés : le rapport d'audit et ce fichier de test décrivent le
-            // problème, ils citent donc forcément les motifs recherchés.
-            if (fichier === 'AUDIT.md' || fichier === 'tests/unit/docs-consistency.test.js') continue;
+            // AUDIT.md décrit le problème et cite donc les termes concernés.
+            if (fichier === 'AUDIT.md') continue;
             for (const motif of motifs) {
                 if (motif.test(fichier) || motif.test(contenu)) {
                     coupables.push(`${fichier} (${motif})`);
